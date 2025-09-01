@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PAmazeCare.DTOs;
 using PAmazeCare.Services.Interfaces;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PAmazeCare.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class MedicalRecordController : ControllerBase
     {
         private readonly IMedicalRecordService _medicalRecordService;
@@ -17,62 +18,64 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpGet("paged")]
-        public async Task<IActionResult> GetAllMedicalRecords([FromQuery] PaginationParams paginationParams)
+        public async Task<IActionResult> GetAllMedicalRecordsPaged([FromQuery] PaginationParams paginationParams)
         {
-            // Safety defaults
-            paginationParams.PageNumber = paginationParams.PageNumber <= 0 ? 1 : paginationParams.PageNumber;
-            paginationParams.PageSize = paginationParams.PageSize <= 0 ? 10 : paginationParams.PageSize;
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var pagedResult = await _medicalRecordService.GetAllMedicalRecordsAsync(paginationParams);
             return Ok(pagedResult);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<List<MedicalRecordDto>>> GetAllMedicalRecords()
         {
             var records = await _medicalRecordService.GetAllMedicalRecordsAsync();
             return Ok(records);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ActionResult<MedicalRecordDto>> GetMedicalRecordById(int id)
         {
             var record = await _medicalRecordService.GetMedicalRecordByIdAsync(id);
             if (record == null)
-                return NotFound($"Medical record with ID {id} not found");
+                return NotFound(new { message = $"MedicalRecord with ID {id} not found" });
 
             return Ok(record);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateMedicalRecordDto dto)
+        public async Task<ActionResult<MedicalRecordDto>> CreateMedicalRecord([FromBody] CreateMedicalRecordDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var created = await _medicalRecordService.CreateMedicalRecordAsync(dto);
-            if (created == null)
-                return BadRequest("Failed to create medical record");
+            var createdRecord = await _medicalRecordService.CreateMedicalRecordAsync(dto);
+            if (createdRecord == null)
+                return BadRequest("Failed to create medical record. Please check the input data.");
 
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            return CreatedAtAction(nameof(GetMedicalRecordById), new { id = createdRecord.Id }, createdRecord);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateMedicalRecordDto dto)
+        public async Task<IActionResult> UpdateMedicalRecord(int id, [FromBody] UpdateMedicalRecordDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var updated = await _medicalRecordService.UpdateMedicalRecordAsync(id, dto);
             if (!updated)
-                return NotFound($"Medical record with ID {id} not found or not updated");
+                return NotFound(new { message = $"MedicalRecord with ID {id} not found or already deleted" });
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteMedicalRecord(int id)
         {
             var deleted = await _medicalRecordService.DeleteMedicalRecordAsync(id);
             if (!deleted)
-                return NotFound($"Medical record with ID {id} not found");
+                return NotFound(new { message = $"MedicalRecord with ID {id} not found or already deleted" });
 
             return NoContent();
         }

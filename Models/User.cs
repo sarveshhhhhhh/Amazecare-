@@ -6,10 +6,9 @@ namespace PAmazeCare.Models
         public string? FullName { get; set; }
         public string? Email { get; set; }
 
-        public string PasswordHash { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty; // For seeding only
+        public string PasswordHash { get; set; }
 
-        public string UserType { get; set; } = string.Empty;
+        public string UserType { get; set; }
 
         public int Role { get; set; }
         public DateTime CreatedAt { get; set; }

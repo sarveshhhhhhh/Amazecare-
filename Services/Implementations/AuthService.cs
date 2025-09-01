@@ -6,6 +6,8 @@ using PAmazeCare.Models;
 using PAmazeCare.Models.Auth;
 using PAmazeCare.Repositories.Interfaces;
 using PAmazeCare.Services.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace PAmazeCare.Services.Implementations
 {
@@ -13,8 +15,8 @@ namespace PAmazeCare.Services.Implementations
     {
         private readonly PAmazeCareContext _context;
         private readonly IUserRepository _userRepository;
-        private readonly ITokenService _tokenService;
-        private readonly ILogger<AuthService> _logger;
+        protected readonly ITokenService _tokenService;
+        protected readonly ILogger<AuthService> _logger;
 
         public AuthService(
             PAmazeCareContext context,
@@ -30,81 +32,44 @@ namespace PAmazeCare.Services.Implementations
 
         public async Task<bool> RegisterAsync(RegisterDto dto)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                var normalizedEmail = dto.Email.Trim().ToLower();
-                
-                _logger.LogInformation($"Registration attempt for email: {normalizedEmail}");
-                
-                // Check if email already exists
-                var emailExists = await _context.Users.AnyAsync(u => u.Email == normalizedEmail);
-                
-                if (emailExists)
-                {
-                    throw new InvalidOperationException("Email already exists.");
-                }
+                if (await _userRepository.EmailExists(dto.Email))
+                    return false;
 
                 var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
                 var user = new User
                 {
                     FullName = dto.FullName,
-                    Email = normalizedEmail,
+                    Email = dto.Email.Trim().ToLower(),
                     PasswordHash = passwordHash,
                     UserType = dto.UserType,
                     Role = GetRoleFromUserType(dto.UserType),
                     CreatedAt = DateTime.UtcNow
                 };
 
-                _context.Users.Add(user);
-                
-                var saveResult = await _context.SaveChangesAsync();
-                _logger.LogInformation($"SaveChanges result: {saveResult} rows affected");
-                
-                await transaction.CommitAsync();
-                _logger.LogInformation($"Transaction committed. User registered successfully: {normalizedEmail}");
-                
+                await _userRepository.AddUserAsync(user);
                 return true;
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
-                _logger.LogError(ex, $"Registration failed for email: {dto.Email}");
-                throw;
+                _logger.LogError(ex, "Error during registration");
+                return false;
             }
         }
 
-        public async Task<AuthResponse> LoginAsync(LoginDto dto)
+        public virtual async Task<string> LoginAsync(LoginDto dto)
         {
             try
             {
-                var normalizedEmail = dto.Email.Trim().ToLower();
-                _logger.LogInformation($"Login attempt for email: {normalizedEmail}");
-
                 var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Email == normalizedEmail);
+                    .FirstOrDefaultAsync(u => u.Email == dto.Email.Trim().ToLower());
 
-                if (user == null)
-                {
-                    _logger.LogWarning($"User not found for email: {normalizedEmail}");
+                if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
                     return null;
-                }
 
-                if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
-                {
-                    _logger.LogWarning($"Invalid password for email: {normalizedEmail}");
-                    return null;
-                }
-
-                var token = _tokenService.GenerateToken(user);
-                _logger.LogInformation($"Login successful for email: {normalizedEmail}");
-                
-                return new AuthResponse
-                {
-                    Token = token,
-                    UserType = user.UserType
-                };
+                return _tokenService.GenerateToken(user);
             }
             catch (Exception ex)
             {
@@ -120,6 +85,7 @@ namespace PAmazeCare.Services.Implementations
                 "patient" => 1,
                 "doctor" => 2,
                 "admin" => 3,
+                "superadmin" => 4,
                 _ => 1 // Default to patient
             };
         }

@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PAmazeCare.DTOs;
 using PAmazeCare.Services.Interfaces;
-using PAmazeCare.Attributes;
-using PAmazeCare.Models;
 using System.Threading.Tasks;
 
 namespace PAmazeCare.Controllers
@@ -21,7 +19,6 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpGet("paged")]
-        [AdminOrAbove]
         public async Task<IActionResult> GetAllDoctors([FromQuery] PaginationParams paginationParams)
         {
             if (!ModelState.IsValid)
@@ -32,7 +29,6 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpGet("all")]
-        [AdminOrAbove]
         public async Task<IActionResult> GetAllDoctorsWithoutPagination()
         {
             var doctors = await _doctorService.GetAllDoctorsAsync();
@@ -40,7 +36,6 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpGet("{id}")]
-        [AdminOrAbove]
         public async Task<IActionResult> GetDoctorById(int id)
         {
             var doctor = await _doctorService.GetDoctorByIdAsync(id);
@@ -51,7 +46,6 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpPost]
-        [AdminOrAbove]
         public async Task<IActionResult> AddDoctor([FromBody] DoctorDto dto)
         {
             if (!ModelState.IsValid)
@@ -74,7 +68,6 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpPut("{id}")]
-        [AdminOrAbove]
         public async Task<IActionResult> UpdateDoctor(int id, [FromBody] DoctorDto dto)
         {
             if (!ModelState.IsValid)
@@ -88,7 +81,6 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpDelete("{id}")]
-        [AdminOrAbove]
         public async Task<IActionResult> DeleteDoctor(int id)
         {
             var deleted = await _doctorService.DeleteDoctorAsync(id);

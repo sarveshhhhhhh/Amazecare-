@@ -22,6 +22,7 @@ namespace PAmazeCare.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            
             modelBuilder.Entity<Appointment>()
             .HasOne(a => a.Patient)
             .WithMany(p => p.Appointments)
@@ -33,6 +34,14 @@ namespace PAmazeCare.Data
                 .WithMany(d => d.Appointments)
                 .HasForeignKey(a => a.DoctorId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Prescription>(entity =>
+            {
+                entity.Property(p => p.PatientId);
+                entity.Property(p => p.DoctorId);
+                
+                entity.Property(p => p.DosageMasterId);
+            });
 
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<DosageMaster>().HasIndex(d => d.DosageName).IsUnique();
@@ -51,26 +60,9 @@ namespace PAmazeCare.Data
             modelBuilder.Entity<Patient>().HasQueryFilter(p => !p.IsDeleted);
             modelBuilder.Entity<Prescription>().HasQueryFilter(p => !p.IsDeleted);
 
-            // Seed Super Admin user
-            SeedSuperAdmin(modelBuilder);
-        }
 
-        private void SeedSuperAdmin(ModelBuilder modelBuilder)
-        {
-            // Create default Super Admin user
-            modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    Id = 1,
-                    FullName = "System Administrator",
-                    Email = "superadmin@pamazecare.com",
-                    Password = "SuperAdmin@123", // Will be hashed by auth service
-                    UserType = "SuperAdmin",
-                    CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-                }
-            );
+
 
         }
-
     }
 }

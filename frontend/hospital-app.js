@@ -123,37 +123,14 @@ class PAmazeCareApp {
             console.log('Response type:', typeof response);
             console.log('Response keys:', response ? Object.keys(response) : 'No response');
             
-            if (response && (response.token || response.Token)) {
-                const token = response.token || response.Token;
-                
-                // Create user object from response
-                const user = {
-                    id: response.userId || response.UserId,
+            if (response && (response.Token || response.token)) {
+                const token = response.Token || response.token;
+                this.currentUser = {
                     email: credentials.email,
-                    userType: response.userType || response.UserType,
-                    fullName: response.fullName || response.FullName
+                    userType: response.UserType || response.userType || 'Patient'
                 };
                 
-                console.log('Login response userType:', response.userType || response.UserType);
-                console.log('Final user object:', user);
-                
-                // Store authentication data
-                localStorage.setItem('token', token);
-                localStorage.setItem('user', JSON.stringify(user));
-                localStorage.setItem('authToken', token);
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                
-                this.currentUser = user;
-                this.api.token = token;
-                
-                const loginForm = document.getElementById('loginForm');
-                if (loginForm) {
-                    loginForm.reset();
-                }
-                
                 this.showNotification('Login successful!', 'success');
-                
-                
                 this.showDashboard();
                 this.updateUserInterface();
                 this.loadInitialData();
@@ -237,15 +214,18 @@ class PAmazeCareApp {
             // Hide loading overlay if showing
             this.showLoading(false);
             
-            // Redirect to login view immediately
-            this.showLogin();
-            
-            // Clear any form data
-            const forms = document.querySelectorAll('form');
-            forms.forEach(form => form.reset());
-            
-            // Reset page title
-            document.title = 'PAmazeCare - Hospital Management System';
+            // Redirect to login view after a brief delay
+            setTimeout(() => {
+                this.showLoginView();
+                
+                // Clear any form data
+                const forms = document.querySelectorAll('form');
+                forms.forEach(form => form.reset());
+                
+                // Reset page title
+                document.title = 'PAmazeCare - Hospital Management System';
+                
+            }, 1500);
             
         } catch (error) {
             console.error('Error during logout:', error);
@@ -260,146 +240,68 @@ class PAmazeCareApp {
     }
 
     hideAllPages() {
-        const pages = ['loginPage', 'registerPage', 'patientRegistrationPage', 'dashboardPage', 'patientDashboardPage'];
+        const pages = ['loginPage', 'registerPage', 'dashboardPage', 'patientDashboardPage'];
         pages.forEach(pageId => {
             const page = document.getElementById(pageId);
             if (page) {
                 page.classList.remove('active');
-                page.style.display = 'none';
             }
         });
     }
 
     showLogin() {
         this.hideAllPages();
-        const loginPage = document.getElementById('loginPage');
-        if (loginPage) {
-            loginPage.classList.add('active');
-            loginPage.style.display = 'block';
-        }
+        document.getElementById('loginPage').classList.add('active');
     }
 
     showRegister() {
         this.hideAllPages();
-        const registerPage = document.getElementById('registerPage');
-        if (registerPage) {
-            registerPage.classList.add('active');
-            registerPage.style.display = 'block';
-        }
+        document.getElementById('registerPage').classList.add('active');
     }
-
-
 
     showDashboard() {
         this.hideAllPages();
         
-        // Route to appropriate dashboard based on user type hierarchy
+        // Route to appropriate dashboard based on user type
         const userType = this.currentUser?.userType?.toLowerCase();
-        console.log('User type for dashboard routing:', userType);
-        console.log('Current user object:', this.currentUser);
         
-        // First, hide both dashboards
-        const patientDashboard = document.getElementById('patientDashboardPage');
-        const adminDashboard = document.getElementById('dashboardPage');
-        
-        if (patientDashboard) {
-            patientDashboard.classList.remove('active');
-            patientDashboard.style.display = 'none';
-        }
-        if (adminDashboard) {
-            adminDashboard.classList.remove('active');
-            adminDashboard.style.display = 'none';
-        }
-        
-        if (userType === 'patient') {
-            // Show ONLY patient dashboard
-            console.log('Routing to patient dashboard');
-            if (patientDashboard) {
-                patientDashboard.classList.add('active');
-                patientDashboard.style.display = 'grid';
-                this.showPatientView('patientDashboard');
-                this.loadPatientDashboardData();
-            }
-        } else if (userType === 'superadmin' || userType === 'admin' || userType === 'doctor') {
-            // Show admin dashboard for SuperAdmin, Admin, and Doctor users
-            console.log('Routing to admin dashboard for userType:', userType);
-            if (adminDashboard) {
-                adminDashboard.classList.add('active');
-                adminDashboard.style.display = 'grid';
-                this.showView('dashboard');
+        if (userType === 'admin') {
+            document.getElementById('dashboardPage').classList.add('active');
+            this.showView('dashboard');
+            
+            // Force show Patient and Doctor Management for admin users
+            setTimeout(() => {
+                const patientsNav = document.getElementById('patientsNav');
+                const doctorsNav = document.getElementById('doctorsNav');
+                const appointmentsNav = document.getElementById('appointmentsNav');
                 
-                // Show role-specific UI elements
-                this.updateUIForRole(userType);
-            }
-        } else {
-            // Default to patient dashboard for unknown users
-            console.log('Unknown userType, defaulting to patient dashboard');
-            if (patientDashboard) {
-                patientDashboard.classList.add('active');
-                patientDashboard.style.display = 'grid';
-                this.showPatientView('patientDashboard');
-            }
-        }
-    }
-
-    // Update UI elements based on user role hierarchy
-    updateUIForRole(userType) {
-        const addAdminBtn = document.querySelector('button[onclick="showAddAdmin()"]');
-        const deletePatientBtn = document.querySelector('button[onclick="deletePatientById()"]');
-        const managementNavs = {
-            patients: document.getElementById('patientsNav'),
-            doctors: document.getElementById('doctorsNav'),
-            appointments: document.getElementById('appointmentsNav'),
-            medicalRecords: document.getElementById('medicalRecordsNav')
-        };
-
-        // Role-based UI visibility
-        switch(userType) {
-            case 'superadmin':
-                // SuperAdmin sees everything
-                if (addAdminBtn) addAdminBtn.style.display = 'block';
-                if (deletePatientBtn) deletePatientBtn.style.display = 'block';
-                Object.values(managementNavs).forEach(nav => {
-                    if (nav) nav.style.display = 'block';
-                });
-                break;
-                
-            case 'admin':
-                // Admin sees most things but cannot create SuperAdmins
-                if (addAdminBtn) addAdminBtn.style.display = 'block';
-                if (deletePatientBtn) deletePatientBtn.style.display = 'block';
-                Object.values(managementNavs).forEach(nav => {
-                    if (nav) nav.style.display = 'block';
-                });
-                break;
-                
-            case 'doctor':
-                // Doctor sees limited management options
-                if (addAdminBtn) addAdminBtn.style.display = 'none';
-                if (deletePatientBtn) deletePatientBtn.style.display = 'none';
-                if (managementNavs.patients) managementNavs.patients.style.display = 'block';
-                if (managementNavs.appointments) managementNavs.appointments.style.display = 'block';
-                if (managementNavs.medicalRecords) managementNavs.medicalRecords.style.display = 'block';
-                if (managementNavs.doctors) managementNavs.doctors.style.display = 'none';
-                break;
-                
-            default:
-                // Hide all admin functions for unknown roles
-                if (addAdminBtn) addAdminBtn.style.display = 'none';
-                if (deletePatientBtn) deletePatientBtn.style.display = 'none';
-                Object.values(managementNavs).forEach(nav => {
-                    if (nav) nav.style.display = 'none';
-                });
-        }
-        
-        // Force show navigation elements after role check
-        setTimeout(() => {
-            Object.values(managementNavs).forEach(nav => {
-                if (nav && nav.style.display === 'block') {
-                    nav.style.visibility = 'visible';
+                if (patientsNav) {
+                    patientsNav.style.display = 'block';
+                    patientsNav.style.visibility = 'visible';
                 }
-            });
+                if (doctorsNav) {
+                    doctorsNav.style.display = 'block';
+                    doctorsNav.style.visibility = 'visible';
+                }
+                if (appointmentsNav) {
+                    appointmentsNav.style.display = 'block';
+                    appointmentsNav.style.visibility = 'visible';
+                }
             }, 100);
+            
+            this.loadDashboardData();
+            this.loadRecentActivities();
+        } else if (userType === 'patient') {
+            document.getElementById('patientDashboardPage').classList.add('active');
+            this.showPatientView('patientDashboard');
+            this.loadPatientDashboardData();
+        } else {
+            // Default to admin dashboard for other user types
+            document.getElementById('dashboardPage').classList.add('active');
+            this.showView('dashboard');
+            this.loadDashboardData();
+            this.loadRecentActivities();
+        }
     }
 
     showPatientDashboard() {
@@ -882,9 +784,10 @@ class PAmazeCareApp {
         } catch (error) {
             console.error('Error updating patient profile:', error);
             this.showNotification('Error updating profile', 'error');
+        } finally {
+            this.showLoading(false);
         }
     }
-
 
 async handleRegister(event) {
     event.preventDefault();
@@ -2955,76 +2858,7 @@ async logout() {
     async showAddMedicalRecord() { this.showNotification('Add Medical Record coming soon', 'info'); }
     async showAddTest() { this.showNotification('Add Test coming soon', 'info'); }
     async showAddDosage() { this.showNotification('Add Dosage coming soon', 'info'); }
-    async showAddAdmin() {
-        // Role hierarchy check - SuperAdmin can create Admin/Doctor, Admin can create Doctor/Patient
-        const userType = this.currentUser?.userType?.toLowerCase();
-        if (!userType || (userType !== 'superadmin' && userType !== 'admin')) {
-            this.showNotification('Access denied. Only Super Admins and Admins can create staff accounts.', 'error');
-            return;
-        }
-        
-        const modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.innerHTML = `
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Add New Administrator</h2>
-                    <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
-                </div>
-                <form id="addAdminForm" class="modal-form">
-                    <div class="form-group">
-                        <label for="adminFullName">Full Name</label>
-                        <input type="text" id="adminFullName" name="fullName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="adminEmail">Email</label>
-                        <input type="email" id="adminEmail" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="adminPassword">Password</label>
-                        <input type="password" id="adminPassword" name="password" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="adminUserType">Role</label>
-                        <select id="adminUserType" name="userType" required>
-                            ${userType === 'superadmin' ? '<option value="SuperAdmin">Super Administrator</option>' : ''}
-                            ${userType === 'superadmin' ? '<option value="Admin">Administrator</option>' : ''}
-                            <option value="Doctor">Doctor</option>
-                            <option value="Patient">Patient</option>
-                        </select>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Create Account</button>
-                    </div>
-                </form>
-            </div>
-        `;
-        
-        document.body.appendChild(modal);
-        modal.style.display = 'flex';
-        
-        // Handle form submission
-        document.getElementById('addAdminForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const userData = {
-                fullName: formData.get('fullName'),
-                email: formData.get('email'),
-                password: formData.get('password'),
-                userType: formData.get('userType')
-            };
-            
-            try {
-                await this.api.registerStaff(userData);
-                this.showNotification(`${userData.userType} account created successfully!`, 'success');
-                modal.remove();
-            } catch (error) {
-                console.error('Staff registration error:', error);
-                this.showNotification(`Failed to create account: ${error.message}`, 'error');
-            }
-        };
-    }
+    async showAddAdmin() { this.showNotification('Add Admin coming soon', 'info'); }
 }
 
 // Global functions for HTML onclick handlers

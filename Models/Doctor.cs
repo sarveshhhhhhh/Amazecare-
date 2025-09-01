@@ -16,5 +16,7 @@
         // Navigation Properties
         public User? User { get; set; }
         public ICollection<Appointment>? Appointments { get; set; }
+        public ICollection<Prescription> Prescriptions { get; set; }  
+
     }
 }

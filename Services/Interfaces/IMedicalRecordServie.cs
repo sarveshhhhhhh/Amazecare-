@@ -8,8 +8,8 @@ namespace PAmazeCare.Services.Interfaces
     {
         Task<PagedResult<MedicalRecordDto>> GetAllMedicalRecordsAsync(PaginationParams paginationParams);
         Task<List<MedicalRecordDto>> GetAllMedicalRecordsAsync();
-        Task<MedicalRecordDto?> GetMedicalRecordByIdAsync(int id);
-        Task<MedicalRecordDto?> CreateMedicalRecordAsync(CreateMedicalRecordDto dto);
+        Task<MedicalRecordDto> GetMedicalRecordByIdAsync(int id);
+        Task<MedicalRecordDto> CreateMedicalRecordAsync(CreateMedicalRecordDto dto);
         Task<bool> UpdateMedicalRecordAsync(int id, UpdateMedicalRecordDto dto);
         Task<bool> DeleteMedicalRecordAsync(int id);
     }

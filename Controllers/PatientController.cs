@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PAmazeCare.DTOs;
 using PAmazeCare.Services.Interfaces;
-using PAmazeCare.Attributes;
-using PAmazeCare.Models;
 using System.Threading.Tasks;
 
 namespace PAmazeCare.Controllers
@@ -19,7 +17,6 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpGet("paged")]
-        [AdminOrAbove]
         public async Task<IActionResult> GetAllPatients([FromQuery] PaginationParams paginationParams)
         {
             if (!ModelState.IsValid)
@@ -30,7 +27,6 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpGet("all")]
-        [AdminOrAbove]
         public async Task<IActionResult> GetAllPatientsWithoutPagination()
         {
             var patients = await _patientService.GetAllPatientsAsync();
@@ -38,7 +34,6 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpGet("{id}")]
-        [DoctorOrAbove]
         public async Task<IActionResult> GetPatientById(int id)
         {
             var patient = await _patientService.GetPatientByIdAsync(id);
@@ -49,11 +44,11 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpPost]
-        [DoctorOrAbove]
         [ProducesResponseType(typeof(PatientDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddPatient([FromBody] CreatePatientDto dto)
+        [HttpPost]
+        public async Task<IActionResult> AddPatient([FromBody] PatientDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -61,8 +56,8 @@ namespace PAmazeCare.Controllers
             try
             {
                 var patientId = await _patientService.AddPatientAsync(dto);
-                var createdPatient = await _patientService.GetPatientByIdAsync(patientId);
-                return CreatedAtAction(nameof(GetPatientById), new { id = patientId }, createdPatient);
+                dto.Id = patientId;
+                return CreatedAtAction(nameof(GetPatientById), new { id = patientId }, dto);
             }
             catch (InvalidOperationException ex)
             {
@@ -71,7 +66,6 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpPut("{id}")]
-        [DoctorOrAbove]
         public async Task<IActionResult> UpdatePatient(int id, [FromBody] PatientDto dto)
         {
             if (!ModelState.IsValid)
@@ -85,7 +79,6 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpDelete("{id}")]
-        [AdminOrAbove]
         public async Task<IActionResult> DeletePatient(int id)
         {
             var success = await _patientService.DeletePatientAsync(id);

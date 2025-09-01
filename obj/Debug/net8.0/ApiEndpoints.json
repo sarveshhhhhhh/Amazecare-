@@ -509,17 +509,27 @@
   },
   {
     "ContainingType": "PAmazeCare.Controllers.MedicalRecordController",
-    "Method": "GetAll",
+    "Method": "GetAllMedicalRecords",
     "RelativePath": "api/MedicalRecord",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[PAmazeCare.DTOs.MedicalRecordDto, PAmazeCare, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "PAmazeCare.Controllers.MedicalRecordController",
-    "Method": "Create",
+    "Method": "CreateMedicalRecord",
     "RelativePath": "api/MedicalRecord",
     "HttpMethod": "POST",
     "IsController": true,
@@ -531,11 +541,21 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "PAmazeCare.DTOs.MedicalRecordDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "PAmazeCare.Controllers.MedicalRecordController",
-    "Method": "GetById",
+    "Method": "GetMedicalRecordById",
     "RelativePath": "api/MedicalRecord/{id}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -547,11 +567,21 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "PAmazeCare.DTOs.MedicalRecordDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "PAmazeCare.Controllers.MedicalRecordController",
-    "Method": "Update",
+    "Method": "UpdateMedicalRecord",
     "RelativePath": "api/MedicalRecord/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -572,7 +602,7 @@
   },
   {
     "ContainingType": "PAmazeCare.Controllers.MedicalRecordController",
-    "Method": "Delete",
+    "Method": "DeleteMedicalRecord",
     "RelativePath": "api/MedicalRecord/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
@@ -588,7 +618,7 @@
   },
   {
     "ContainingType": "PAmazeCare.Controllers.MedicalRecordController",
-    "Method": "GetAllMedicalRecords",
+    "Method": "GetAllMedicalRecordsPaged",
     "RelativePath": "api/MedicalRecord/paged",
     "HttpMethod": "GET",
     "IsController": true,
@@ -617,7 +647,7 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "PAmazeCare.DTOs.CreatePatientDto",
+        "Type": "PAmazeCare.DTOs.PatientDto",
         "IsRequired": true
       }
     ],

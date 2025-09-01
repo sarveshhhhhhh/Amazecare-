@@ -12,8 +12,8 @@ using PAmazeCare.Data;
 namespace PAmazeCare.Migrations
 {
     [DbContext(typeof(PAmazeCareContext))]
-    [Migration("20250808115212_UpdatePrescriptionModel")]
-    partial class UpdatePrescriptionModel
+    [Migration("20250901213328_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,13 +33,23 @@ namespace PAmazeCare.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AdminName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Admins");
                 });
@@ -60,6 +70,9 @@ namespace PAmazeCare.Migrations
 
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
@@ -89,28 +102,18 @@ namespace PAmazeCare.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ContactNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Designation")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ExperienceYears")
-                        .HasColumnType("int");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Qualification")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Specialty")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
@@ -118,8 +121,7 @@ namespace PAmazeCare.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Doctors");
                 });
@@ -132,13 +134,19 @@ namespace PAmazeCare.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Dosage")
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DosageName")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Dosage")
+                    b.HasIndex("DosageName")
                         .IsUnique();
 
                     b.ToTable("DosageMasters");
@@ -160,18 +168,15 @@ namespace PAmazeCare.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Diagnosis")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("RecordDate")
-                        .HasColumnType("datetime2");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Treatment")
                         .IsRequired()
@@ -180,10 +185,6 @@ namespace PAmazeCare.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppointmentId");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("PatientId");
 
                     b.ToTable("MedicalRecords");
                 });
@@ -199,19 +200,20 @@ namespace PAmazeCare.Migrations
                     b.Property<string>("ContactNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DOB")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -222,8 +224,7 @@ namespace PAmazeCare.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Patients");
                 });
@@ -236,24 +237,43 @@ namespace PAmazeCare.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DosageId")
+                    b.Property<int>("DoctorId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Instructions")
+                    b.Property<string>("Dosage")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("DosageMasterId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("MedicalRecordId")
                         .HasColumnType("int");
 
-                    b.Property<string>("MedicineName")
+                    b.Property<string>("Medication")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PrescribedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Timing")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DosageId");
+                    b.HasIndex("DoctorId");
 
-                    b.HasIndex("MedicalRecordId");
+                    b.HasIndex("DosageMasterId");
+
+                    b.HasIndex("PatientId");
 
                     b.ToTable("Prescriptions");
                 });
@@ -266,11 +286,22 @@ namespace PAmazeCare.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("MedicalRecordId")
                         .HasColumnType("int");
 
                     b.Property<int>("TestId")
                         .HasColumnType("int");
+
+                    b.Property<string>("TestName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -291,6 +322,12 @@ namespace PAmazeCare.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("TestName")
                         .IsRequired()
@@ -322,16 +359,17 @@ namespace PAmazeCare.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserType")
                         .IsRequired()
@@ -340,7 +378,8 @@ namespace PAmazeCare.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
@@ -348,8 +387,8 @@ namespace PAmazeCare.Migrations
             modelBuilder.Entity("PAmazeCare.Models.Admin", b =>
                 {
                     b.HasOne("PAmazeCare.Models.User", "User")
-                        .WithOne("Admin")
-                        .HasForeignKey("PAmazeCare.Models.Admin", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -378,8 +417,8 @@ namespace PAmazeCare.Migrations
             modelBuilder.Entity("PAmazeCare.Models.Doctor", b =>
                 {
                     b.HasOne("PAmazeCare.Models.User", "User")
-                        .WithOne("Doctor")
-                        .HasForeignKey("PAmazeCare.Models.Doctor", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -391,29 +430,13 @@ namespace PAmazeCare.Migrations
                     b.HasOne("PAmazeCare.Models.Appointment", null)
                         .WithMany("MedicalRecords")
                         .HasForeignKey("AppointmentId");
-
-                    b.HasOne("PAmazeCare.Models.Doctor", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PAmazeCare.Models.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("PAmazeCare.Models.Patient", b =>
                 {
                     b.HasOne("PAmazeCare.Models.User", "User")
-                        .WithOne("Patient")
-                        .HasForeignKey("PAmazeCare.Models.Patient", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -422,21 +445,25 @@ namespace PAmazeCare.Migrations
 
             modelBuilder.Entity("PAmazeCare.Models.Prescription", b =>
                 {
-                    b.HasOne("PAmazeCare.Models.DosageMaster", "Dosage")
+                    b.HasOne("PAmazeCare.Models.Doctor", "Doctor")
                         .WithMany("Prescriptions")
-                        .HasForeignKey("DosageId")
+                        .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PAmazeCare.Models.MedicalRecord", "MedicalRecord")
-                        .WithMany()
-                        .HasForeignKey("MedicalRecordId")
+                    b.HasOne("PAmazeCare.Models.DosageMaster", null)
+                        .WithMany("Prescriptions")
+                        .HasForeignKey("DosageMasterId");
+
+                    b.HasOne("PAmazeCare.Models.Patient", "Patient")
+                        .WithMany("Prescriptions")
+                        .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Dosage");
+                    b.Navigation("Doctor");
 
-                    b.Navigation("MedicalRecord");
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("PAmazeCare.Models.RecommendedTest", b =>
@@ -466,6 +493,8 @@ namespace PAmazeCare.Migrations
             modelBuilder.Entity("PAmazeCare.Models.Doctor", b =>
                 {
                     b.Navigation("Appointments");
+
+                    b.Navigation("Prescriptions");
                 });
 
             modelBuilder.Entity("PAmazeCare.Models.DosageMaster", b =>
@@ -476,20 +505,13 @@ namespace PAmazeCare.Migrations
             modelBuilder.Entity("PAmazeCare.Models.Patient", b =>
                 {
                     b.Navigation("Appointments");
+
+                    b.Navigation("Prescriptions");
                 });
 
             modelBuilder.Entity("PAmazeCare.Models.TestMaster", b =>
                 {
                     b.Navigation("RecommendedTests");
-                });
-
-            modelBuilder.Entity("PAmazeCare.Models.User", b =>
-                {
-                    b.Navigation("Admin");
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("Patient");
                 });
 #pragma warning restore 612, 618
         }

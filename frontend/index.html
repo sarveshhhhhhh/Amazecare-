@@ -54,6 +54,7 @@
         </div>
     </div>
 
+    <!-- Registration Page -->
     <div id="registerPage" class="page">
         <div class="login-container">
             <div class="login-card">
@@ -86,15 +87,25 @@
                         <label for="regPassword">Password</label>
                         <div class="input-group">
                             <i class="fas fa-lock"></i>
-                            <input type="password" id="regPassword" name="password" required minlength="6" maxlength="100" placeholder="Enter your password (min 6 characters)">
+                            <input type="password" id="regPassword" name="password" required placeholder="Enter your password">
                             <button type="button" class="password-toggle" onclick="toggleRegisterPassword()">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
                     </div>
                     
-                    <!-- Hidden field - all public registrations are patients -->
-                    <input type="hidden" id="userType" name="userType" value="Patient">
+                    <div class="form-group">
+                        <label for="userType">User Type</label>
+                        <div class="input-group">
+                            <i class="fas fa-user-tag"></i>
+                            <select id="userType" name="userType" required>
+                                <option value="">Select User Type</option>
+                                <option value="Patient">Patient</option>
+                                <option value="Doctor">Doctor</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>
                     
                     <button type="submit" class="login-btn">
                         <i class="fas fa-user-plus"></i>
@@ -108,7 +119,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Admin Dashboard Page -->
     <div id="dashboardPage" class="page">
@@ -252,9 +262,9 @@
                             <i class="fas fa-user-plus"></i>
                             Add Patient
                         </button>
-                        <button class="action-btn" onclick="showAddAdmin()">
-                            <i class="fas fa-user-shield"></i>
-                            Add Admin/Doctor
+                        <button class="action-btn" onclick="showAddDoctor()">
+                            <i class="fas fa-user-md"></i>
+                            Add Doctor
                         </button>
                         <button class="action-btn" onclick="showAddAppointment()">
                             <i class="fas fa-calendar-plus"></i>

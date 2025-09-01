@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using PAmazeCare.DTOs;
 using PAmazeCare.Models.Auth;
 using PAmazeCare.Services.Interfaces;
 
@@ -18,57 +19,24 @@ namespace PAmazeCare.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
-            try
-            {
-                // Validate model state
-                if (!ModelState.IsValid)
-                {
-                    var errors = ModelState.Values
-                        .SelectMany(v => v.Errors)
-                        .Select(e => e.ErrorMessage);
-                    return BadRequest(new { Message = "Validation failed", Errors = errors });
-                }
+            var result = await _authService.RegisterAsync(dto);
 
-                // Allow any user type registration
-                // Keep the UserType from the request (Patient, Doctor, Admin)
+            return result
+                ? Ok("Registration successful.")
+                : BadRequest("Registration failed.");
 
-                await _authService.RegisterAsync(dto);
-
-                return Ok(new { Message = "Registration successful." });
-            }
-            catch (Exception ex)
-            {
-                // Return the exact exception message (e.g., "Email already exists.")
-                return BadRequest(new { Message = ex.Message });
-            }
         }
-
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
-            try
-            {
-                // Validate model state
-                if (!ModelState.IsValid)
-                {
-                    var errors = ModelState.Values
-                        .SelectMany(v => v.Errors)
-                        .Select(e => e.ErrorMessage);
-                    return BadRequest(new { Message = "Validation failed", Errors = errors });
-                }
+            var token = await _authService.LoginAsync(dto);
 
-                var authResponse = await _authService.LoginAsync(dto);
+            if (string.IsNullOrEmpty(token))
+                return Unauthorized("Invalid credentials.");
 
-                if (authResponse == null)
-                    return Unauthorized(new { Message = "Invalid email or password." });
-
-                return Ok(authResponse);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Message = "Login error", Error = ex.Message });
-            }
+            return Ok(new { Token = token });
         }
+
     }
 }

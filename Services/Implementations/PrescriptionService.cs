@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PAmazeCare.Data;
 using PAmazeCare.DTOs;
@@ -135,7 +135,7 @@ namespace PAmazeCare.Services.Implementations
                     DoctorId = dto.DoctorId,
                     Medication = dto.Medication,
                     MedicalRecordId = dto.MedicalRecordId,
-                    MedicineName = dto.MedicineName, 
+                    
 
 
                     Dosage = dto.Dosage,

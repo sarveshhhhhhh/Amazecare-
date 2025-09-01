@@ -1,4 +1,5 @@
-﻿namespace PAmazeCare.Models
+
+namespace PAmazeCare.Models
 {
     public class RecommendedTest
     {

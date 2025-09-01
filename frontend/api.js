@@ -3,7 +3,6 @@
 
 class ApiService {
     constructor() {
-        this.baseURL = API_BASE_URL;
         this.baseHeaders = {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -12,7 +11,7 @@ class ApiService {
 
     // Get auth token from localStorage
     getAuthToken() {
-        return localStorage.getItem('authToken');
+        return localStorage.getItem('token') || localStorage.getItem('authToken');
     }
 
     // Get headers with auth token
@@ -26,10 +25,7 @@ class ApiService {
     // Generic HTTP request handler
     async makeRequest(url, options = {}) {
         try {
-            // Handle both full URLs and relative paths
-            const requestUrl = url.startsWith('http') ? url : `${this.baseURL}${url}`;
-            
-            const response = await fetch(requestUrl, {
+            const response = await fetch(url, {
                 headers: this.getHeaders(),
                 ...options
             });
@@ -46,18 +42,7 @@ class ApiService {
             
             return await response.text();
         } catch (error) {
-            console.error('API request error:', error);
-            
-            // Enhanced error handling for better frontend feedback
-            if (error.response) {
-                const errorText = await error.response.text();
-                try {
-                    const errorData = JSON.parse(errorText);
-                    throw new Error(JSON.stringify(errorData));
-                } catch (parseError) {
-                    throw new Error(errorText);
-                }
-            }
+            console.error('API Request failed:', error);
             throw error;
         }
     }
@@ -66,33 +51,29 @@ class ApiService {
     
     // Get appointments for a specific patient
     async getPatientAppointments(patientId) {
-        return await this.makeRequest(`/api/Appointment/patient/${patientId}`);
+        const url = `${config.API_BASE_URL}/api/Appointment/patient/${patientId}`;
+        return await this.makeRequest(url);
     }
 
     // Get medical records for a specific patient
     async getPatientMedicalRecords(patientId) {
-        return await this.makeRequest(`/api/MedicalRecord/patient/${patientId}`);
+        const url = `${config.API_BASE_URL}/api/MedicalRecord/patient/${patientId}`;
+        return await this.makeRequest(url);
     }
 
     // Cancel appointment
     async cancelAppointment(appointmentId) {
-        return this.makeRequest(`/api/Appointment/${appointmentId}/cancel`, {
-            method: 'PUT'
-        });
+        return this.makeRequest(`/api/Appointment/${appointmentId}/cancel`, 'PUT');
     }
 
     // Patient profile management
     async getPatientProfile(patientId) {
-        return this.makeRequest(`/api/Patient/${patientId}`);
+        return this.makeRequest(`/api/Patient/${patientId}`, 'GET');
     }
 
     async updatePatientProfile(patientId, patientData) {
-        return this.makeRequest(`/api/Patient/${patientId}`, {
-            method: 'PATCH',
-            body: JSON.stringify(patientData)
-        });
+        return this.makeRequest(`/api/Patient/${patientId}`, 'PUT', patientData);
     }
-
 
     // ==================== AUTHENTICATION ====================
     async login(credentials) {
@@ -113,45 +94,40 @@ class ApiService {
             console.log('Raw API response:', response);
             console.log('Response type:', typeof response);
             
-            if (response && response.Token) {
-                localStorage.setItem('authToken', response.Token);
-                localStorage.setItem('userType', response.UserType);
+            if (response && (response.Token || response.token)) {
+                const token = response.Token || response.token;
+                localStorage.setItem('authToken', token);
                 // Extract user info from token or set basic info
                 const userInfo = {
                     email: credentials.email,
-                    userType: response.UserType || 'Patient'
+                    userType: response.UserType || response.userType || 'Patient'
                 };
                 localStorage.setItem('currentUser', JSON.stringify(userInfo));
             }
             return response;
         } catch (error) {
-            console.error('Login error:', error);
+            console.error('Login API error:', error);
             throw error;
         }
     }
 
-    // Register a new user (public - any user type)
     async register(userData) {
-        // Ensure exact property names match backend RegisterDto
-        const registerDto = {
-            FullName: userData.FullName || userData.fullName || '',
-            Email: userData.Email || userData.email || '',
-            Password: userData.Password || userData.password || '',
-            UserType: userData.UserType || userData.userType || "Patient"
-        };
-        
-        // Validate required fields
-        if (!registerDto.FullName || !registerDto.Email || !registerDto.Password) {
-            throw new Error('All fields are required');
+        try {
+            const registerDto = {
+                FullName: userData.fullName,
+                Email: userData.email,
+                Password: userData.password,
+                UserType: userData.userType || 'Patient'
+            };
+            const response = await this.makeRequest(API_ENDPOINTS.AUTH.REGISTER, {
+                method: 'POST',
+                body: JSON.stringify(registerDto)
+            });
+            return response;
+        } catch (error) {
+            console.error('Registration error:', error);
+            throw error;
         }
-        
-        console.log('Sending registration request to:', API_ENDPOINTS.AUTH.REGISTER);
-        console.log('Registration payload:', registerDto);
-        
-        return await this.makeRequest(API_ENDPOINTS.AUTH.REGISTER, {
-            method: 'POST',
-            body: JSON.stringify(registerDto)
-        });
     }
 
     // ==================== ADMIN METHODS ====================
@@ -161,7 +137,7 @@ class ApiService {
 
     async getAllAdminsPaged(paginationParams = DEFAULT_PAGINATION) {
         const params = new URLSearchParams(paginationParams);
-        return await this.makeRequest(`${API_ENDPOINTS.ADMIN.GET_ALL_PAGED}?${params}`);
+        return await this.makeRequest(`${API_ENDPOINTS.ADMIN.GET_PAGED}?${params}`);
     }
 
     async getAdminById(id) {
@@ -350,7 +326,7 @@ class ApiService {
 
     async getAllMedicalRecordsPaged(paginationParams = DEFAULT_PAGINATION) {
         const params = new URLSearchParams(paginationParams);
-        return await this.makeRequest(`${API_ENDPOINTS.MEDICAL_RECORD.GET_ALL_PAGED}?${params}`);
+        return await this.makeRequest(`${API_ENDPOINTS.MEDICAL_RECORD.GET_PAGED}?${params}`);
     }
 
     async getMedicalRecordById(id) {
@@ -384,7 +360,7 @@ class ApiService {
 
     async getAllPrescriptionsPaged(paginationParams = DEFAULT_PAGINATION) {
         const params = new URLSearchParams(paginationParams);
-        return await this.makeRequest(`${API_ENDPOINTS.PRESCRIPTION.GET_ALL_PAGED}?${params}`);
+        return await this.makeRequest(`${API_ENDPOINTS.PRESCRIPTION.GET_PAGED}?${params}`);
     }
 
     async getPrescriptionById(id) {
@@ -418,7 +394,7 @@ class ApiService {
 
     async getAllTestMastersPaged(paginationParams = DEFAULT_PAGINATION) {
         const params = new URLSearchParams(paginationParams);
-        return await this.makeRequest(`${API_ENDPOINTS.TEST_MASTER.GET_ALL_PAGED}?${params}`);
+        return await this.makeRequest(`${API_ENDPOINTS.TEST_MASTER.GET_PAGED}?${params}`);
     }
 
     async getTestMasterById(id) {
@@ -452,7 +428,7 @@ class ApiService {
 
     async getAllRecommendedTestsPaged(paginationParams = DEFAULT_PAGINATION) {
         const params = new URLSearchParams(paginationParams);
-        return await this.makeRequest(`${API_ENDPOINTS.RECOMMENDED_TEST.GET_ALL_PAGED}?${params}`);
+        return await this.makeRequest(`${API_ENDPOINTS.RECOMMENDED_TEST.GET_PAGED}?${params}`);
     }
 
     async getRecommendedTestById(id) {
@@ -486,7 +462,7 @@ class ApiService {
 
     async getAllDosageMastersPaged(paginationParams = DEFAULT_PAGINATION) {
         const params = new URLSearchParams(paginationParams);
-        return await this.makeRequest(`${API_ENDPOINTS.DOSAGE_MASTER.GET_ALL_PAGED}?${params}`);
+        return await this.makeRequest(`${API_ENDPOINTS.DOSAGE_MASTER.GET_PAGED}?${params}`);
     }
 
     async getDosageMasterById(id) {

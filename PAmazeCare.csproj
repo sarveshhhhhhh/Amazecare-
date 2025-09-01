@@ -5,9 +5,9 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
 		<StartupObject>PAmazeCare.Program</StartupObject>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+
 	</PropertyGroup>
 
 	<ItemGroup>

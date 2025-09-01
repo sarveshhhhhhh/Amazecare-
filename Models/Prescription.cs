@@ -1,4 +1,7 @@
-﻿using System;
+using NUnit.Framework;
+using System;
+using System.Reflection;
+using System.Security.AccessControl;
 
 namespace PAmazeCare.Models
 {
@@ -10,7 +13,9 @@ namespace PAmazeCare.Models
         public int DoctorId { get; set; }
 
         public int MedicalRecordId { get; set; }
-        public string MedicineName { get; set; } 
+
+        public int? DosageMasterId { get; set; }   
+
 
 
         public Patient Patient { get; set; }
@@ -20,5 +25,7 @@ namespace PAmazeCare.Models
         public bool IsDeleted { get; set; } = false;
         public string Dosage { get; set; } = string.Empty;
         public DateTime PrescribedDate { get; set; }
+
+        
     }
 }
