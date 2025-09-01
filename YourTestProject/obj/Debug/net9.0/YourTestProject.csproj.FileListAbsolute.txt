@@ -91,6 +91,7 @@ C:\Users\sarve\source\repos\PAmazeCare\YourTestProject\obj\Debug\net9.0\YourTest
 C:\Users\sarve\source\repos\PAmazeCare\YourTestProject\obj\Debug\net9.0\YourTestProject.AssemblyInfoInputs.cache
 C:\Users\sarve\source\repos\PAmazeCare\YourTestProject\obj\Debug\net9.0\YourTestProject.AssemblyInfo.cs
 C:\Users\sarve\source\repos\PAmazeCare\YourTestProject\obj\Debug\net9.0\YourTestProject.csproj.CoreCompileInputs.cache
+C:\Users\sarve\source\repos\PAmazeCare\YourTestProject\obj\Debug\net9.0\YourTestProject.sourcelink.json
 C:\Users\sarve\source\repos\PAmazeCare\YourTestProject\obj\Debug\net9.0\YourTest.2FFD28C1.Up2Date
 C:\Users\sarve\source\repos\PAmazeCare\YourTestProject\obj\Debug\net9.0\YourTestProject.dll
 C:\Users\sarve\source\repos\PAmazeCare\YourTestProject\obj\Debug\net9.0\refint\YourTestProject.dll

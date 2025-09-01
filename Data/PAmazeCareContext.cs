@@ -17,7 +17,6 @@ namespace PAmazeCare.Data
         public DbSet<MedicalRecord> MedicalRecords { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
         public DbSet<RecommendedTest> RecommendedTests { get; set; }
-        public DbSet<RolePermissions> RolePermissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,7 +40,6 @@ namespace PAmazeCare.Data
 
             modelBuilder.Entity<User>().Property(u => u.CreatedAt).HasDefaultValueSql("GETDATE()");
             modelBuilder.Entity<MedicalRecord>().Property(m => m.CreatedAt).HasDefaultValueSql("GETDATE()");
-            modelBuilder.Entity<RolePermissions>().Property(r => r.CreatedAt).HasDefaultValueSql("GETDATE()");
 
             modelBuilder.Entity<TestMaster>().HasQueryFilter(t => !t.IsDeleted);
             modelBuilder.Entity<DosageMaster>().HasQueryFilter(d => !d.IsDeleted);
@@ -72,50 +70,7 @@ namespace PAmazeCare.Data
                 }
             );
 
-            // Seed role permissions
-            var permissions = new List<RolePermissions>();
-            int permissionId = 1;
-
-            foreach (var rolePermission in RolePermissionMatrix.Permissions)
-            {
-                foreach (var permission in rolePermission.Value)
-                {
-                    permissions.Add(new RolePermissions
-                    {
-                        Id = permissionId++,
-                        Role = rolePermission.Key,
-                        Permission = permission,
-                        Description = GetPermissionDescription(permission),
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-                    });
-                }
-            }
-
-            modelBuilder.Entity<RolePermissions>().HasData(permissions);
         }
 
-        private string GetPermissionDescription(string permission)
-        {
-            return permission switch
-            {
-                PermissionConstants.CREATE_SUPER_ADMIN => "Can create Super Administrator accounts",
-                PermissionConstants.CREATE_ADMIN => "Can create Administrator accounts",
-                PermissionConstants.CREATE_DOCTOR => "Can create Doctor accounts",
-                PermissionConstants.CREATE_PATIENT => "Can create Patient accounts",
-                PermissionConstants.MANAGE_ALL_PATIENTS => "Can manage all patient records",
-                PermissionConstants.MANAGE_ASSIGNED_PATIENTS => "Can manage assigned patient records only",
-                PermissionConstants.MANAGE_OWN_DATA => "Can manage own profile and data",
-                PermissionConstants.VIEW_SYSTEM_LOGS => "Can view system audit logs",
-                PermissionConstants.MANAGE_SYSTEM_SETTINGS => "Can modify system settings",
-                PermissionConstants.DELETE_USERS => "Can delete user accounts",
-                PermissionConstants.CREATE_MEDICAL_RECORDS => "Can create medical records",
-                PermissionConstants.VIEW_ALL_MEDICAL_RECORDS => "Can view all medical records",
-                PermissionConstants.VIEW_ASSIGNED_MEDICAL_RECORDS => "Can view assigned medical records only",
-                PermissionConstants.MANAGE_ALL_APPOINTMENTS => "Can manage all appointments",
-                PermissionConstants.MANAGE_ASSIGNED_APPOINTMENTS => "Can manage assigned appointments only",
-                PermissionConstants.BOOK_APPOINTMENTS => "Can book appointments",
-                _ => "Unknown permission"
-            };
-        }
     }
 }

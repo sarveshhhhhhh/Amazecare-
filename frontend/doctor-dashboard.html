@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard - PAmazeCare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .doctor-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .welcome-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        
+        .appointment-list {
+            list-style: none;
+        }
+        
+        .appointment-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .appointment-info h4 {
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+        
+        .appointment-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .appointment-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+        
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .schedule-day {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+        
+        .schedule-day.today {
+            border-color: #667eea;
+            background: #e7f3ff;
+        }
+        
+        .day-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .day-appointments {
+            font-size: 0.8rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <h1>PAmazeCare Doctor</h1>
+        </div>
+        <div class="user-info">
+            <span class="doctor-badge">DOCTOR</span>
+            <span id="userEmail">Loading...</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="welcome-section">
+            <h2>Doctor Dashboard</h2>
+            <p>Manage your appointments, patient records, and medical consultations.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Today's Schedule</h3>
+                <ul id="todayAppointments" class="appointment-list">
+                    <li class="empty-state">Loading today's appointments...</li>
+                </ul>
+                <button class="btn btn-success" onclick="viewFullSchedule()">View Full Schedule</button>
+            </div>
+
+            <div class="card">
+                <h3>Quick Actions</h3>
+                <button class="btn" onclick="viewPatients()">View Patients</button>
+                <button class="btn" onclick="createMedicalRecord()">New Medical Record</button>
+                <button class="btn" onclick="writePrescription()">Write Prescription</button>
+                <button class="btn" onclick="updateProfile()">Update Profile</button>
+            </div>
+
+            <div class="card">
+                <h3>Pending Tasks</h3>
+                <ul id="pendingTasks" class="appointment-list">
+                    <li class="empty-state">Loading pending tasks...</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Recent Patients</h3>
+                <ul id="recentPatients" class="appointment-list">
+                    <li class="empty-state">Loading recent patients...</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 2rem;">
+            <h3>Weekly Schedule Overview</h3>
+            <div class="schedule-grid">
+                <div class="schedule-day">
+                    <div class="day-name">Mon</div>
+                    <div class="day-appointments">0 appointments</div>
+                </div>
+                <div class="schedule-day">
+                    <div class="day-name">Tue</div>
+                    <div class="day-appointments">0 appointments</div>
+                </div>
+                <div class="schedule-day today">
+                    <div class="day-name">Wed</div>
+                    <div class="day-appointments">0 appointments</div>
+                </div>
+                <div class="schedule-day">
+                    <div class="day-name">Thu</div>
+                    <div class="day-appointments">0 appointments</div>
+                </div>
+                <div class="schedule-day">
+                    <div class="day-name">Fri</div>
+                    <div class="day-appointments">0 appointments</div>
+                </div>
+                <div class="schedule-day">
+                    <div class="day-name">Sat</div>
+                    <div class="day-appointments">0 appointments</div>
+                </div>
+                <div class="schedule-day">
+                    <div class="day-name">Sun</div>
+                    <div class="day-appointments">0 appointments</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script>
+        // Check authentication and doctor role
+        function checkAuth() {
+            const token = localStorage.getItem('authToken');
+            const userType = localStorage.getItem('userType');
+            
+            if (!token) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            if (userType && userType.toLowerCase() !== 'doctor') {
+                // Redirect to appropriate dashboard
+                switch (userType.toLowerCase()) {
+                    case 'patient':
+                        window.location.href = 'patient-dashboard.html';
+                        break;
+                    case 'admin':
+                        window.location.href = 'admin-dashboard.html';
+                        break;
+                    default:
+                        window.location.href = 'login.html';
+                }
+                return false;
+            }
+            
+            return true;
+        }
+
+        function displayUserInfo() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const userEmailElement = document.getElementById('userEmail');
+            
+            if (currentUser.email) {
+                userEmailElement.textContent = currentUser.email;
+            } else {
+                userEmailElement.textContent = 'Doctor';
+            }
+        }
+
+        async function loadDashboardData() {
+            try {
+                // Load today's appointments (placeholder)
+                const todayAppointments = document.getElementById('todayAppointments');
+                todayAppointments.innerHTML = '<li class="empty-state">No appointments scheduled for today</li>';
+                
+                // Load pending tasks (placeholder)
+                const pendingTasks = document.getElementById('pendingTasks');
+                pendingTasks.innerHTML = '<li class="empty-state">No pending tasks</li>';
+                
+                // Load recent patients (placeholder)
+                const recentPatients = document.getElementById('recentPatients');
+                recentPatients.innerHTML = '<li class="empty-state">No recent patients</li>';
+                
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userType');
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+
+        // Doctor functions (placeholders)
+        function viewFullSchedule() { alert('Full schedule feature coming soon!'); }
+        function viewPatients() { alert('Patient list feature coming soon!'); }
+        function createMedicalRecord() { alert('Medical record creation feature coming soon!'); }
+        function writePrescription() { alert('Prescription writing feature coming soon!'); }
+        function updateProfile() { alert('Profile update feature coming soon!'); }
+
+        // Initialize dashboard
+        if (checkAuth()) {
+            displayUserInfo();
+            loadDashboardData();
+        }
+    </script>
+</body>
+</html>

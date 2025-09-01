@@ -429,37 +429,6 @@
         }
       }
     },
-    "/api/Auth/register-staff": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PAmazeCare.Models.Auth.RegisterDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PAmazeCare.Models.Auth.RegisterDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PAmazeCare.Models.Auth.RegisterDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Auth/login": {
       "post": {
         "tags": [
@@ -1153,17 +1122,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PAmazeCare.DTOs.PatientDto"
+                "$ref": "#/components/schemas/PAmazeCare.DTOs.CreatePatientDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/PAmazeCare.DTOs.PatientDto"
+                "$ref": "#/components/schemas/PAmazeCare.DTOs.CreatePatientDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/PAmazeCare.DTOs.PatientDto"
+                "$ref": "#/components/schemas/PAmazeCare.DTOs.CreatePatientDto"
               }
             }
           }
@@ -1800,6 +1769,30 @@
         }
       }
     },
+    "/api/User/all": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/User/count": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/WeatherForecast": {
       "get": {
         "tags": [
@@ -1994,6 +1987,44 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PAmazeCare.DTOs.CreatePatientDto": {
+        "required": [
+          "dateOfBirth",
+          "email",
+          "fullName",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "contactNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "maxLength": 100,
+            "minLength": 6,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -2359,15 +2390,20 @@
         "additionalProperties": false
       },
       "PAmazeCare.Models.Auth.LoginDto": {
+        "required": [
+          "email",
+          "password"
+        ],
         "type": "object",
         "properties": {
           "email": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "format": "email"
           },
           "password": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false

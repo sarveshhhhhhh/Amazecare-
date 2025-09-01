@@ -8,13 +8,7 @@ namespace PAmazeCare.Attributes
 {
     public class RoleAuthorizationAttribute : Attribute, IAuthorizationFilter
     {
-        private readonly string[] _requiredPermissions;
         private readonly UserTypeEnum[] _allowedRoles;
-
-        public RoleAuthorizationAttribute(params string[] requiredPermissions)
-        {
-            _requiredPermissions = requiredPermissions;
-        }
 
         public RoleAuthorizationAttribute(params UserTypeEnum[] allowedRoles)
         {
@@ -47,19 +41,6 @@ namespace PAmazeCare.Attributes
                     return;
                 }
             }
-
-            // Check permission-based authorization
-            if (_requiredPermissions != null && _requiredPermissions.Length > 0)
-            {
-                bool hasPermission = _requiredPermissions.Any(permission => 
-                    RolePermissionMatrix.HasPermission(userType, permission));
-
-                if (!hasPermission)
-                {
-                    context.Result = new ForbidResult();
-                    return;
-                }
-            }
         }
     }
 
@@ -79,8 +60,4 @@ namespace PAmazeCare.Attributes
         public DoctorOrAboveAttribute() : base(UserTypeEnum.SuperAdmin, UserTypeEnum.Admin, UserTypeEnum.Doctor) { }
     }
 
-    public class RequirePermissionAttribute : RoleAuthorizationAttribute
-    {
-        public RequirePermissionAttribute(params string[] permissions) : base(permissions) { }
-    }
 }

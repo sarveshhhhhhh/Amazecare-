@@ -2,6 +2,8 @@ C:\Users\sarve\source\repos\PAmazeCare\bin\Debug\net8.0\testhost.dll
 C:\Users\sarve\source\repos\PAmazeCare\bin\Debug\net8.0\testhost.exe
 C:\Users\sarve\source\repos\PAmazeCare\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\sarve\source\repos\PAmazeCare\bin\Debug\net8.0\appsettings.json
+C:\Users\sarve\source\repos\PAmazeCare\bin\Debug\net8.0\YourTestProject\bin\Release\net9.0\YourTestProject.deps.json
+C:\Users\sarve\source\repos\PAmazeCare\bin\Debug\net8.0\YourTestProject\bin\Release\net9.0\YourTestProject.runtimeconfig.json
 C:\Users\sarve\source\repos\PAmazeCare\bin\Debug\net8.0\YourTestProject\obj\project.assets.json
 C:\Users\sarve\source\repos\PAmazeCare\bin\Debug\net8.0\YourTestProject\obj\YourTestProject.csproj.nuget.dgspec.json
 C:\Users\sarve\source\repos\PAmazeCare\bin\Debug\net8.0\PAmazeCare.staticwebassets.endpoints.json
@@ -246,6 +248,7 @@ C:\Users\sarve\source\repos\PAmazeCare\obj\Debug\net8.0\PAmazeCare.GeneratedMSBu
 C:\Users\sarve\source\repos\PAmazeCare\obj\Debug\net8.0\PAmazeCare.csproj.CoreCompileInputs.cache
 C:\Users\sarve\source\repos\PAmazeCare\obj\Debug\net8.0\PAmazeCare.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\sarve\source\repos\PAmazeCare\obj\Debug\net8.0\PAmazeCare.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\sarve\source\repos\PAmazeCare\obj\Debug\net8.0\PAmazeCare.sourcelink.json
 C:\Users\sarve\source\repos\PAmazeCare\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Users\sarve\source\repos\PAmazeCare\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\sarve\source\repos\PAmazeCare\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
@@ -262,4 +265,5 @@ C:\Users\sarve\source\repos\PAmazeCare\obj\Debug\net8.0\PAmazeCare.genruntimecon
 C:\Users\sarve\source\repos\PAmazeCare\obj\Debug\net8.0\ref\PAmazeCare.dll
 C:\Users\sarve\source\repos\PAmazeCare\bin\Debug\net8.0\YourTestProject\bin\Debug\net9.0\YourTestProject.deps.json
 C:\Users\sarve\source\repos\PAmazeCare\bin\Debug\net8.0\YourTestProject\bin\Debug\net9.0\YourTestProject.runtimeconfig.json
+C:\Users\sarve\source\repos\PAmazeCare\bin\Debug\net8.0\YourTestProject\obj\Debug\net9.0\YourTestProject.sourcelink.json
 C:\Users\sarve\source\repos\PAmazeCare\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

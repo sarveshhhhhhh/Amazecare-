@@ -1,4 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Tokens;
 using PAmazeCare.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

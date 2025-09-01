@@ -278,22 +278,6 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "PAmazeCare.Controllers.AuthController",
-    "Method": "RegisterStaff",
-    "RelativePath": "api/Auth/register-staff",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "dto",
-        "Type": "PAmazeCare.Models.Auth.RegisterDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "PAmazeCare.Controllers.DoctorController",
     "Method": "AddDoctor",
     "RelativePath": "api/Doctor",
@@ -633,7 +617,7 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "PAmazeCare.DTOs.PatientDto",
+        "Type": "PAmazeCare.DTOs.CreatePatientDto",
         "IsRequired": true
       }
     ],
@@ -1105,6 +1089,26 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PAmazeCare.Controllers.UserController",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/User/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PAmazeCare.Controllers.UserController",
+    "Method": "GetUserCount",
+    "RelativePath": "api/User/count",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Test Suite - PAmazeCare</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        h1, h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .test-section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 1px solid #e1e5e9;
+            border-radius: 5px;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .test-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        
+        .clear-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>PAmazeCare Authentication Test Suite</h1>
+        <p>Use this page to test all authentication scenarios and edge cases.</p>
+        
+        <div class="test-section">
+            <h2>1. Registration Tests</h2>
+            
+            <div class="form-group">
+                <label for="regFullName">Full Name:</label>
+                <input type="text" id="regFullName" value="Test User">
+            </div>
+            
+            <div class="form-group">
+                <label for="regEmail">Email:</label>
+                <input type="email" id="regEmail" value="test@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="regPassword">Password:</label>
+                <input type="password" id="regPassword" value="password123">
+            </div>
+            
+            <button class="test-button" onclick="testValidRegistration()">Test Valid Registration</button>
+            <button class="test-button" onclick="testDuplicateEmail()">Test Duplicate Email</button>
+            <button class="test-button" onclick="testInvalidEmail()">Test Invalid Email</button>
+            <button class="test-button" onclick="testShortPassword()">Test Short Password</button>
+            <button class="test-button" onclick="testEmptyFields()">Test Empty Fields</button>
+            <button class="clear-btn" onclick="clearResults('regResult')">Clear</button>
+            
+            <div id="regResult" class="test-result" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>2. Login Tests</h2>
+            
+            <div class="form-group">
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" value="test@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" value="password123">
+            </div>
+            
+            <button class="test-button" onclick="testValidLogin()">Test Valid Login</button>
+            <button class="test-button" onclick="testInvalidPassword()">Test Wrong Password</button>
+            <button class="test-button" onclick="testNonexistentUser()">Test Nonexistent User</button>
+            <button class="test-button" onclick="testEmptyLoginFields()">Test Empty Fields</button>
+            <button class="clear-btn" onclick="clearResults('loginResult')">Clear</button>
+            
+            <div id="loginResult" class="test-result" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>3. Authentication State Tests</h2>
+            
+            <button class="test-button" onclick="checkCurrentAuth()">Check Current Auth State</button>
+            <button class="test-button" onclick="testTokenValidation()">Test Token Validation</button>
+            <button class="test-button" onclick="testLogout()">Test Logout</button>
+            <button class="test-button" onclick="testProtectedRoute()">Test Protected Route Access</button>
+            <button class="clear-btn" onclick="clearResults('authResult')">Clear</button>
+            
+            <div id="authResult" class="test-result" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>4. Database Tests</h2>
+            
+            <button class="test-button" onclick="viewAllUsers()">View All Users</button>
+            <button class="test-button" onclick="testEmailCheck()">Test Email Existence Check</button>
+            <button class="clear-btn" onclick="clearResults('dbResult')">Clear</button>
+            
+            <div id="dbResult" class="test-result" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>5. Edge Case Tests</h2>
+            
+            <button class="test-button" onclick="testCaseSensitivity()">Test Email Case Sensitivity</button>
+            <button class="test-button" onclick="testWhitespace()">Test Whitespace Handling</button>
+            <button class="test-button" onclick="testSpecialCharacters()">Test Special Characters</button>
+            <button class="test-button" onclick="testLongInputs()">Test Long Inputs</button>
+            <button class="clear-btn" onclick="clearResults('edgeResult')">Clear</button>
+            
+            <div id="edgeResult" class="test-result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script>
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = `test-result ${type}`;
+            element.textContent = message;
+        }
+        
+        function clearResults(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'none';
+            element.textContent = '';
+        }
+        
+        // Registration Tests
+        async function testValidRegistration() {
+            try {
+                const userData = {
+                    FullName: document.getElementById('regFullName').value,
+                    Email: document.getElementById('regEmail').value,
+                    Password: document.getElementById('regPassword').value,
+                    UserType: "Patient"
+                };
+                
+                const response = await apiService.register(userData);
+                showResult('regResult', `✅ Registration successful!\nResponse: ${JSON.stringify(response, null, 2)}`, 'success');
+            } catch (error) {
+                showResult('regResult', `❌ Registration failed!\nError: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testDuplicateEmail() {
+            try {
+                const userData = {
+                    FullName: "Duplicate User",
+                    Email: document.getElementById('regEmail').value, // Same email
+                    Password: "password123",
+                    UserType: "Patient"
+                };
+                
+                const response = await apiService.register(userData);
+                showResult('regResult', `❌ Expected error but got success!\nResponse: ${JSON.stringify(response, null, 2)}`, 'error');
+            } catch (error) {
+                showResult('regResult', `✅ Correctly rejected duplicate email!\nError: ${error.message}`, 'success');
+            }
+        }
+        
+        async function testInvalidEmail() {
+            try {
+                const userData = {
+                    FullName: "Test User",
+                    Email: "invalid-email",
+                    Password: "password123",
+                    UserType: "Patient"
+                };
+                
+                const response = await apiService.register(userData);
+                showResult('regResult', `❌ Expected validation error but got success!\nResponse: ${JSON.stringify(response, null, 2)}`, 'error');
+            } catch (error) {
+                showResult('regResult', `✅ Correctly rejected invalid email!\nError: ${error.message}`, 'success');
+            }
+        }
+        
+        async function testShortPassword() {
+            try {
+                const userData = {
+                    FullName: "Test User",
+                    Email: "short@example.com",
+                    Password: "123",
+                    UserType: "Patient"
+                };
+                
+                const response = await apiService.register(userData);
+                showResult('regResult', `❌ Expected validation error but got success!\nResponse: ${JSON.stringify(response, null, 2)}`, 'error');
+            } catch (error) {
+                showResult('regResult', `✅ Correctly rejected short password!\nError: ${error.message}`, 'success');
+            }
+        }
+        
+        async function testEmptyFields() {
+            try {
+                const userData = {
+                    FullName: "",
+                    Email: "",
+                    Password: "",
+                    UserType: "Patient"
+                };
+                
+                const response = await apiService.register(userData);
+                showResult('regResult', `❌ Expected validation error but got success!\nResponse: ${JSON.stringify(response, null, 2)}`, 'error');
+            } catch (error) {
+                showResult('regResult', `✅ Correctly rejected empty fields!\nError: ${error.message}`, 'success');
+            }
+        }
+        
+        // Login Tests
+        async function testValidLogin() {
+            try {
+                const credentials = {
+                    email: document.getElementById('loginEmail').value,
+                    password: document.getElementById('loginPassword').value
+                };
+                
+                const response = await apiService.login(credentials);
+                showResult('loginResult', `✅ Login successful!\nToken: ${response.Token ? 'Present' : 'Missing'}\nUserType: ${response.UserType}\nFull Response: ${JSON.stringify(response, null, 2)}`, 'success');
+            } catch (error) {
+                showResult('loginResult', `❌ Login failed!\nError: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testInvalidPassword() {
+            try {
+                const credentials = {
+                    email: document.getElementById('loginEmail').value,
+                    password: "wrongpassword"
+                };
+                
+                const response = await apiService.login(credentials);
+                showResult('loginResult', `❌ Expected authentication error but got success!\nResponse: ${JSON.stringify(response, null, 2)}`, 'error');
+            } catch (error) {
+                showResult('loginResult', `✅ Correctly rejected invalid password!\nError: ${error.message}`, 'success');
+            }
+        }
+        
+        async function testNonexistentUser() {
+            try {
+                const credentials = {
+                    email: "nonexistent@example.com",
+                    password: "password123"
+                };
+                
+                const response = await apiService.login(credentials);
+                showResult('loginResult', `❌ Expected authentication error but got success!\nResponse: ${JSON.stringify(response, null, 2)}`, 'error');
+            } catch (error) {
+                showResult('loginResult', `✅ Correctly rejected nonexistent user!\nError: ${error.message}`, 'success');
+            }
+        }
+        
+        async function testEmptyLoginFields() {
+            try {
+                const credentials = {
+                    email: "",
+                    password: ""
+                };
+                
+                const response = await apiService.login(credentials);
+                showResult('loginResult', `❌ Expected validation error but got success!\nResponse: ${JSON.stringify(response, null, 2)}`, 'error');
+            } catch (error) {
+                showResult('loginResult', `✅ Correctly rejected empty fields!\nError: ${error.message}`, 'success');
+            }
+        }
+        
+        // Authentication State Tests
+        function checkCurrentAuth() {
+            const token = localStorage.getItem('authToken');
+            const userType = localStorage.getItem('userType');
+            const currentUser = localStorage.getItem('currentUser');
+            
+            const authState = {
+                hasToken: !!token,
+                tokenLength: token ? token.length : 0,
+                userType: userType,
+                currentUser: currentUser ? JSON.parse(currentUser) : null
+            };
+            
+            showResult('authResult', `Current Authentication State:\n${JSON.stringify(authState, null, 2)}`, 'info');
+        }
+        
+        function testTokenValidation() {
+            const token = apiService.getAuthToken();
+            const headers = apiService.getHeaders();
+            
+            const tokenInfo = {
+                tokenPresent: !!token,
+                tokenInHeaders: headers.Authorization ? true : false,
+                headerValue: headers.Authorization || 'Not present'
+            };
+            
+            showResult('authResult', `Token Validation:\n${JSON.stringify(tokenInfo, null, 2)}`, 'info');
+        }
+        
+        function testLogout() {
+            // Clear all auth data
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userType');
+            localStorage.removeItem('currentUser');
+            
+            showResult('authResult', `✅ Logout successful!\nAll authentication data cleared from localStorage.`, 'success');
+        }
+        
+        function testProtectedRoute() {
+            const token = localStorage.getItem('authToken');
+            
+            if (!token) {
+                showResult('authResult', `✅ Protected route test passed!\nNo token present - would redirect to login.`, 'success');
+            } else {
+                showResult('authResult', `ℹ️ Token present - protected routes would allow access.\nToken: ${token.substring(0, 20)}...`, 'info');
+            }
+        }
+        
+        // Database Tests
+        async function viewAllUsers() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/Auth/debug/users`);
+                const users = await response.json();
+                
+                showResult('dbResult', `Database Users (${users.length} total):\n${JSON.stringify(users, null, 2)}`, 'info');
+            } catch (error) {
+                showResult('dbResult', `❌ Failed to fetch users!\nError: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testEmailCheck() {
+            const email = document.getElementById('regEmail').value;
+            
+            try {
+                const testDto = {
+                    FullName: "Email Check Test",
+                    Email: email,
+                    Password: "testpassword123",
+                    UserType: "Patient"
+                };
+                
+                const response = await fetch(`${API_BASE_URL}/api/Auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testDto)
+                });
+                
+                const result = await response.text();
+                
+                if (response.ok) {
+                    showResult('dbResult', `✅ Email ${email} is available!\nResponse: ${result}`, 'success');
+                } else {
+                    showResult('dbResult', `ℹ️ Email ${email} already exists.\nResponse: ${result}`, 'info');
+                }
+            } catch (error) {
+                showResult('dbResult', `❌ Email check failed!\nError: ${error.message}`, 'error');
+            }
+        }
+        
+        // Edge Case Tests
+        async function testCaseSensitivity() {
+            const baseEmail = document.getElementById('regEmail').value;
+            const upperEmail = baseEmail.toUpperCase();
+            
+            try {
+                const userData = {
+                    FullName: "Case Test User",
+                    Email: upperEmail,
+                    Password: "password123",
+                    UserType: "Patient"
+                };
+                
+                const response = await apiService.register(userData);
+                showResult('edgeResult', `❌ Case sensitivity test failed!\nUppercase email was accepted: ${upperEmail}`, 'error');
+            } catch (error) {
+                showResult('edgeResult', `✅ Case sensitivity working!\nUppercase email correctly rejected: ${upperEmail}\nError: ${error.message}`, 'success');
+            }
+        }
+        
+        async function testWhitespace() {
+            try {
+                const userData = {
+                    FullName: "  Whitespace User  ",
+                    Email: "  whitespace@example.com  ",
+                    Password: "password123",
+                    UserType: "Patient"
+                };
+                
+                const response = await apiService.register(userData);
+                showResult('edgeResult', `✅ Whitespace handling test!\nEmail with spaces was processed: ${userData.Email}`, 'success');
+            } catch (error) {
+                showResult('edgeResult', `ℹ️ Whitespace test result:\nError: ${error.message}`, 'info');
+            }
+        }
+        
+        async function testSpecialCharacters() {
+            try {
+                const userData = {
+                    FullName: "Special User!@#",
+                    Email: "special+test@example.com",
+                    Password: "password123!@#",
+                    UserType: "Patient"
+                };
+                
+                const response = await apiService.register(userData);
+                showResult('edgeResult', `✅ Special characters accepted!\nEmail: ${userData.Email}`, 'success');
+            } catch (error) {
+                showResult('edgeResult', `ℹ️ Special characters test:\nError: ${error.message}`, 'info');
+            }
+        }
+        
+        async function testLongInputs() {
+            const longName = "A".repeat(150);
+            const longEmail = "a".repeat(100) + "@example.com";
+            const longPassword = "a".repeat(200);
+            
+            try {
+                const userData = {
+                    FullName: longName,
+                    Email: longEmail,
+                    Password: longPassword,
+                    UserType: "Patient"
+                };
+                
+                const response = await apiService.register(userData);
+                showResult('edgeResult', `❌ Long inputs were accepted unexpectedly!`, 'error');
+            } catch (error) {
+                showResult('edgeResult', `✅ Long inputs correctly rejected!\nName length: ${longName.length}\nEmail length: ${longEmail.length}\nPassword length: ${longPassword.length}\nError: ${error.message}`, 'success');
+            }
+        }
+    </script>
+</body>
+</html>

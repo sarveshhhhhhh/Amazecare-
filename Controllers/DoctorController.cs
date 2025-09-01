@@ -51,7 +51,7 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpPost]
-        [RequirePermission(PermissionConstants.CREATE_DOCTOR)]
+        [AdminOrAbove]
         public async Task<IActionResult> AddDoctor([FromBody] DoctorDto dto)
         {
             if (!ModelState.IsValid)

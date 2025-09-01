@@ -113,7 +113,7 @@ namespace PAmazeCare.Services.Implementations
 
 
 
-        public async Task<int> AddPatientAsync(PatientDto dto)
+        public async Task<int> AddPatientAsync(CreatePatientDto dto)
         {
             try
             {
@@ -145,7 +145,7 @@ namespace PAmazeCare.Services.Implementations
                     FullName = dto.FullName,
                     Email = dto.Email,
                     ContactNumber = dto.ContactNumber,
-                    DateOfBirth = dto.DateOfBirth.Value
+                    DateOfBirth = dto.DateOfBirth
                 };
 
                 _context.Patients.Add(patient);
@@ -181,7 +181,7 @@ namespace PAmazeCare.Services.Implementations
                 patient.ContactNumber = dto.ContactNumber ?? string.Empty;
 
                 if (dto.DateOfBirth.HasValue)
-                    patient.DateOfBirth = dto.DateOfBirth.Value;
+                    patient.DateOfBirth = dto.DateOfBirth;
 
                 // Only update UserId if it's provided and valid
                 if (dto.UserId.HasValue && dto.UserId.Value != patient.UserId)

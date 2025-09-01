@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Debug - PAmazeCare</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
+        .section { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        .result { margin-top: 15px; padding: 10px; border-radius: 4px; background-color: #f8f9fa; border: 1px solid #dee2e6; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <h1>PAmazeCare Database Debug</h1>
+    
+    <div class="section">
+        <h2>Check Existing Users</h2>
+        <button onclick="checkUsers()">Get All Users</button>
+        <div id="usersResult" class="result"></div>
+    </div>
+
+    <div class="section">
+        <h2>Test Email Check</h2>
+        <input type="email" id="testEmail" placeholder="Enter email to check" style="padding: 10px; width: 300px;">
+        <button onclick="checkEmail()">Check Email Exists</button>
+        <div id="emailResult" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5120';
+        
+        async function checkUsers() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/Auth/debug/users`);
+                const users = await response.json();
+                
+                let html = '<h3>Existing Users:</h3>';
+                if (users.length === 0) {
+                    html += '<p>No users found in database.</p>';
+                } else {
+                    html += '<table><tr><th>ID</th><th>Full Name</th><th>Email</th><th>User Type</th><th>Created At</th></tr>';
+                    users.forEach(user => {
+                        html += `<tr>
+                            <td>${user.id}</td>
+                            <td>${user.fullName}</td>
+                            <td>${user.email}</td>
+                            <td>${user.userType}</td>
+                            <td>${new Date(user.createdAt).toLocaleString()}</td>
+                        </tr>`;
+                    });
+                    html += '</table>';
+                }
+                
+                document.getElementById('usersResult').innerHTML = html;
+            } catch (error) {
+                document.getElementById('usersResult').innerHTML = `<strong>Error:</strong> ${error.message}`;
+            }
+        }
+        
+        async function checkEmail() {
+            const email = document.getElementById('testEmail').value;
+            if (!email) {
+                alert('Please enter an email to check');
+                return;
+            }
+            
+            try {
+                // Test registration with this email to see the exact error
+                const testDto = {
+                    FullName: "Test User",
+                    Email: email,
+                    Password: "testpassword123",
+                    UserType: "Patient"
+                };
+                
+                const response = await fetch(`${API_BASE_URL}/api/Auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testDto)
+                });
+                
+                const result = await response.text();
+                const resultDiv = document.getElementById('emailResult');
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `<strong>Success:</strong> Email ${email} is available and registration worked!`;
+                } else {
+                    resultDiv.innerHTML = `<strong>Error ${response.status}:</strong> ${result}`;
+                }
+            } catch (error) {
+                document.getElementById('emailResult').innerHTML = `<strong>Network Error:</strong> ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

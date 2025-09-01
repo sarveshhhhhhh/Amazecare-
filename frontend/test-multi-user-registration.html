@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Multi-User Registration</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        button { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .result { margin-top: 15px; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        input, select { padding: 8px; margin: 5px; width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>Test Multi-User Type Registration</h1>
+    
+    <div class="test-section">
+        <h3>Quick Test All User Types</h3>
+        <button onclick="testPatientRegistration()">Test Patient Registration</button>
+        <button onclick="testDoctorRegistration()">Test Doctor Registration</button>
+        <button onclick="testAdminRegistration()">Test Admin Registration</button>
+        <div id="quickResult" class="result" style="display: none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Custom Registration Test</h3>
+        <input type="text" id="customName" placeholder="Full Name" value="Custom User">
+        <input type="email" id="customEmail" placeholder="Email" value="">
+        <input type="password" id="customPassword" placeholder="Password" value="password123">
+        <select id="customUserType">
+            <option value="Patient">Patient</option>
+            <option value="Doctor">Doctor</option>
+            <option value="Admin">Admin</option>
+        </select>
+        <button onclick="generateUniqueEmail()">Generate Unique Email</button>
+        <button onclick="testCustomRegistration()">Test Registration</button>
+        <div id="customResult" class="result" style="display: none;"></div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script>
+        function generateUniqueEmail() {
+            const timestamp = Date.now();
+            document.getElementById('customEmail').value = `user${timestamp}@example.com`;
+        }
+        
+        // Auto-generate on load
+        generateUniqueEmail();
+        
+        async function testRegistration(userType, name, email, password, resultId) {
+            try {
+                const userData = {
+                    FullName: name,
+                    Email: email,
+                    Password: password,
+                    UserType: userType
+                };
+                
+                console.log(`Testing ${userType} registration:`, userData);
+                const response = await apiService.register(userData);
+                
+                document.getElementById(resultId).innerHTML = `
+                    <div class="success">
+                        ✅ SUCCESS: ${userType} registration worked!<br>
+                        Email: ${email}<br>
+                        Response: ${JSON.stringify(response)}
+                    </div>`;
+                document.getElementById(resultId).style.display = 'block';
+                    
+            } catch (error) {
+                document.getElementById(resultId).innerHTML = `
+                    <div class="error">
+                        ❌ FAILED: ${userType} registration failed<br>
+                        Email: ${email}<br>
+                        Error: ${error.message}
+                    </div>`;
+                document.getElementById(resultId).style.display = 'block';
+            }
+        }
+        
+        async function testPatientRegistration() {
+            const timestamp = Date.now();
+            await testRegistration('Patient', `Patient User ${timestamp}`, `patient${timestamp}@example.com`, 'password123', 'quickResult');
+        }
+        
+        async function testDoctorRegistration() {
+            const timestamp = Date.now();
+            await testRegistration('Doctor', `Dr. Smith ${timestamp}`, `doctor${timestamp}@example.com`, 'password123', 'quickResult');
+        }
+        
+        async function testAdminRegistration() {
+            const timestamp = Date.now();
+            await testRegistration('Admin', `Admin User ${timestamp}`, `admin${timestamp}@example.com`, 'password123', 'quickResult');
+        }
+        
+        async function testCustomRegistration() {
+            const name = document.getElementById('customName').value;
+            const email = document.getElementById('customEmail').value;
+            const password = document.getElementById('customPassword').value;
+            const userType = document.getElementById('customUserType').value;
+            
+            await testRegistration(userType, name, email, password, 'customResult');
+        }
+    </script>
+</body>
+</html>

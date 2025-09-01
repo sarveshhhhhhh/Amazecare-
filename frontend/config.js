@@ -1,7 +1,7 @@
 // API Configuration for PAmazeCare Hospital Management System - API Configuration
 
 // Base API URL - Update this to match your backend server
-const API_BASE_URL = 'http://localhost:5120';
+const API_BASE_URL = 'http://localhost:5123';
 
 // API Endpoints Configuration
 const API_ENDPOINTS = {
@@ -95,7 +95,7 @@ const API_ENDPOINTS = {
     // Dosage Master endpoints
     DOSAGE_MASTER: {
         GET_ALL: `${API_BASE_URL}/api/DosageMaster`,
-        GET_PAGED: `${API_BASE_URL}/api/DosageMaster/paged`,
+        GET_ALL_PAGED: `${API_BASE_URL}/api/DosageMaster/paged`,
         GET_BY_ID: (id) => `${API_BASE_URL}/api/DosageMaster/${id}`,
         CREATE: `${API_BASE_URL}/api/DosageMaster`,
         UPDATE: (id) => `${API_BASE_URL}/api/DosageMaster/${id}`,

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Database Connection & Registration</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        button { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .result { margin-top: 15px; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        input, select { padding: 8px; margin: 5px; width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>Database Connection & Registration Test</h1>
+    
+    <div class="test-section">
+        <h3>1. Check Current Users in Database</h3>
+        <button onclick="checkUsers()">View All Users</button>
+        <div id="usersResult" class="result" style="display: none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. Test Registration with Database Verification</h3>
+        <input type="text" id="testName" placeholder="Full Name" value="Test User">
+        <input type="email" id="testEmail" placeholder="Email" value="">
+        <input type="password" id="testPassword" placeholder="Password" value="password123">
+        <select id="testUserType">
+            <option value="Patient">Patient</option>
+            <option value="Doctor">Doctor</option>
+            <option value="Admin">Admin</option>
+        </select>
+        <br>
+        <button onclick="generateUniqueEmail()">Generate Unique Email</button>
+        <button onclick="testRegistrationAndVerify()">Register & Verify in DB</button>
+        <div id="registrationResult" class="result" style="display: none;"></div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script>
+        function generateUniqueEmail() {
+            const timestamp = Date.now();
+            document.getElementById('testEmail').value = `testuser${timestamp}@example.com`;
+        }
+        
+        // Auto-generate on load
+        generateUniqueEmail();
+        
+        async function checkUsers() {
+            try {
+                const response = await fetch('http://localhost:5120/api/User/all', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const users = await response.json();
+                    let tableHtml = `
+                        <div class="info">
+                            <strong>Total Users Found: ${users.length}</strong>
+                            <table>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>User Type</th>
+                                    <th>Role</th>
+                                    <th>Created At</th>
+                                </tr>`;
+                    
+                    users.forEach(user => {
+                        tableHtml += `
+                            <tr>
+                                <td>${user.id}</td>
+                                <td>${user.fullName}</td>
+                                <td>${user.email}</td>
+                                <td>${user.userType}</td>
+                                <td>${user.role}</td>
+                                <td>${new Date(user.createdAt).toLocaleString()}</td>
+                            </tr>`;
+                    });
+                    
+                    tableHtml += '</table></div>';
+                    document.getElementById('usersResult').innerHTML = tableHtml;
+                } else {
+                    document.getElementById('usersResult').innerHTML = `
+                        <div class="error">
+                            Failed to fetch users. Status: ${response.status}<br>
+                            This might mean the User controller doesn't have a 'all' endpoint.
+                        </div>`;
+                }
+                
+                document.getElementById('usersResult').style.display = 'block';
+                
+            } catch (error) {
+                document.getElementById('usersResult').innerHTML = `
+                    <div class="error">
+                        Error fetching users: ${error.message}<br>
+                        Make sure the backend is running on localhost:5120
+                    </div>`;
+                document.getElementById('usersResult').style.display = 'block';
+            }
+        }
+        
+        async function testRegistrationAndVerify() {
+            const name = document.getElementById('testName').value;
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            const userType = document.getElementById('testUserType').value;
+            
+            try {
+                // Step 1: Get user count before registration
+                const beforeResponse = await fetch('http://localhost:5120/api/User/all');
+                const beforeUsers = beforeResponse.ok ? await beforeResponse.json() : [];
+                const beforeCount = beforeUsers.length;
+                
+                // Step 2: Register new user
+                const userData = {
+                    FullName: name,
+                    Email: email,
+                    Password: password,
+                    UserType: userType
+                };
+                
+                console.log('Registering user:', userData);
+                const registerResponse = await apiService.register(userData);
+                
+                // Step 3: Get user count after registration
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+                const afterResponse = await fetch('http://localhost:5120/api/User/all');
+                const afterUsers = afterResponse.ok ? await afterResponse.json() : [];
+                const afterCount = afterUsers.length;
+                
+                // Step 4: Check if new user was added
+                const newUser = afterUsers.find(u => u.email === email.toLowerCase());
+                
+                let resultHtml = `
+                    <div class="success">
+                        ✅ Registration API Success: ${JSON.stringify(registerResponse)}<br>
+                        Users before: ${beforeCount}<br>
+                        Users after: ${afterCount}<br>
+                        User count increased: ${afterCount > beforeCount ? 'YES' : 'NO'}<br>
+                `;
+                
+                if (newUser) {
+                    resultHtml += `
+                        <br><strong>✅ User found in database:</strong><br>
+                        ID: ${newUser.id}<br>
+                        Name: ${newUser.fullName}<br>
+                        Email: ${newUser.email}<br>
+                        Type: ${newUser.userType}<br>
+                        Role: ${newUser.role}<br>
+                        Created: ${new Date(newUser.createdAt).toLocaleString()}
+                    `;
+                } else {
+                    resultHtml += '<br><strong>❌ User NOT found in database!</strong>';
+                }
+                
+                resultHtml += '</div>';
+                document.getElementById('registrationResult').innerHTML = resultHtml;
+                
+            } catch (error) {
+                document.getElementById('registrationResult').innerHTML = `
+                    <div class="error">
+                        ❌ Registration failed: ${error.message}
+                    </div>`;
+            }
+            
+            document.getElementById('registrationResult').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

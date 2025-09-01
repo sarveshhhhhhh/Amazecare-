@@ -64,6 +64,14 @@ namespace PAmazeCare
             {
                 options.AddPolicy("AllowFrontend", policy =>
                 {
+                    policy.WithOrigins("http://localhost:8080", "http://127.0.0.1:8080", "http://localhost:3000", "http://127.0.0.1:3000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+                
+                options.AddPolicy("AllowAll", policy =>
+                {
                     policy.AllowAnyOrigin()
                           .AllowAnyHeader()
                           .AllowAnyMethod();
@@ -111,7 +119,7 @@ namespace PAmazeCare
             });
 
             app.UseHttpsRedirection();
-            app.UseCors("AllowFrontend");
+            app.UseCors("AllowAll");
 
             app.UseAuthentication();
             app.UseAuthorization();

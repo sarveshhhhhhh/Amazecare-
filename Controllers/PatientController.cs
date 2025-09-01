@@ -19,7 +19,7 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpGet("paged")]
-        [RequirePermission(PermissionConstants.MANAGE_ALL_PATIENTS)]
+        [AdminOrAbove]
         public async Task<IActionResult> GetAllPatients([FromQuery] PaginationParams paginationParams)
         {
             if (!ModelState.IsValid)
@@ -49,11 +49,11 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpPost]
-        [RequirePermission(PermissionConstants.CREATE_PATIENT)]
+        [DoctorOrAbove]
         [ProducesResponseType(typeof(PatientDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddPatient([FromBody] PatientDto dto)
+        public async Task<IActionResult> AddPatient([FromBody] CreatePatientDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -61,8 +61,8 @@ namespace PAmazeCare.Controllers
             try
             {
                 var patientId = await _patientService.AddPatientAsync(dto);
-                dto.Id = patientId;
-                return CreatedAtAction(nameof(GetPatientById), new { id = patientId }, dto);
+                var createdPatient = await _patientService.GetPatientByIdAsync(patientId);
+                return CreatedAtAction(nameof(GetPatientById), new { id = patientId }, createdPatient);
             }
             catch (InvalidOperationException ex)
             {
@@ -71,7 +71,7 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpPut("{id}")]
-        [RequirePermission(PermissionConstants.MANAGE_ALL_PATIENTS, PermissionConstants.MANAGE_ASSIGNED_PATIENTS)]
+        [DoctorOrAbove]
         public async Task<IActionResult> UpdatePatient(int id, [FromBody] PatientDto dto)
         {
             if (!ModelState.IsValid)

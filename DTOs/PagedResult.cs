@@ -1,4 +1,6 @@
-﻿namespace PAmazeCare.DTOs
+using System.Collections.Generic;
+
+namespace PAmazeCare.DTOs
 {
     public class PagedResult<T>
     {

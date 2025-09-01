@@ -63,12 +63,15 @@ class PAmazeCareApp {
 
             const response = await apiService.login(loginDto);
             
-            if (response && response.token) {
-                localStorage.setItem('authToken', response.token);
+            if (response && (response.Token || response.token)) {
+                const token = response.Token || response.token;
+                const userType = response.UserType || response.userType || 'Patient';
+                
+                localStorage.setItem('authToken', token);
                 const user = {
                     email: loginDto.email,
-                    userType: response.userType || 'Patient',
-                    token: response.token
+                    userType: userType,
+                    token: token
                 };
                 
                 localStorage.setItem('currentUser', JSON.stringify(user));
@@ -95,18 +98,55 @@ class PAmazeCareApp {
         try {
             const formData = new FormData(event.target);
             const registerDto = {
-                fullName: formData.get('fullName'),
-                email: formData.get('email'),
-                password: formData.get('password'),
-                userType: formData.get('userType')
+                FullName: formData.get('fullName'),
+                Email: formData.get('email'),
+                Password: formData.get('password'),
+                UserType: formData.get('userType') || "Patient"
             };
 
-            await apiService.register(registerDto);
+            // Client-side validation
+            if (!registerDto.FullName || registerDto.FullName.trim().length === 0) {
+                this.showNotification('Full name is required.', 'error');
+                return;
+            }
+            if (!registerDto.Email || registerDto.Email.trim().length === 0) {
+                this.showNotification('Email is required.', 'error');
+                return;
+            }
+            if (!registerDto.Password || registerDto.Password.length < 6) {
+                this.showNotification('Password must be at least 6 characters long.', 'error');
+                return;
+            }
+
+            console.log('Registration data:', registerDto);
+            const response = await apiService.register(registerDto);
+            console.log('Registration response:', response);
+            
             this.showNotification('Registration successful! Please login.', 'success');
             this.showLogin();
         } catch (error) {
             console.error('Registration error:', error);
-            this.showNotification('Registration failed. Please try again.', 'error');
+            let errorMessage = 'Registration failed. Please try again.';
+            
+            // Parse error response for specific validation messages
+            try {
+                const errorData = JSON.parse(error.message);
+                if (errorData.Message) {
+                    errorMessage = errorData.Message;
+                } else if (errorData.Errors && Array.isArray(errorData.Errors)) {
+                    errorMessage = errorData.Errors.join(', ');
+                }
+            } catch (parseError) {
+                if (error.message.includes('Password must be between 6 and 100 characters')) {
+                    errorMessage = 'Password must be at least 6 characters long.';
+                } else if (error.message.includes('Email may already exist')) {
+                    errorMessage = 'Email already exists. Please use a different email.';
+                } else if (error.message.includes('400')) {
+                    errorMessage = 'Invalid registration data. Please check all fields and ensure password is at least 6 characters.';
+                }
+            }
+            
+            this.showNotification(errorMessage, 'error');
         } finally {
             this.showLoading(false);
         }
@@ -868,11 +908,10 @@ class PAmazeCareApp {
                 </div>
             `;
             this.showModal(modalHtml);
+            this.showLoading(false);
         } catch (error) {
             console.error('Error loading appointment form:', error);
             this.showNotification('Error loading appointment form', 'error');
-        } finally {
-            this.showLoading(false);
         }
     }
 
@@ -1256,193 +1295,85 @@ function showAddAdmin() { app.showAddAdmin(); }
 let app;
 document.addEventListener('DOMContentLoaded', () => {
     app = new PAmazeCareApp();
-    function logout() { app.logout(); }
 });
 
-            // Load patients and doctors for dropdowns
-            const [patients, doctors] = await Promise.all([
-                apiService.getAllPatients(),
-                apiService.getAllDoctors()
-            ]);
-
-            const modalHtml = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <h2>Book New Appointment</h2>
-                        <button class="modal-close" onclick="app.closeModal()">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="addAppointmentForm">
-                            <div class="form-group">
-                                <label for="appointmentPatient">Patient</label>
-                                <select id="appointmentPatient" name="patientId" required>
-                                    <option value="">Select Patient</option>
-                                    ${patients.map(patient => `<option value="${patient.id}">${patient.fullName || patient.email}</option>`).join('')}
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="appointmentDoctor">Doctor</label>
-                                <select id="appointmentDoctor" name="doctorId" required>
-                                    <option value="">Select Doctor</option>
-                                    ${doctors.map(doctor => `<option value="${doctor.id}">${doctor.fullName || doctor.email} - ${doctor.specialty || 'General'}</option>`).join('')}
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="appointmentDate">Date</label>
-                                <input type="date" id="appointmentDate" name="appointmentDate" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="appointmentTime">Time</label>
-                                <input type="time" id="appointmentTime" name="appointmentTime" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="appointmentReason">Reason</label>
-                                <textarea id="appointmentReason" name="reason" rows="3" placeholder="Reason for appointment"></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="app.closeModal()">Cancel</button>
-                        <button class="btn btn-primary" onclick="app.saveAppointment()">Book Appointment</button>
-                    </div>
-                </div>
-            `;
-            this.showModal(modalHtml);
-        } catch (error) {
-            console.error('Error loading appointment form data:', error);
-            this.showNotification('Error loading form data', 'error');
-        }
-    }
-
-    async saveAppointment() {
-        try {
-            const form = document.getElementById('addAppointmentForm');
-            const formData = new FormData(form);
-            
-            const appointmentDto = {
-                patientId: parseInt(formData.get('patientId')),
-                doctorId: parseInt(formData.get('doctorId')),
-                appointmentDate: formData.get('appointmentDate'),
-                appointmentTime: formData.get('appointmentTime'),
-                reason: formData.get('reason'),
-                status: 'Scheduled'
-            };
-
-            await apiService.createAppointment(appointmentDto);
-            this.showNotification('Appointment booked successfully!', 'success');
-            this.closeModal();
-            await this.loadAppointmentsData();
-        } catch (error) {
-            console.error('Error saving appointment:', error);
-            this.showNotification('Error booking appointment', 'error');
-        }
-    }
-
-    async viewAppointment(id) {
-        try {
-            const appointment = await apiService.getAppointmentById(id);
-            const modalHtml = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <h2>Appointment Details</h2>
-                        <button class="modal-close" onclick="app.closeModal()">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="appointment-details">
-                            <p><strong>ID:</strong> ${appointment.id}</p>
-                            <p><strong>Patient:</strong> ${appointment.patientName || appointment.patientId || 'N/A'}</p>
-                            <p><strong>Doctor:</strong> ${appointment.doctorName || appointment.doctorId || 'N/A'}</p>
-                            <p><strong>Date:</strong> ${appointment.appointmentDate ? new Date(appointment.appointmentDate).toLocaleDateString() : 'N/A'}</p>
-                            <p><strong>Time:</strong> ${appointment.appointmentTime || 'N/A'}</p>
-                            <p><strong>Status:</strong> ${appointment.status || 'Pending'}</p>
-                            <p><strong>Reason:</strong> ${appointment.reason || 'N/A'}</p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="app.closeModal()">Close</button>
-                        <button class="btn btn-warning" onclick="app.cancelAppointment(${appointment.id})">Cancel Appointment</button>
-                    </div>
-                </div>
-            `;
-            this.showModal(modalHtml);
-        } catch (error) {
-            console.error('Error viewing appointment:', error);
-            this.showNotification('Error loading appointment details', 'error');
-        }
-    }
-
-    async cancelAppointment(id) {
-        if (!confirm('Are you sure you want to cancel this appointment?')) return;
-
-        try {
-            await apiService.cancelAppointment(id);
-            this.showNotification('Appointment cancelled successfully!', 'success');
-            await this.loadAppointmentsData();
-        } catch (error) {
-            console.error('Error cancelling appointment:', error);
-            this.showNotification('Error cancelling appointment', 'error');
-        }
-    }
-
-    // ==================== OTHER MODULES ====================
-    async showMedicalRecords() {
-        this.showView('medicalRecords');
-        this.showNotification('Medical Records module loaded', 'info');
-    }
-
-    async showPrescriptions() {
-        this.showView('prescriptions');
-        this.showNotification('Prescriptions module loaded', 'info');
-    }
-
-    async showTests() {
-        this.showView('tests');
-        this.showNotification('Tests module loaded', 'info');
-    }
-
-    async showDosage() {
-        this.showView('dosage');
-        this.showNotification('Dosage Master module loaded', 'info');
-    }
-
-    async showAdmins() {
-        this.showView('admins');
-        this.showNotification('Administrators module loaded', 'info');
-    }
-
-    showProfile() {
-        this.showNotification('Profile management - Coming soon!', 'info');
-    }
-
-    showSettings() {
-        this.showNotification('Settings - Coming soon!', 'info');
-    }
-
-    // ==================== EVENT LISTENERS ====================
-    setupEventListeners() {
-        const loginForm = document.getElementById('loginForm');
-        if (loginForm) {
-            loginForm.addEventListener('submit', (e) => this.handleLogin(e));
-        }
-
-        const registerForm = document.getElementById('registerForm');
-        if (registerForm) {
-            registerForm.addEventListener('submit', (e) => this.handleRegister(e));
-        }
-
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-container')) {
-                this.closeModal();
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closeModal();
-            }
-        });
+// Global function definitions
+function logout() { app.logout(); }
+function showLogin() { app.showLogin(); }
+function showRegister() { app.showRegister(); }
+function showDashboard() { app.showDashboard(); }
+function showPatients() { app.showPatients(); }
+function showDoctors() { app.showDoctors(); }
+function showAppointments() { app.showAppointments(); }
+function showMedicalRecords() { app.showMedicalRecords(); }
+function showPrescriptions() { app.showPrescriptions(); }
+function showTests() { app.showTests(); }
+function showDosage() { app.showDosage(); }
+function showAdmins() { app.showAdmins(); }
+function showProfile() { app.showProfile(); }
+function showSettings() { app.showSettings(); }
+function showAddPatient() { app.showAddPatient(); }
+function showAddDoctor() { app.showAddDoctor(); }
+function showAddAppointment() { app.showAddAppointment(); }
+function showAddPrescription() { app.showAddPrescription(); }
+function showAddMedicalRecord() { app.showAddMedicalRecord(); }
+function showAddTest() { app.showAddTest(); }
+function showAddDosage() { app.showAddDosage(); }
+function showAddAdmin() { app.showAddAdmin(); }
+function toggleUserMenu() { app.toggleUserMenu(); }
+function togglePassword() { 
+    const passwordInput = document.getElementById('password');
+    const toggleBtn = passwordInput.nextElementSibling;
+    const icon = toggleBtn.querySelector('i');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
     }
 }
+function toggleRegisterPassword() {
+    const passwordInput = document.getElementById('regPassword');
+    const toggleBtn = passwordInput.nextElementSibling;
+    const icon = toggleBtn.querySelector('i');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+
+// End of PAmazeCareApp class
+
+// Global function definitions
+function logout() { if (app) app.logout(); }
+function showLogin() { if (app) app.showLogin(); }
+function showRegister() { if (app) app.showRegister(); }
+function showDashboard() { if (app) app.showDashboard(); }
+function showPatients() { if (app) app.showPatients(); }
+function showDoctors() { if (app) app.showDoctors(); }
+function showAppointments() { if (app) app.showAppointments(); }
+function showMedicalRecords() { if (app) app.showMedicalRecords(); }
+function showPrescriptions() { if (app) app.showPrescriptions(); }
+function showTests() { if (app) app.showTests(); }
+function showDosage() { if (app) app.showDosage(); }
+function showAdmins() { if (app) app.showAdmins(); }
+function showProfile() { if (app) app.showProfile(); }
+function showSettings() { if (app) app.showSettings(); }
+function showAddPatient() { if (app) app.showAddPatient(); }
+function showAddDoctor() { if (app) app.showAddDoctor(); }
+function showAddAppointment() { if (app) app.showAddAppointment(); }
+function showAddPrescription() { if (app) app.showAddPrescription(); }
+function showAddMedicalRecord() { if (app) app.showAddMedicalRecord(); }
+function showAddTest() { if (app) app.showAddTest(); }
+function showAddDosage() { if (app) app.showAddDosage(); }
+function showAddAdmin() { if (app) app.showAddAdmin(); }
+function toggleUserMenu() { if (app) app.toggleUserMenu(); }
 
 // ==================== GLOBAL FUNCTIONS ====================
 function togglePassword() {
@@ -1489,12 +1420,5 @@ function showPrescriptions() { app.showPrescriptions(); }
 function showTests() { app.showTests(); }
 function showDosage() { app.showDosage(); }
 function showAdmins() { app.showAdmins(); }
-function showProfile() { app.showProfile(); }
-function showSettings() { app.showSettings(); }
-function logout() { app.logout(); }
-
-// Initialize the application
-let app;
-document.addEventListener('DOMContentLoaded', () => {
-    app = new PAmazeCareApp();
-});
+function showProfile() { if (app) app.showProfile(); }
+function showSettings() { if (app) app.showSettings(); }

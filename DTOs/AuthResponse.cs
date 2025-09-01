@@ -1,4 +1,4 @@
-﻿namespace PAmazeCare.DTOs
+namespace PAmazeCare.DTOs
 {
     public class AuthResponse
     {
