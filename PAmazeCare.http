@@ -1,0 +1,6 @@
+@PAmazeCare_HostAddress = http://localhost:5120
+
+GET {{PAmazeCare_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

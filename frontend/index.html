@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAmazeCare - Hospital Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="page active">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="logo">
+                        <i class="fas fa-heartbeat"></i>
+                        <h1>PAmazeCare</h1>
+                    </div>
+                    <p>Hospital Management System</p>
+                </div>
+                
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="email" name="email" required placeholder="Enter your email">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" required placeholder="Enter your password">
+                            <button type="button" class="password-toggle" onclick="togglePassword()">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In
+                    </button>
+                </form>
+                
+                <div class="login-footer">
+                    <p>Don't have an account? <a href="#" onclick="showRegister()">Register here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="registerPage" class="page">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="logo">
+                        <i class="fas fa-heartbeat"></i>
+                        <h1>PAmazeCare</h1>
+                    </div>
+                    <p>Create New Account</p>
+                </div>
+                
+                <form id="registerForm" class="login-form">
+                    <div class="form-group">
+                        <label for="regFullName">Full Name</label>
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="regFullName" name="fullName" required placeholder="Enter your full name">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="regEmail">Email Address</label>
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="regEmail" name="email" required placeholder="Enter your email">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="regPassword">Password</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="regPassword" name="password" required placeholder="Enter your password">
+                            <button type="button" class="password-toggle" onclick="toggleRegisterPassword()">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden field - all public registrations are patients -->
+                    <input type="hidden" id="userType" name="userType" value="Patient">
+                    
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-user-plus"></i>
+                        Create Account
+                    </button>
+                </form>
+                
+                <div class="login-footer">
+                    <p>Already have an account? <a href="#" onclick="showLogin()">Sign in here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Admin Dashboard Page -->
+    <div id="dashboardPage" class="page">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>PAmazeCare Admin</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <span id="userName">Welcome Admin</span>
+                    <div class="user-dropdown">
+                        <button class="user-btn" onclick="toggleUserMenu()">
+                            <i class="fas fa-user-circle"></i>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" id="userMenu">
+                            <a href="#" onclick="showProfile()"><i class="fas fa-user"></i> Profile</a>
+                            <a href="#" onclick="showSettings()"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <ul>
+                    <li class="nav-item active">
+                        <a href="#" onclick="showDashboard()" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item expandable" id="patientsNav">
+                        <a href="#" onclick="togglePatientManagement()" class="nav-link">
+                            <div style="display: flex; align-items: center;">
+                                <i class="fas fa-users"></i>
+                                <span>Patient Management</span>
+                            </div>
+                            <i class="fas fa-chevron-down expand-icon"></i>
+                        </a>
+                        <ul class="sub-menu" id="patientSubMenu">
+                            <li><a href="#" onclick="showAddPatient()" class="sub-nav-link"><i class="fas fa-user-plus"></i>Add Patient</a></li>
+                            <li><a href="#" onclick="showAllPatients()" class="sub-nav-link"><i class="fas fa-users"></i>View All Patients</a></li>
+                            <li><a href="#" onclick="showGetPatientById()" class="sub-nav-link"><i class="fas fa-search"></i>Get Patient by ID</a></li>
+                            <li><a href="#" onclick="deletePatientById()" class="sub-nav-link"><i class="fas fa-user-times"></i>Delete Patient</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item expandable" id="doctorsNav">
+                        <a href="#" onclick="toggleDoctorManagement()" class="nav-link">
+                            <div style="display: flex; align-items: center;">
+                                <i class="fas fa-user-md"></i>
+                                <span>Doctor Management</span>
+                            </div>
+                            <i class="fas fa-chevron-down expand-icon"></i>
+                        </a>
+                        <ul class="sub-menu" id="doctorSubMenu">
+                            <li><a href="#" onclick="showAddDoctor()" class="sub-nav-link"><i class="fas fa-user-plus"></i>Add Doctor</a></li>
+                            <li><a href="#" onclick="showAllDoctors()" class="sub-nav-link"><i class="fas fa-users"></i>View All Doctors</a></li>
+                            <li><a href="#" onclick="showGetDoctorById()" class="sub-nav-link"><i class="fas fa-search"></i>Get Doctor by ID</a></li>
+                            <li><a href="#" onclick="deleteDoctorById()" class="sub-nav-link"><i class="fas fa-user-times"></i>Delete Doctor</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item expandable" id="appointmentsNav">
+                        <a href="#" onclick="toggleAppointmentManagement()" class="nav-link">
+                            <div style="display: flex; align-items: center;">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>Appointment Management</span>
+                            </div>
+                            <i class="fas fa-chevron-down expand-icon"></i>
+                        </a>
+                        <ul class="sub-menu" id="appointmentSubMenu">
+                            <li><a href="#" onclick="showAddAppointment()" class="sub-nav-link"><i class="fas fa-calendar-plus"></i>Add Appointment</a></li>
+                            <li><a href="#" onclick="showAllAppointments()" class="sub-nav-link"><i class="fas fa-calendar-check"></i>View All Appointments</a></li>
+                            <li><a href="#" onclick="showGetAppointmentById()" class="sub-nav-link"><i class="fas fa-search"></i>Get Appointment by ID</a></li>
+                            <li><a href="#" onclick="deleteAppointmentById()" class="sub-nav-link"><i class="fas fa-calendar-times"></i>Delete Appointment</a></li>
+                            <li><a href="#" onclick="cancelAppointmentById()" class="sub-nav-link"><i class="fas fa-ban"></i>Cancel Appointment</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" id="medicalRecordsNav">
+                        <a href="#" onclick="showMedicalRecords()" class="nav-link">
+                            <i class="fas fa-file-medical"></i>
+                            <span>Medical Records</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <div id="dashboardView" class="content-view active">
+                <div class="page-header">
+                    <h1>Admin Dashboard</h1>
+                    <p>Welcome to PAmazeCare Hospital Management System</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon patients">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalPatients">0</h3>
+                            <p>Total Patients</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon doctors">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalDoctors">0</h3>
+                            <p>Total Doctors</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon appointments">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalAppointments">0</h3>
+                            <p>Total Appointments</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="showAddPatient()">
+                            <i class="fas fa-user-plus"></i>
+                            Add Patient
+                        </button>
+                        <button class="action-btn" onclick="showAddAdmin()">
+                            <i class="fas fa-user-shield"></i>
+                            Add Admin/Doctor
+                        </button>
+                        <button class="action-btn" onclick="showAddAppointment()">
+                            <i class="fas fa-calendar-plus"></i>
+                            Book Appointment
+                        </button>
+                        <button class="action-btn" onclick="showAddMedicalRecord()">
+                            <i class="fas fa-file-medical"></i>
+                            Add Medical Record
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="recent-activities">
+                    <h2>Recent Activities</h2>
+                    <div class="activity-list" id="recentActivities">
+                        <!-- Activities will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patients View -->
+            <div id="patientsView" class="content-view">
+                <div class="page-header">
+                    <h1>Patients Management</h1>
+                    <button class="btn btn-primary" onclick="showAddPatient()">
+                        <i class="fas fa-plus"></i> Add Patient
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Contact</th>
+                                <th>Date of Birth</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientsTableBody">
+                            <!-- Patients data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="patientsPagination">
+                    <!-- Pagination controls will be added here -->
+                </div>
+            </div>
+
+            <!-- Other content views will be similar structures -->
+            <div id="doctorsView" class="content-view">
+                <div class="page-header">
+                    <h1>Doctors Management</h1>
+                    <button class="btn btn-primary" onclick="showAddDoctor()">
+                        <i class="fas fa-plus"></i> Add Doctor
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Contact</th>
+                                <th>Specialty</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctorsTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="doctorsPagination"></div>
+            </div>
+
+            <!-- Appointments View -->
+            <div id="appointmentsView" class="content-view">
+                <div class="page-header">
+                    <h1>Appointments Management</h1>
+                    <button class="btn btn-primary" onclick="showAddAppointment()">
+                        <i class="fas fa-plus"></i> Book Appointment
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentsTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="appointmentsPagination"></div>
+            </div>
+
+            <!-- Other views (Medical Records, Prescriptions, etc.) -->
+            <div id="medicalRecordsView" class="content-view">
+                <div class="page-header">
+                    <h1>Medical Records</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="app.showGetMedicalRecordById()">
+                            <i class="fas fa-search"></i> Get by ID
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Search Controls -->
+                <div class="search-controls">
+                    <div class="search-group">
+                        <input type="number" id="medicalRecordIdInput" placeholder="Enter Medical Record ID" class="form-control">
+                        <button class="btn btn-info" onclick="app.getMedicalRecordById()">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                        <button class="btn btn-secondary" onclick="app.showAllMedicalRecords()">
+                            <i class="fas fa-list"></i> Show All
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Diagnosis</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="medicalRecordsTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="medicalRecordsPagination"></div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Patient Dashboard Page -->
+    <div id="patientDashboardPage" class="page">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>PAmazeCare Patient</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <span id="patientUserName">Welcome Patient</span>
+                    <div class="user-dropdown">
+                        <button class="user-btn" onclick="toggleUserMenu()">
+                            <i class="fas fa-user-circle"></i>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" id="patientUserMenu">
+                            <a href="#" onclick="showProfile()"><i class="fas fa-user"></i> Profile</a>
+                            <a href="#" onclick="showSettings()"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Patient Sidebar -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <ul>
+                    <li class="nav-item active">
+                        <a href="#" onclick="showPatientDashboard()" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="showMyAppointments()" class="nav-link">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>My Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="showBookAppointment()" class="nav-link">
+                            <i class="fas fa-calendar-plus"></i>
+                            <span>Book Appointment</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="showMyMedicalRecords()" class="nav-link">
+                            <i class="fas fa-file-medical"></i>
+                            <span>Medical Records</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="showMyPrescriptions()" class="nav-link">
+                            <i class="fas fa-prescription-bottle"></i>
+                            <span>Prescriptions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="showPatientProfile()" class="nav-link">
+                            <i class="fas fa-user-edit"></i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Patient Main Content -->
+        <main class="main-content">
+            <!-- Patient Dashboard View -->
+            <div id="patientDashboardView" class="content-view active">
+                <div class="page-header">
+                    <h1>Patient Dashboard</h1>
+                    <p>Manage your health and appointments</p>
+                </div>
+
+                <!-- Patient Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon appointments">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="patientTotalAppointments">0</h3>
+                            <p>My Appointments</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon medical">
+                            <i class="fas fa-file-medical"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="patientTotalRecords">0</h3>
+                            <p>Medical Records</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon prescriptions">
+                            <i class="fas fa-prescription-bottle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="patientTotalPrescriptions">0</h3>
+                            <p>Prescriptions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patient Quick Actions -->
+                <div class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="showBookAppointment()">
+                            <i class="fas fa-calendar-plus"></i>
+                            Book Appointment
+                        </button>
+                        <button class="action-btn" onclick="showMyAppointments()">
+                            <i class="fas fa-calendar-check"></i>
+                            View My Appointments
+                        </button>
+                        <button class="action-btn" onclick="showMyMedicalRecords()">
+                            <i class="fas fa-file-medical"></i>
+                            View Medical Records
+                        </button>
+                        <button class="action-btn" onclick="showPatientProfile()">
+                            <i class="fas fa-user-edit"></i>
+                            Update Profile
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Upcoming Appointments -->
+                <div class="upcoming-appointments">
+                    <h2>Upcoming Appointments</h2>
+                    <div class="appointments-list" id="upcomingAppointments">
+                        <!-- Upcoming appointments will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Recent Medical Records -->
+                <div class="recent-records">
+                    <h2>Recent Medical Records</h2>
+                    <div class="records-list" id="recentMedicalRecords">
+                        <!-- Recent records will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient Appointments View -->
+            <div id="patientAppointmentsView" class="content-view">
+                <div class="page-header">
+                    <h1>My Appointments</h1>
+                    <button class="btn btn-primary" onclick="showBookAppointment()">
+                        <i class="fas fa-plus"></i> Book New Appointment
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientAppointmentsTableBody">
+                            <!-- Patient appointments will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Patient Medical Records View -->
+            <div id="patientMedicalRecordsView" class="content-view">
+                <div class="page-header">
+                    <h1>My Medical Records</h1>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Doctor</th>
+                                <th>Diagnosis</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientMedicalRecordsTableBody">
+                            <!-- Patient medical records will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Patient Profile View -->
+            <div id="patientProfileView" class="content-view">
+                <div class="page-header">
+                    <h1>My Profile</h1>
+                </div>
+                <div class="profile-container">
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="profile-info" id="patientProfileInfo">
+                                <!-- Profile info will be loaded here -->
+                            </div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="app.editPatientProfile()">
+                                <i class="fas fa-edit"></i> Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+                        </button>
+                        <div class="dropdown-menu" id="userMenu">
+                            <a href="#" onclick="showProfile()"><i class="fas fa-user"></i> Profile</a>
+                            <a href="#" onclick="showSettings()"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <ul>
+                    <li class="nav-item active">
+                        <a href="#" onclick="showDashboard()" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item expandable" id="patientsNav">
+                        <a href="#" onclick="togglePatientManagement()" class="nav-link">
+                            <div style="display: flex; align-items: center;">
+                                <i class="fas fa-users"></i>
+                                <span>Patient Management</span>
+                            </div>
+                            <i class="fas fa-chevron-down expand-icon"></i>
+                        </a>
+                        <ul class="sub-menu" id="patientSubMenu">
+                            <li><a href="#" onclick="showAddPatient()" class="sub-nav-link"><i class="fas fa-user-plus"></i>Add Patient</a></li>
+                            <li><a href="#" onclick="showAllPatients()" class="sub-nav-link"><i class="fas fa-users"></i>View All Patients</a></li>
+                            <li><a href="#" onclick="showGetPatientById()" class="sub-nav-link"><i class="fas fa-search"></i>Get Patient by ID</a></li>
+                            <li><a href="#" onclick="deletePatientById()" class="sub-nav-link"><i class="fas fa-user-times"></i>Delete Patient</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item expandable" id="doctorsNav">
+                        <a href="#" onclick="toggleDoctorManagement()" class="nav-link">
+                            <div style="display: flex; align-items: center;">
+                                <i class="fas fa-user-md"></i>
+                                <span>Doctor Management</span>
+                            </div>
+                            <i class="fas fa-chevron-down expand-icon"></i>
+                        </a>
+                        <ul class="sub-menu" id="doctorSubMenu">
+                            <li><a href="#" onclick="showAddDoctor()" class="sub-nav-link"><i class="fas fa-user-plus"></i>Add Doctor</a></li>
+                            <li><a href="#" onclick="showAllDoctors()" class="sub-nav-link"><i class="fas fa-users"></i>View All Doctors</a></li>
+                            <li><a href="#" onclick="showGetDoctorById()" class="sub-nav-link"><i class="fas fa-search"></i>Get Doctor by ID</a></li>
+                            <li><a href="#" onclick="deleteDoctorById()" class="sub-nav-link"><i class="fas fa-user-times"></i>Delete Doctor</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item expandable" id="appointmentsNav">
+                        <a href="#" onclick="toggleAppointmentManagement()" class="nav-link">
+                            <div style="display: flex; align-items: center;">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>Appointment Management</span>
+                            </div>
+                            <i class="fas fa-chevron-down expand-icon"></i>
+                        </a>
+                        <ul class="sub-menu" id="appointmentSubMenu">
+                            <li><a href="#" onclick="showAddAppointment()" class="sub-nav-link"><i class="fas fa-calendar-plus"></i>Add Appointment</a></li>
+                            <li><a href="#" onclick="showAllAppointments()" class="sub-nav-link"><i class="fas fa-calendar-check"></i>View All Appointments</a></li>
+                            <li><a href="#" onclick="showGetAppointmentById()" class="sub-nav-link"><i class="fas fa-search"></i>Get Appointment by ID</a></li>
+                            <li><a href="#" onclick="deleteAppointmentById()" class="sub-nav-link"><i class="fas fa-calendar-times"></i>Delete Appointment</a></li>
+                            <li><a href="#" onclick="cancelAppointmentById()" class="sub-nav-link"><i class="fas fa-ban"></i>Cancel Appointment</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" id="medicalRecordsNav">
+                        <a href="#" onclick="showMedicalRecords()" class="nav-link">
+                            <i class="fas fa-file-medical"></i>
+                            <span>Medical Records</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <div id="dashboardView" class="content-view active">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                    <p>Welcome to PAmazeCare Hospital Management System</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon patients">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalPatients">0</h3>
+                            <p>Total Patients</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon doctors">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalDoctors">0</h3>
+                            <p>Total Doctors</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon appointments">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalAppointments">0</h3>
+                            <p>Total Appointments</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="showAddAppointment()">
+                            <i class="fas fa-calendar-plus"></i>
+                            Book Appointment
+                        </button>
+                        <button class="action-btn" onclick="showAddMedicalRecord()">
+                            <i class="fas fa-file-medical"></i>
+                            Add Medical Record
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="recent-activities">
+                    <h2>Recent Activities</h2>
+                    <div class="activity-list" id="recentActivities">
+                        <!-- Activities will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patients View -->
+            <div id="patientsView" class="content-view">
+                <div class="page-header">
+                    <h1>Patients Management</h1>
+                    <button class="btn btn-primary" onclick="showAddPatient()">
+                        <i class="fas fa-plus"></i> Add Patient
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Contact</th>
+                                <th>Date of Birth</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientsTableBody">
+                            <!-- Patients data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="patientsPagination">
+                    <!-- Pagination controls will be added here -->
+                </div>
+            </div>
+
+            <!-- Other content views will be similar structures -->
+            <div id="doctorsView" class="content-view">
+                <div class="page-header">
+                    <h1>Doctors Management</h1>
+                    <button class="btn btn-primary" onclick="showAddDoctor()">
+                        <i class="fas fa-plus"></i> Add Doctor
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Contact</th>
+                                <th>Specialty</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctorsTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="doctorsPagination"></div>
+            </div>
+
+            <!-- Appointments View -->
+            <div id="appointmentsView" class="content-view">
+                <div class="page-header">
+                    <h1>Appointments Management</h1>
+                    <button class="btn btn-primary" onclick="showAddAppointment()">
+                        <i class="fas fa-plus"></i> Book Appointment
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentsTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="appointmentsPagination"></div>
+            </div>
+
+            <!-- Other views (Medical Records, Prescriptions, etc.) -->
+            <div id="medicalRecordsView" class="content-view">
+                <div class="page-header">
+                    <h1>Medical Records</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="app.showGetMedicalRecordById()">
+                            <i class="fas fa-search"></i> Get by ID
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Search Controls -->
+                <div class="search-controls">
+                    <div class="search-group">
+                        <input type="number" id="medicalRecordIdInput" placeholder="Enter Medical Record ID" class="form-control">
+                        <button class="btn btn-info" onclick="app.getMedicalRecordById()">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                        <button class="btn btn-secondary" onclick="app.showAllMedicalRecords()">
+                            <i class="fas fa-list"></i> Show All
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Diagnosis</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="medicalRecordsTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="medicalRecordsPagination"></div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification">
+        <div class="notification-content">
+            <i class="notification-icon"></i>
+            <span class="notification-message"></span>
+        </div>
+    </div>
+
+    <!-- Modal Container -->
+    <div id="modalContainer" class="modal-container">
+        <!-- Modals will be dynamically created here -->
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script src="hospital-app.js"></script>
+</body>
+</html>

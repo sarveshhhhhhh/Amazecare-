@@ -1,0 +1,21 @@
+﻿namespace PAmazeCare.Models
+{
+    public class Patient
+    {
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public string? FullName { get; set; }
+        public string? Email { get; set; }
+        public string PasswordHash { get; set; }
+        public string? Gender { get; set; }
+        public string? ContactNumber { get; set; }
+        public DateTime? DateOfBirth { get; set; }  
+
+        public bool IsDeleted { get; set; } = false;
+
+
+        public User User { get; set; } = null!;
+        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+    }
+
+}
