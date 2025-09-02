@@ -33,6 +33,7 @@ namespace PAmazeCare.Services.Implementations
                 var totalCount = await query.CountAsync();
 
                 var items = await query
+                    .Include(p => p.Patient)
                     .OrderBy(p => p.Id)
                     .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
                     .Take(paginationParams.PageSize)
@@ -44,7 +45,8 @@ namespace PAmazeCare.Services.Implementations
                         Medication = p.Medication,
                         Dosage = p.Dosage,
                         Timing = p.Timing,
-                        PrescribedDate = p.PrescribedDate
+                        PrescribedDate = p.PrescribedDate,
+                        PatientName = p.Patient.FullName ?? "Unknown Patient"
                     })
                     .ToListAsync();
 
@@ -68,6 +70,7 @@ namespace PAmazeCare.Services.Implementations
             try
             {
                 return await _context.Prescriptions
+                    .Include(p => p.Patient)
                     .Where(p => !p.IsDeleted)
                     .Select(p => new PrescriptionDto
                     {
@@ -77,7 +80,8 @@ namespace PAmazeCare.Services.Implementations
                         Medication = p.Medication,
                         Dosage = p.Dosage,
                         Timing = p.Timing,
-                        PrescribedDate = p.PrescribedDate
+                        PrescribedDate = p.PrescribedDate,
+                        PatientName = p.Patient.FullName ?? "Unknown Patient"
                     })
                     .ToListAsync();
             }
@@ -93,6 +97,7 @@ namespace PAmazeCare.Services.Implementations
             try
             {
                 var prescription = await _context.Prescriptions
+                    .Include(p => p.Patient)
                     .Where(p => p.Id == id && !p.IsDeleted)
                     .FirstOrDefaultAsync();
 
@@ -106,7 +111,8 @@ namespace PAmazeCare.Services.Implementations
                     Medication = prescription.Medication,
                     Dosage = prescription.Dosage,
                     Timing = prescription.Timing,
-                    PrescribedDate = prescription.PrescribedDate
+                    PrescribedDate = prescription.PrescribedDate,
+                    PatientName = prescription.Patient?.FullName ?? "Unknown Patient"
                 };
             }
             catch (Exception ex)
@@ -146,15 +152,21 @@ namespace PAmazeCare.Services.Implementations
                 _context.Prescriptions.Add(prescription);
                 await _context.SaveChangesAsync();
 
+                // Reload with patient information
+                var createdPrescription = await _context.Prescriptions
+                    .Include(p => p.Patient)
+                    .FirstOrDefaultAsync(p => p.Id == prescription.Id);
+
                 return new PrescriptionDto
                 {
-                    Id = prescription.Id,
-                    PatientId = prescription.PatientId,
-                    DoctorId = prescription.DoctorId,
-                    Medication = prescription.Medication,
-                    Dosage = prescription.Dosage,
-                    Timing = prescription.Timing,
-                    PrescribedDate = prescription.PrescribedDate
+                    Id = createdPrescription.Id,
+                    PatientId = createdPrescription.PatientId,
+                    DoctorId = createdPrescription.DoctorId,
+                    Medication = createdPrescription.Medication,
+                    Dosage = createdPrescription.Dosage,
+                    Timing = createdPrescription.Timing,
+                    PrescribedDate = createdPrescription.PrescribedDate,
+                    PatientName = createdPrescription.Patient?.FullName ?? "Unknown Patient"
                 };
             }
             catch (Exception ex)

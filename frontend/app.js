@@ -62,23 +62,34 @@ class PAmazeCareApp {
             };
 
             const response = await apiService.login(loginDto);
+            console.log('Login response:', response);
             
             if (response && response.token) {
                 localStorage.setItem('authToken', response.token);
                 
-                // Check for admin credentials
-                const isAdmin = loginDto.email === 'hexa@gmail.com' && loginDto.password === 'Hexa@10';
+                // Check for hardcoded admin credentials as fallback
+                const isHardcodedAdmin = loginDto.email === 'hexa@gmail.com' && loginDto.password === 'Hexa@10';
                 
                 const user = {
-                    email: loginDto.email,
-                    userType: isAdmin ? 'Admin' : (response.userType || 'Patient'),
+                    email: response.email || loginDto.email,
+                    fullName: response.fullName,
+                    userType: isHardcodedAdmin ? 'Admin' : response.userType,
                     token: response.token,
-                    isAdmin: isAdmin
+                    isAdmin: isHardcodedAdmin || response.userType?.toLowerCase() === 'admin'
                 };
+                
+                console.log('User object created:', user);
+                console.log('UserType from response:', response.userType);
+                console.log('IsHardcodedAdmin:', isHardcodedAdmin);
 
                 // For patients, try to fetch and store patient ID
                 if (user.userType?.toLowerCase() === 'patient') {
                     await this.fetchPatientId(user.email);
+                }
+                
+                // For doctors, try to fetch and store doctor ID
+                if (user.userType?.toLowerCase() === 'doctor') {
+                    await this.fetchDoctorId(user.email);
                 }
                 
                 localStorage.setItem('currentUser', JSON.stringify(user));
@@ -144,12 +155,28 @@ class PAmazeCareApp {
     showDashboard() {
         this.hideAllPages();
         
-        // Check if user is admin and show appropriate dashboard
-        if (this.currentUser && this.currentUser.isAdmin) {
+        const userType = this.currentUser?.userType?.toLowerCase();
+        console.log('showDashboard - currentUser:', this.currentUser);
+        console.log('showDashboard - userType:', userType);
+        console.log('showDashboard - isAdmin:', this.currentUser?.isAdmin);
+        
+        if (userType === 'doctor') {
+            console.log('Routing to doctor dashboard');
+            document.getElementById('doctorDashboardPage').classList.add('active');
+            this.showDoctorView('doctorDashboard');
+            this.loadDoctorDashboardData();
+        } else if (userType === 'patient') {
+            console.log('Routing to patient dashboard');
+            document.getElementById('patientDashboardPage').classList.add('active');
+            this.showPatientView('patientDashboard');
+            this.loadPatientDashboardData();
+        } else if (userType === 'admin' || (this.currentUser && this.currentUser.isAdmin)) {
+            console.log('Routing to admin dashboard');
             document.getElementById('dashboardPage').classList.add('active');
             this.showView('dashboard');
             this.loadDashboardData();
         } else {
+            console.log('Routing to default dashboard');
             document.getElementById('dashboardPage').classList.add('active');
             this.showView('dashboard');
             this.loadDashboardData();
@@ -187,9 +214,24 @@ class PAmazeCareApp {
     updateUserInterface() {
         if (!this.currentUser) return;
 
-        const userNameElement = document.getElementById('userName');
-        if (userNameElement) {
-            userNameElement.textContent = `Welcome, ${this.currentUser.email}`;
+        const userType = this.currentUser?.userType?.toLowerCase();
+        
+        // Update username display based on dashboard type
+        if (userType === 'doctor') {
+            const doctorUserNameElement = document.getElementById('doctorUserName');
+            if (doctorUserNameElement) {
+                doctorUserNameElement.textContent = `Welcome, Dr. ${this.currentUser.email}`;
+            }
+        } else if (userType === 'patient') {
+            const patientUserNameElement = document.getElementById('patientUserName');
+            if (patientUserNameElement) {
+                patientUserNameElement.textContent = `Welcome, ${this.currentUser.email}`;
+            }
+        } else {
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement) {
+                userNameElement.textContent = `Welcome, ${this.currentUser.email}`;
+            }
         }
 
         this.updateNavigationByRole();
@@ -272,6 +314,33 @@ class PAmazeCareApp {
             }
         } catch (error) {
             console.error('Error fetching patient ID:', error);
+            return null;
+        }
+    }
+
+    async fetchDoctorId(email) {
+        try {
+            console.log('Fetching doctor ID for email:', email);
+            
+            // Get all doctors and find the one with matching email
+            const doctors = await apiService.getAllDoctors();
+            console.log('All doctors:', doctors);
+            
+            const doctor = doctors.find(d => d.email?.toLowerCase() === email.toLowerCase());
+            console.log('Found doctor:', doctor);
+            
+            if (doctor && doctor.id) {
+                localStorage.setItem('doctorId', doctor.id.toString());
+                this.currentUser.doctorId = doctor.id;
+                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                console.log('Doctor ID stored in localStorage:', doctor.id);
+                return doctor.id;
+            } else {
+                console.log('No doctor record found for email:', email);
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching doctor ID:', error);
             return null;
         }
     }
@@ -707,6 +776,241 @@ class PAmazeCareApp {
         `;
 
         paginationContainer.innerHTML = paginationHtml;
+    }
+
+    // ==================== DOCTOR DASHBOARD METHODS ====================
+    showDoctorView(viewName) {
+        document.querySelectorAll('#doctorDashboardPage .nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        document.querySelectorAll('#doctorDashboardPage .content-view').forEach(view => {
+            view.classList.remove('active');
+        });
+
+        const targetView = document.getElementById(`${viewName}View`);
+        if (targetView) {
+            targetView.classList.add('active');
+        }
+
+        const navItem = document.querySelector(`[onclick="show${viewName.charAt(0).toUpperCase() + viewName.slice(1)}()"]`)?.parentElement;
+        if (navItem) {
+            navItem.classList.add('active');
+        }
+
+        this.currentView = viewName;
+    }
+
+    async loadDoctorDashboardData() {
+        try {
+            this.showLoading(true);
+            const doctorId = localStorage.getItem('doctorId');
+            
+            if (!doctorId) {
+                this.showNotification('Doctor profile not found', 'error');
+                return;
+            }
+
+            // Load doctor-specific data
+            const [appointments, patients, medicalRecords] = await Promise.all([
+                apiService.getDoctorAppointments(doctorId).catch(() => []),
+                apiService.getDoctorPatients(doctorId).catch(() => []),
+                apiService.getDoctorMedicalRecords(doctorId).catch(() => [])
+            ]);
+
+            // Filter today's appointments
+            const today = new Date().toDateString();
+            const todayAppointments = appointments.filter(apt => 
+                new Date(apt.appointmentDate).toDateString() === today
+            );
+
+            this.updateDoctorDashboardStats({
+                todayAppointments: todayAppointments.length,
+                totalPatients: patients.length,
+                totalRecords: medicalRecords.length
+            });
+
+            this.loadDoctorTodaySchedule(todayAppointments);
+
+        } catch (error) {
+            console.error('Error loading doctor dashboard data:', error);
+            this.showNotification('Error loading dashboard data', 'error');
+        } finally {
+            this.showLoading(false);
+        }
+    }
+
+    updateDoctorDashboardStats(stats) {
+        const elements = {
+            doctorTotalAppointments: document.getElementById('doctorTotalAppointments'),
+            doctorTotalPatients: document.getElementById('doctorTotalPatients'),
+            doctorTotalRecords: document.getElementById('doctorTotalRecords')
+        };
+
+        if (elements.doctorTotalAppointments) {
+            elements.doctorTotalAppointments.textContent = stats.todayAppointments;
+        }
+        if (elements.doctorTotalPatients) {
+            elements.doctorTotalPatients.textContent = stats.totalPatients;
+        }
+        if (elements.doctorTotalRecords) {
+            elements.doctorTotalRecords.textContent = stats.totalRecords;
+        }
+    }
+
+    loadDoctorTodaySchedule(appointments) {
+        const scheduleContainer = document.getElementById('doctorTodaySchedule');
+        if (!scheduleContainer) return;
+
+        if (appointments.length === 0) {
+            scheduleContainer.innerHTML = '<p class="no-data">No appointments scheduled for today</p>';
+            return;
+        }
+
+        scheduleContainer.innerHTML = appointments.map(appointment => `
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="activity-content">
+                    <p><strong>${appointment.patientName || 'Patient'}</strong></p>
+                    <div class="activity-time">${new Date(appointment.appointmentDate).toLocaleTimeString()}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async loadPatientDashboardData() {
+        // Existing patient dashboard loading logic
+        try {
+            this.showLoading(true);
+            // Patient-specific data loading
+        } catch (error) {
+            console.error('Error loading patient dashboard data:', error);
+        } finally {
+            this.showLoading(false);
+        }
+    }
+
+    showPatientView(viewName) {
+        document.querySelectorAll('#patientDashboardPage .nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        document.querySelectorAll('#patientDashboardPage .content-view').forEach(view => {
+            view.classList.remove('active');
+        });
+
+        const targetView = document.getElementById(`${viewName}View`);
+        if (targetView) {
+            targetView.classList.add('active');
+        }
+
+        const navItem = document.querySelector(`[onclick="show${viewName.charAt(0).toUpperCase() + viewName.slice(1)}()"]`)?.parentElement;
+        if (navItem) {
+            navItem.classList.add('active');
+        }
+
+        this.currentView = viewName;
+    }
+
+    async showDoctorAddMedicalRecord() {
+        const doctorId = localStorage.getItem('doctorId');
+        if (!doctorId) {
+            this.showNotification('Doctor profile not found', 'error');
+            return;
+        }
+
+        try {
+            const patients = await apiService.getAllPatients();
+            
+            const modalHtml = `
+                <div class="modal">
+                    <div class="modal-header">
+                        <h2><i class="fas fa-file-medical"></i> Add Medical Record</h2>
+                        <button class="modal-close" onclick="app.closeModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addDoctorMedicalRecordForm">
+                            <input type="hidden" name="doctorId" value="${doctorId}">
+                            <div class="form-group">
+                                <label for="recordPatientId">Patient</label>
+                                <div class="input-group">
+                                    <i class="fas fa-user"></i>
+                                    <select id="recordPatientId" name="patientId" required>
+                                        <option value="">Select Patient</option>
+                                        ${patients.map(patient => 
+                                            `<option value="${patient.id}">${patient.fullName} - ${patient.email}</option>`
+                                        ).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="recordDiagnosis">Diagnosis</label>
+                                <div class="input-group">
+                                    <i class="fas fa-stethoscope"></i>
+                                    <textarea id="recordDiagnosis" name="diagnosis" required placeholder="Enter diagnosis"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="recordTreatment">Treatment</label>
+                                <div class="input-group">
+                                    <i class="fas fa-pills"></i>
+                                    <textarea id="recordTreatment" name="treatment" placeholder="Enter treatment plan"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="recordNotes">Notes</label>
+                                <div class="input-group">
+                                    <i class="fas fa-notes-medical"></i>
+                                    <textarea id="recordNotes" name="notes" placeholder="Additional notes"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="app.closeModal()">Cancel</button>
+                        <button class="btn btn-primary" onclick="app.saveDoctorMedicalRecord()">Save Record</button>
+                    </div>
+                </div>
+            `;
+            this.showModal(modalHtml);
+        } catch (error) {
+            console.error('Error loading patients for medical record:', error);
+            this.showNotification('Error loading patients', 'error');
+        }
+    }
+
+    async saveDoctorMedicalRecord() {
+        try {
+            const form = document.getElementById('addDoctorMedicalRecordForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const formData = new FormData(form);
+            const medicalRecordDto = {
+                patientId: parseInt(formData.get('patientId')),
+                doctorId: parseInt(formData.get('doctorId')),
+                diagnosis: formData.get('diagnosis'),
+                treatment: formData.get('treatment'),
+                notes: formData.get('notes'),
+                recordDate: new Date().toISOString()
+            };
+
+            await apiService.createMedicalRecord(medicalRecordDto);
+            this.showNotification('Medical record added successfully!', 'success');
+            this.closeModal();
+            
+            if (this.currentView === 'doctorMedicalRecords') {
+                await this.loadDoctorMedicalRecordsData();
+            }
+            await this.loadDoctorDashboardData();
+        } catch (error) {
+            console.error('Error saving medical record:', error);
+            this.showNotification('Error saving medical record', 'error');
+        }
     }
 
     // ==================== DOCTORS MANAGEMENT ====================
@@ -1573,6 +1877,16 @@ function showAdmins() { if(app) app.showAdmins(); }
 function showProfile() { if(app) app.showProfile(); }
 function showSettings() { if(app) app.showSettings(); }
 function logout() { if(app) app.logout(); }
+
+// Doctor Dashboard Functions
+function showDoctorDashboard() { if(app) app.showDoctorView('doctorDashboard'); }
+function showDoctorAppointments() { if(app) app.showDoctorView('doctorAppointments'); }
+function showDoctorMedicalRecords() { if(app) app.showDoctorView('doctorMedicalRecords'); }
+function showDoctorSchedule() { if(app) app.showDoctorView('doctorSchedule'); }
+function showDoctorProfile() { if(app) app.showDoctorView('doctorProfile'); }
+function showDoctorAddMedicalRecord() { if(app) app.showDoctorAddMedicalRecord(); }
+function showDoctorViewAppointments() { if(app) app.showDoctorView('doctorAppointments'); }
+function showDoctorUpdateProfile() { if(app) app.showDoctorView('doctorProfile'); }
 
 // Initialize the application
 let app;

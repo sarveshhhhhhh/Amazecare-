@@ -120,23 +120,52 @@ namespace PAmazeCare.Services.Implementations
             var existingUser = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == dto.Email);
 
+            User user;
+            
             if (existingUser != null)
-                throw new InvalidOperationException("User with this email already exists.");
-
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword("Password123!");
-
-            var user = new User
             {
-                FullName = dto.FullName ?? "Unknown",
-                Email = dto.Email,
-                PasswordHash = passwordHash,
-                Role = 2,
-                UserType = UserTypeEnum.Doctor.ToString(),
-                CreatedAt = DateTime.Now
-            };
+                // User already exists, use existing user
+                user = existingUser;
+                
+                // Update user type to Doctor if not already set
+                if (user.UserType != UserTypeEnum.Doctor.ToString())
+                {
+                    user.UserType = UserTypeEnum.Doctor.ToString();
+                    user.Role = 2;
+                }
+                
+                // Update full name if provided
+                if (!string.IsNullOrWhiteSpace(dto.FullName))
+                {
+                    user.FullName = dto.FullName;
+                }
+            }
+            else
+            {
+                // Create new user
+                string passwordHash = BCrypt.Net.BCrypt.HashPassword("Password123!");
 
-            _context.Users.Add(user);
+                user = new User
+                {
+                    FullName = dto.FullName ?? "Unknown",
+                    Email = dto.Email,
+                    PasswordHash = passwordHash,
+                    Role = 2,
+                    UserType = UserTypeEnum.Doctor.ToString(),
+                    CreatedAt = DateTime.Now
+                };
+
+                _context.Users.Add(user);
+            }
+
             await _context.SaveChangesAsync();
+
+            // Check if doctor profile already exists
+            var existingDoctor = await _context.Doctors
+                .FirstOrDefaultAsync(d => d.Email == dto.Email && !d.IsDeleted);
+
+            if (existingDoctor != null)
+                throw new InvalidOperationException("Doctor profile already exists for this email.");
 
             var doctor = new Doctor
             {

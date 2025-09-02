@@ -315,19 +315,35 @@ class PAmazeCareApp {
             // Show patient dashboard for patient users
             const adminDashboard = document.getElementById('dashboardPage');
             const patientDashboard = document.getElementById('patientDashboardPage');
+            const doctorDashboard = document.getElementById('doctorDashboardPage');
             
             if (adminDashboard) adminDashboard.classList.remove('active');
             if (patientDashboard) patientDashboard.classList.add('active');
+            if (doctorDashboard) doctorDashboard.classList.remove('active');
             
             this.showPatientView('patientDashboard');
             this.loadPatientDashboardData();
-        } else {
-            // Show regular dashboard for doctors and other non-admin users
+        } else if (userType === 'doctor') {
+            // Show doctor dashboard for doctor users
             const adminDashboard = document.getElementById('dashboardPage');
             const patientDashboard = document.getElementById('patientDashboardPage');
+            const doctorDashboard = document.getElementById('doctorDashboardPage');
+            
+            if (adminDashboard) adminDashboard.classList.remove('active');
+            if (patientDashboard) patientDashboard.classList.remove('active');
+            if (doctorDashboard) doctorDashboard.classList.add('active');
+            
+            this.showDoctorView('doctorDashboard');
+            this.loadDoctorDashboardData();
+        } else {
+            // Show regular dashboard for other non-admin users
+            const adminDashboard = document.getElementById('dashboardPage');
+            const patientDashboard = document.getElementById('patientDashboardPage');
+            const doctorDashboard = document.getElementById('doctorDashboardPage');
             
             if (adminDashboard) adminDashboard.classList.add('active');
             if (patientDashboard) patientDashboard.classList.remove('active');
+            if (doctorDashboard) doctorDashboard.classList.remove('active');
             
             this.showView('dashboard');
             this.loadDashboardData();
@@ -852,6 +868,508 @@ class PAmazeCareApp {
             this.showNotification('Error updating profile', 'error');
         } finally {
             this.showLoading(false);
+        }
+    }
+
+    // ==================== DOCTOR DASHBOARD FUNCTIONS ====================
+    
+    showDoctorView(viewName) {
+        // Hide all doctor content views
+        const allViews = document.querySelectorAll('#doctorDashboardPage .content-view');
+        allViews.forEach(view => view.classList.remove('active'));
+        
+        // Remove active class from all navigation items
+        const allNavItems = document.querySelectorAll('#doctorDashboardPage .nav-item');
+        allNavItems.forEach(item => item.classList.remove('active'));
+        
+        // Show the selected view
+        const targetView = document.getElementById(`${viewName}View`);
+        if (targetView) {
+            targetView.classList.add('active');
+        }
+        
+        // Activate the corresponding navigation item
+        const navItem = document.querySelector(`[onclick="show${viewName.charAt(0).toUpperCase() + viewName.slice(1)}()"]`)?.parentElement;
+        if (navItem) {
+            navItem.classList.add('active');
+        }
+        
+        this.currentView = viewName;
+        
+        // Load data based on the view
+        if (viewName === 'doctorAppointments') {
+            this.loadDoctorAppointments();
+        } else if (viewName === 'doctorPrescriptions') {
+            this.loadDoctorPrescriptions();
+        }
+    }
+
+    async loadDoctorDashboardData() {
+        try {
+            this.showLoading(true);
+            const doctorId = localStorage.getItem('doctorId');
+            console.log('Current doctorId in localStorage:', doctorId);
+            
+            if (!doctorId) {
+                await this.fetchDoctorId(this.currentUser?.email);
+            }
+
+            const updatedDoctorId = localStorage.getItem('doctorId');
+            console.log('Updated doctorId after fetch:', updatedDoctorId);
+            
+            // TEMPORARY: Always show member block for testing
+            this.showDoctorMemberBlock();
+            
+            if (!updatedDoctorId) {
+                // Doctor hasn't completed profile yet, show member block
+                console.log('No doctor ID found, showing member block');
+                this.updateDoctorDashboardStats({
+                    todayAppointments: 0,
+                    totalAppointments: 0,
+                    totalPrescriptions: 0
+                });
+                this.loadDoctorTodaySchedule([]);
+                return;
+            }
+
+            // Doctor has completed profile, but keep member block visible for now
+            console.log('Doctor ID found, but keeping member block visible for testing');
+
+            const [appointments, prescriptions] = await Promise.all([
+                apiService.getDoctorAppointments(updatedDoctorId).catch(() => []),
+                apiService.getDoctorPrescriptions(updatedDoctorId).catch(() => [])
+            ]);
+
+            const today = new Date().toDateString();
+            const todayAppointments = appointments.filter(apt => 
+                new Date(apt.appointmentDate).toDateString() === today
+            );
+
+            this.updateDoctorDashboardStats({
+                todayAppointments: todayAppointments.length,
+                totalAppointments: appointments.length,
+                totalPrescriptions: prescriptions.length
+            });
+
+            this.loadDoctorTodaySchedule(todayAppointments);
+
+        } catch (error) {
+            console.error('Error loading doctor dashboard data:', error);
+            this.showNotification('Error loading dashboard data', 'error');
+        } finally {
+            this.showLoading(false);
+        }
+    }
+
+    async loadDoctorAppointments() {
+        try {
+            this.showLoading(true);
+            const doctorId = localStorage.getItem('doctorId');
+            
+            if (!doctorId) {
+                this.showNotification('Doctor ID not found. Please complete your profile first.', 'warning');
+                return;
+            }
+
+            console.log('Frontend: Loading appointments for doctor ID:', doctorId);
+            console.log('Frontend: API URL will be:', `/api/appointment/doctor/${doctorId}`);
+            
+            const appointments = await apiService.getDoctorAppointments(doctorId);
+            console.log('Frontend: Doctor appointments loaded:', appointments);
+            console.log('Frontend: Appointments type:', typeof appointments);
+            console.log('Frontend: Appointments length:', appointments?.length);
+            
+            this.displayDoctorAppointments(appointments);
+            
+        } catch (error) {
+            console.error('Frontend: Error loading doctor appointments:', error);
+            console.error('Frontend: Error details:', error.message);
+            console.error('Frontend: Error stack:', error.stack);
+            this.showNotification(`Error loading appointments: ${error.message}`, 'error');
+        } finally {
+            this.showLoading(false);
+        }
+    }
+
+
+    displayDoctorAppointments(appointments) {
+        const tbody = document.getElementById('doctorAppointmentsTableBody');
+        
+        if (!tbody) {
+            console.error('Doctor appointments table body not found');
+            return;
+        }
+        
+        if (!appointments || appointments.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6">No appointments found</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = appointments.map(appointment => `
+            <tr>
+                <td>${appointment.id}</td>
+                <td>${appointment.patientName || 'Unknown Patient'}</td>
+                <td>${new Date(appointment.appointmentDate).toLocaleDateString()}</td>
+                <td>${appointment.appointmentTime}</td>
+                <td>${appointment.symptoms || 'N/A'}</td>
+                <td>
+                    <span class="status-badge ${appointment.status?.toLowerCase() || 'scheduled'}">${appointment.status || 'Scheduled'}</span>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    async showDoctorAddPrescription() {
+        const doctorId = localStorage.getItem('doctorId');
+        if (!doctorId) {
+            this.showNotification('Doctor profile not found', 'error');
+            return;
+        }
+
+        try {
+            const patients = await apiService.getAllPatients();
+            
+            const modalHtml = `
+                <div class="modal">
+                    <div class="modal-header">
+                        <h2><i class="fas fa-prescription-bottle"></i> Add Prescription</h2>
+                        <button class="modal-close" onclick="app.closeModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addDoctorPrescriptionForm">
+                            <input type="hidden" name="doctorId" value="${doctorId}">
+                            <div class="form-group">
+                                <label for="prescriptionPatientId">Patient</label>
+                                <div class="input-group">
+                                    <i class="fas fa-user"></i>
+                                    <select id="prescriptionPatientId" name="patientId" required>
+                                        <option value="">Select Patient</option>
+                                        ${patients.map(patient => 
+                                            `<option value="${patient.id}">${patient.fullName} - ${patient.email}</option>`
+                                        ).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="prescriptionMedication">Medication</label>
+                                <div class="input-group">
+                                    <i class="fas fa-pills"></i>
+                                    <input type="text" id="prescriptionMedication" name="medication" required placeholder="Enter medication name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="prescriptionDosage">Dosage</label>
+                                <div class="input-group">
+                                    <i class="fas fa-prescription-bottle"></i>
+                                    <input type="text" id="prescriptionDosage" name="dosage" required placeholder="e.g., 500mg twice daily">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="prescriptionInstructions">Instructions</label>
+                                <div class="input-group">
+                                    <i class="fas fa-notes-medical"></i>
+                                    <textarea id="prescriptionInstructions" name="instructions" placeholder="Additional instructions"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="prescriptionDate">Prescription Date</label>
+                                <div class="input-group">
+                                    <i class="fas fa-calendar"></i>
+                                    <input type="date" id="prescriptionDate" name="date" required value="${new Date().toISOString().split('T')[0]}">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="app.closeModal()">Cancel</button>
+                        <button class="btn btn-primary" onclick="app.saveDoctorPrescription()">Save Prescription</button>
+                    </div>
+                </div>
+            `;
+            this.showModal(modalHtml);
+        } catch (error) {
+            console.error('Error loading patients for prescription:', error);
+            this.showNotification('Error loading patients', 'error');
+        }
+    }
+
+    async saveDoctorPrescription() {
+        try {
+            const form = document.getElementById('addDoctorPrescriptionForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const formData = new FormData(form);
+            const createPrescriptionDto = {
+                patientId: parseInt(formData.get('patientId')),
+                doctorId: parseInt(formData.get('doctorId')),
+                medication: formData.get('medication'),
+                medicineName: formData.get('medication'),
+                dosage: formData.get('dosage'),
+                timing: formData.get('instructions'),
+                medicalRecordId: 0 // Optional - can be linked to specific medical record if needed
+            };
+
+            await apiService.createPrescription(createPrescriptionDto);
+            this.showNotification('Prescription added successfully!', 'success');
+            this.closeModal();
+            
+            // Refresh the current view and dashboard
+            if (this.currentView === 'doctorPrescriptions') {
+                await this.loadDoctorPrescriptions();
+            }
+            await this.loadDoctorDashboardData();
+        } catch (error) {
+            console.error('Error saving prescription:', error);
+            this.showNotification('Error saving prescription', 'error');
+        }
+    }
+
+    async loadDoctorPrescriptions() {
+        try {
+            this.showLoading(true);
+            const doctorId = localStorage.getItem('doctorId');
+            
+            if (!doctorId) {
+                this.showNotification('Doctor ID not found. Please complete your profile first.', 'warning');
+                return;
+            }
+
+            const prescriptions = await apiService.getDoctorPrescriptions(doctorId);
+            this.displayDoctorPrescriptions(prescriptions);
+            
+        } catch (error) {
+            console.error('Error loading doctor prescriptions:', error);
+            this.showNotification(`Error loading prescriptions: ${error.message}`, 'error');
+        } finally {
+            this.showLoading(false);
+        }
+    }
+
+    displayDoctorPrescriptions(prescriptions) {
+        const tbody = document.getElementById('doctorPrescriptionsTableBody');
+        
+        if (!tbody) {
+            console.error('Doctor prescriptions table body not found');
+            return;
+        }
+        
+        if (!prescriptions || prescriptions.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6">No prescriptions found</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = prescriptions.map(prescription => `
+            <tr>
+                <td>${prescription.id}</td>
+                <td>${prescription.patientName || 'Unknown Patient'}</td>
+                <td>${prescription.medication || 'N/A'}</td>
+                <td>${prescription.dosage || 'N/A'}</td>
+                <td>${new Date(prescription.date).toLocaleDateString()}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="app.viewPrescription(${prescription.id})">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                    <button class="btn btn-sm btn-secondary" onclick="app.editPrescription(${prescription.id})">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    updateDoctorDashboardStats(stats) {
+        const todayAppointmentsEl = document.getElementById('doctorTodayAppointments');
+        const totalAppointmentsEl = document.getElementById('doctorTotalAppointments');
+        const totalPrescriptionsEl = document.getElementById('doctorTotalPrescriptions');
+
+        if (todayAppointmentsEl) todayAppointmentsEl.textContent = stats.todayAppointments || 0;
+        if (totalAppointmentsEl) totalAppointmentsEl.textContent = stats.totalAppointments || 0;
+        if (totalPrescriptionsEl) totalPrescriptionsEl.textContent = stats.totalPrescriptions || 0;
+    }
+
+    loadDoctorTodaySchedule(appointments) {
+        const scheduleContainer = document.getElementById('doctorTodaySchedule');
+        if (!scheduleContainer) return;
+
+        if (!appointments || appointments.length === 0) {
+            scheduleContainer.innerHTML = '<p class="no-data">No appointments scheduled for today</p>';
+            return;
+        }
+
+        scheduleContainer.innerHTML = appointments.map(apt => `
+            <div class="appointment-item">
+                <div class="appointment-time">${new Date(apt.appointmentDate).toLocaleTimeString()}</div>
+                <div class="appointment-patient">${apt.patientName || 'Unknown Patient'}</div>
+                <div class="appointment-status ${apt.status?.toLowerCase()}">${apt.status || 'Scheduled'}</div>
+            </div>
+        `).join('');
+    }
+
+    async fetchDoctorId(email) {
+        try {
+            const doctors = await this.api.getAllDoctors();
+            const doctor = doctors.find(d => d.email?.toLowerCase() === email.toLowerCase());
+            if (doctor && doctor.id) {
+                localStorage.setItem('doctorId', doctor.id.toString());
+                this.currentUser.doctorId = doctor.id;
+                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                return doctor.id;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching doctor ID:', error);
+            return null;
+        }
+    }
+
+    async showAddDoctorForm() {
+        const modalHtml = `
+            <div class="modal">
+                <div class="modal-header">
+                    <h2><i class="fas fa-user-md"></i> Complete Doctor Profile</h2>
+                    <button class="modal-close" onclick="app.closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="addDoctorForm">
+                        <div class="form-group">
+                            <label for="doctorFullName">Full Name</label>
+                            <div class="input-group">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="doctorFullName" name="fullName" required placeholder="Enter your full name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="doctorEmail">Email</label>
+                            <div class="input-group">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="doctorEmail" name="email" required placeholder="Enter your email" value="${this.currentUser?.email || ''}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="doctorContactNumber">Contact Number</label>
+                            <div class="input-group">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="doctorContactNumber" name="contactNumber" required placeholder="Enter your contact number">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="doctorSpecialty">Specialty</label>
+                            <div class="input-group">
+                                <i class="fas fa-stethoscope"></i>
+                                <select id="doctorSpecialty" name="specialty" required>
+                                    <option value="">Select Specialty</option>
+                                    <option value="General Medicine">General Medicine</option>
+                                    <option value="Cardiology">Cardiology</option>
+                                    <option value="Dermatology">Dermatology</option>
+                                    <option value="Neurology">Neurology</option>
+                                    <option value="Orthopedics">Orthopedics</option>
+                                    <option value="Pediatrics">Pediatrics</option>
+                                    <option value="Psychiatry">Psychiatry</option>
+                                    <option value="Surgery">Surgery</option>
+                                    <option value="Gynecology">Gynecology</option>
+                                    <option value="Ophthalmology">Ophthalmology</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="doctorExperience">Years of Experience</label>
+                            <div class="input-group">
+                                <i class="fas fa-calendar"></i>
+                                <input type="number" id="doctorExperience" name="experience" min="0" max="50" placeholder="Years of experience">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="doctorQualification">Qualification</label>
+                            <div class="input-group">
+                                <i class="fas fa-graduation-cap"></i>
+                                <input type="text" id="doctorQualification" name="qualification" placeholder="e.g., MBBS, MD">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="doctorAddress">Address</label>
+                            <div class="input-group">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <textarea id="doctorAddress" name="address" placeholder="Enter your address"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="app.closeModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="app.saveDoctorProfile()">Complete Profile</button>
+                </div>
+            </div>
+        `;
+        this.showModal(modalHtml);
+    }
+
+    async saveDoctorProfile() {
+        try {
+            const form = document.getElementById('addDoctorForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            this.showLoading(true);
+            const formData = new FormData(form);
+            const doctorDto = {
+                fullName: formData.get('fullName'),
+                email: formData.get('email'),
+                contactNumber: formData.get('contactNumber'),
+                specialty: formData.get('specialty'),
+                experience: parseInt(formData.get('experience')) || 0,
+                qualification: formData.get('qualification'),
+                address: formData.get('address')
+            };
+
+            const createdDoctor = await this.api.createDoctor(doctorDto);
+            console.log('Created doctor response:', createdDoctor);
+            
+            // Store doctor ID in localStorage
+            const doctorId = createdDoctor?.id || createdDoctor;
+            if (doctorId) {
+                localStorage.setItem('doctorId', doctorId.toString());
+                this.currentUser.doctorId = doctorId;
+                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+            } else {
+                throw new Error('Doctor ID not returned from API');
+            }
+
+            this.showNotification('Doctor profile completed successfully!', 'success');
+            this.closeModal();
+            
+            // Hide the member block and refresh dashboard
+            this.hideDoctorMemberBlock();
+            await this.loadDoctorDashboardData();
+            
+        } catch (error) {
+            console.error('Error saving doctor profile:', error);
+            this.showNotification('Error completing profile. Please try again.', 'error');
+        } finally {
+            this.showLoading(false);
+        }
+    }
+
+    hideDoctorMemberBlock() {
+        const memberBlock = document.querySelector('#doctorDashboardPage .member-block');
+        if (memberBlock) {
+            memberBlock.style.display = 'none';
+        }
+    }
+
+    showDoctorMemberBlock() {
+        const memberBlock = document.querySelector('#doctorDashboardPage .member-block');
+        console.log('Looking for member block:', memberBlock);
+        if (memberBlock) {
+            memberBlock.style.display = 'block';
+            console.log('Member block shown');
+        } else {
+            console.log('Member block not found in DOM');
         }
     }
 
@@ -3279,6 +3797,15 @@ function showBookAppointment() { if (window.app) app.showBookAppointment(); }
 function showViewDoctors() { if (window.app) app.showViewDoctors(); }
 function showPatientProfile() { if (window.app) app.showPatientProfile(); }
 function editPatientProfile() { if (window.app) app.editPatientProfile(); }
+
+// Doctor Dashboard Global Functions
+function showDoctorDashboard() { if (window.app) app.showDoctorView('doctorDashboard'); }
+function showDoctorAppointments() { if (window.app) app.showDoctorView('doctorAppointments'); }
+function showDoctorPrescriptions() { if (window.app) app.showDoctorView('doctorPrescriptions'); }
+function showDoctorAddPrescription() { if (window.app) app.showDoctorAddPrescription(); }
+function showDoctorSchedule() { if (window.app) app.showDoctorView('doctorSchedule'); }
+function showDoctorProfile() { if (window.app) app.showDoctorView('doctorProfile'); }
+function showAddDoctorForm() { if (window.app) app.showAddDoctorForm(); }
 
 // Initialize app when DOM is loaded
 let app;

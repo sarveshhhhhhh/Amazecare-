@@ -176,28 +176,31 @@
     color: #212529;
 }
 
-/* Modal overlay fix */
+/* Modal overlay fix - Maximum visibility */
 .modal-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(17, 24, 39, 0.8); /* Darker, semi-transparent overlay */
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 9999;
+    backdrop-filter: blur(8px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .modal-container .modal {
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    box-shadow: var(--shadow-xl);
     max-width: 90%;
     max-height: 90%;
     overflow-y: auto;
-    width: 1000px;
+    width: 1000px; /* Default width for large modals */
+    border: 1px solid var(--gray-200);
 }
 
 .modal-container .patient-management {
@@ -285,12 +288,14 @@
 /* Enhanced Modal Styles for Patient Form */
 .modal {
     background: var(--white);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xl);
     max-width: 600px;
     width: 90%;
     max-height: 90vh;
     overflow-y: auto;
+    border: 1px solid var(--gray-200);
+    position: relative;
 }
 
 .modal-header {
@@ -299,6 +304,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: var(--white);
 }
 
 .modal-header h2 {
@@ -354,10 +360,11 @@
 }
 
 .form-group label {
-    font-weight: 500;
-    color: var(--gray-700);
+    font-weight: 700;
+    color: var(--gray-900) !important;
     margin-bottom: 0.5rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
 .input-group {
@@ -369,9 +376,10 @@
 .input-group i {
     position: absolute;
     left: 1rem;
-    color: var(--gray-400);
+    color: var(--gray-700) !important;
     z-index: 1;
-    font-size: 0.875rem;
+    font-size: 1rem;
+    font-weight: bold;
 }
 
 .input-group input,
@@ -380,20 +388,24 @@
     padding: 0.75rem 1rem 0.75rem 2.5rem;
     border: 1px solid var(--gray-300);
     border-radius: var(--radius-md);
-    font-size: 0.875rem;
+    font-size: 1rem;
     transition: var(--transition-fast);
-    background: var(--white);
+    background: var(--gray-50);
+    color: var(--gray-900);
+    font-weight: 500;
 }
 
 .input-group input:focus,
 .input-group select:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    background: var(--white);
 }
 
 .input-group input::placeholder {
-    color: var(--gray-400);
+    color: var(--gray-600) !important;
+    font-weight: 500;
 }
 
 .password-toggle {
@@ -456,6 +468,50 @@
 
 .input-group input:valid:not(:focus):not(:placeholder-shown) {
     border-color: var(--success);
+}
+
+/* Doctor Dashboard Specific Styles */
+.schedule-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.schedule-calendar {
+    display: grid;
+    gap: 1rem;
+}
+
+.no-data {
+    text-align: center;
+    color: var(--gray-500);
+    font-style: italic;
+    padding: 2rem;
+}
+
+/* Textarea styling for medical records */
+.input-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: var(--transition-fast);
+    background: var(--gray-50);
+    color: var(--gray-900);
+    font-weight: 500;
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.input-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    background: var(--white);
 }
 
 /* Loading overlay */
@@ -813,7 +869,9 @@ img {
 }
 
 /* ==================== DASHBOARD LAYOUT ==================== */
-#dashboardPage {
+#dashboardPage,
+#doctorDashboardPage,
+#patientDashboardPage {
     display: grid;
     grid-template-areas: 
         "header header"

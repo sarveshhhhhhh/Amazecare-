@@ -898,6 +898,248 @@
         </main>
     </div>
 
+    <!-- Doctor Dashboard Page -->
+    <div id="doctorDashboardPage" class="page">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>PAmazeCare Doctor</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <span id="doctorUserName">Welcome Doctor</span>
+                    <div class="user-dropdown">
+                        <button class="user-btn" onclick="toggleUserMenu()">
+                            <i class="fas fa-user-circle"></i>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" id="doctorUserMenu">
+                            <a href="#" onclick="showProfile()"><i class="fas fa-user"></i> Profile</a>
+                            <a href="#" onclick="showSettings()"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Doctor Sidebar -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <ul>
+                    <li class="nav-item active">
+                        <a href="#" onclick="showDoctorDashboard()" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="showDoctorAppointments()" class="nav-link">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>My Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="showDoctorPrescriptions()" class="nav-link">
+                            <i class="fas fa-prescription-bottle"></i>
+                            <span>Prescriptions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="showDoctorSchedule()" class="nav-link">
+                            <i class="fas fa-clock"></i>
+                            <span>Schedule</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="showDoctorProfile()" class="nav-link">
+                            <i class="fas fa-user-edit"></i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- Become a Member Block -->
+            <div class="member-block">
+                <div class="member-card">
+                    <div class="member-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3>Complete Your Profile</h3>
+                    <p>Complete your doctor profile to start managing patients and appointments</p>
+                    <button class="btn btn-primary" onclick="showAddDoctorForm()">
+                        <i class="fas fa-plus"></i>
+                        Complete Profile
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Doctor Main Content -->
+        <main class="main-content">
+            <!-- Doctor Dashboard View -->
+            <div id="doctorDashboardView" class="content-view active">
+                <div class="page-header">
+                    <h1>Doctor Dashboard</h1>
+                    <p>Manage your patients and appointments</p>
+                </div>
+
+                <!-- Doctor Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon appointments">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="doctorTodayAppointments">0</h3>
+                            <p>Today's Appointments</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon patients">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="doctorTotalAppointments">0</h3>
+                            <p>Total Appointments</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon doctors">
+                            <i class="fas fa-file-medical"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="doctorTotalPrescriptions">0</h3>
+                            <p>Prescriptions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Doctor Quick Actions -->
+                <div class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="showDoctorAddPrescription()">
+                            <i class="fas fa-prescription-bottle"></i>
+                            Add Prescription
+                        </button>
+                        <button class="action-btn" onclick="showDoctorViewAppointments()">
+                            <i class="fas fa-calendar-check"></i>
+                            View Appointments
+                        </button>
+                        <button class="action-btn" onclick="showDoctorUpdateProfile()">
+                            <i class="fas fa-user-edit"></i>
+                            Update Profile
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Today's Schedule -->
+                <div class="recent-activities">
+                    <h2>Today's Schedule</h2>
+                    <div class="activity-list" id="doctorTodaySchedule">
+                        <!-- Today's appointments will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doctor Appointments View -->
+            <div id="doctorAppointmentsView" class="content-view">
+                <div class="page-header">
+                    <h1>My Appointments</h1>
+                    <p>Manage your scheduled appointments</p>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctorAppointmentsTableBody">
+                            <!-- Doctor appointments will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- Doctor Prescriptions View -->
+            <div id="doctorPrescriptionsView" class="content-view">
+                <div class="page-header">
+                    <h1>Prescriptions</h1>
+                    <button class="btn btn-primary" onclick="showDoctorAddPrescription()">
+                        <i class="fas fa-plus"></i> Add Prescription
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Medication</th>
+                                <th>Dosage</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctorPrescriptionsTableBody">
+                            <!-- Doctor's prescriptions will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Doctor Schedule View -->
+            <div id="doctorScheduleView" class="content-view">
+                <div class="page-header">
+                    <h1>My Schedule</h1>
+                    <p>View your daily and weekly schedule</p>
+                </div>
+                <div class="schedule-container">
+                    <div class="schedule-calendar" id="doctorScheduleCalendar">
+                        <!-- Schedule calendar will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doctor Profile View -->
+            <div id="doctorProfileView" class="content-view">
+                <div class="page-header">
+                    <h1>My Profile</h1>
+                </div>
+                <div class="profile-container">
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="profile-info" id="doctorProfileInfo">
+                                <!-- Doctor profile info will be loaded here -->
+                            </div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="app.editDoctorProfile()">
+                                <i class="fas fa-edit"></i> Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="loading-spinner">

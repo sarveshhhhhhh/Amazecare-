@@ -1,4 +1,4 @@
-﻿namespace PAmazeCare.Models
+namespace PAmazeCare.Models
 {
     public class Patient
     {
@@ -9,10 +9,12 @@
         public string PasswordHash { get; set; }
         public string? Gender { get; set; }
         public string? ContactNumber { get; set; }
-        public DateTime? DateOfBirth { get; set; }  
+        public DateTime? DateOfBirth { get; set; }
+        public string? Address { get; set; }
+        public string? BloodGroup { get; set; }
+        public string? EmergencyContact { get; set; }
 
         public bool IsDeleted { get; set; } = false;
-
 
         public User User { get; set; } = null!;
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

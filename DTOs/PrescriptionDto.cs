@@ -13,8 +13,7 @@ namespace PAmazeCare.DTOs
         public DateTime PrescribedDate { get; set; }
         public int MedicalRecordId { get; set; }
         public string MedicineName { get; set; }
-
-
+        public string PatientName { get; set; }
     }
 
     public class CreatePrescriptionDto

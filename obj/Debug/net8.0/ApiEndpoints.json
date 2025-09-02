@@ -226,6 +226,22 @@
   },
   {
     "ContainingType": "PAmazeCare.Controllers.AppointmentController",
+    "Method": "GetAppointmentsByDoctorId",
+    "RelativePath": "api/Appointment/doctor/{doctorId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "doctorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PAmazeCare.Controllers.AppointmentController",
     "Method": "GetAllAppointmentsPaged",
     "RelativePath": "api/Appointment/paged",
     "HttpMethod": "GET",

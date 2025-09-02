@@ -25,7 +25,11 @@ class ApiService {
     // Generic HTTP request handler
     async makeRequest(url, options = {}) {
         try {
-            const response = await fetch(url, {
+            // Ensure URL has proper base URL if it's a relative path
+            const fullUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
+            console.log('API: Making request to:', fullUrl);
+            
+            const response = await fetch(fullUrl, {
                 headers: this.getHeaders(),
                 ...options
             });
@@ -535,6 +539,30 @@ class ApiService {
     async getAppointmentsByDoctorId(doctorId) {
         const appointments = await this.getAllAppointments();
         return appointments.filter(apt => apt.doctorId === doctorId);
+    }
+
+    // ==================== DOCTOR-SPECIFIC METHODS ====================
+    async getDoctorAppointments(doctorId) {
+        console.log('API: Getting appointments for doctor ID:', doctorId);
+        try {
+            const result = await this.makeRequest(`/appointment/doctor/${doctorId}`);
+            console.log('API: Doctor appointments response:', result);
+            return result;
+        } catch (error) {
+            console.error('API: Error getting doctor appointments:', error);
+            throw error;
+        }
+    }
+
+
+    async getDoctorMedicalRecords(doctorId) {
+        const medicalRecords = await this.getAllMedicalRecords();
+        return medicalRecords.filter(record => record.doctorId == doctorId);
+    }
+
+    async getDoctorPrescriptions(doctorId) {
+        const prescriptions = await this.getAllPrescriptions();
+        return prescriptions.filter(prescription => prescription.doctorId == doctorId);
     }
 }
 

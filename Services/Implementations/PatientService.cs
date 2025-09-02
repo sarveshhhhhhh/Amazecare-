@@ -236,8 +236,5 @@ namespace PAmazeCare.Services.Implementations
             }
         }
 
-
-
-
     }
 }

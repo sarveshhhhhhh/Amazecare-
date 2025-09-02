@@ -59,7 +59,7 @@ namespace PAmazeCare.Services.Implementations
             }
         }
 
-        public virtual async Task<string> LoginAsync(LoginDto dto)
+        public virtual async Task<object> LoginAsync(LoginDto dto)
         {
             try
             {
@@ -69,7 +69,15 @@ namespace PAmazeCare.Services.Implementations
                 if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
                     return null;
 
-                return _tokenService.GenerateToken(user);
+                var token = _tokenService.GenerateToken(user);
+                
+                return new
+                {
+                    Token = token,
+                    UserType = user.UserType,
+                    Email = user.Email,
+                    FullName = user.FullName
+                };
             }
             catch (Exception ex)
             {

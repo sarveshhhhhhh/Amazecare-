@@ -331,5 +331,38 @@ namespace PAmazeCare.Services.Implementations
                 return new PagedResult<AppointmentDto>();
             }
         }
+
+        public async Task<List<AppointmentDto>> GetAppointmentsByDoctorIdAsync(int doctorId)
+        {
+            try
+            {
+                return await _context.Appointments
+                    .IgnoreQueryFilters()
+                    .Where(a => a.DoctorId == doctorId && !a.IsDeleted)
+                    .Include(a => a.Patient)
+                    .Include(a => a.Doctor)
+                    .OrderBy(a => a.AppointmentDate)
+                    .ThenBy(a => a.AppointmentTime)
+                    .Select(a => new AppointmentDto
+                    {
+                        Id = a.Id,
+                        PatientId = a.PatientId,
+                        PatientName = a.Patient.FullName ?? string.Empty,
+                        DoctorId = a.DoctorId,
+                        DoctorName = a.Doctor.FullName ?? string.Empty,
+                        AppointmentDate = a.AppointmentDate,
+                        AppointmentTime = a.AppointmentTime,
+                        Symptoms = a.Symptoms ?? string.Empty,
+                        Status = a.Status ?? string.Empty
+                    })
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving appointments for doctor {DoctorId}", doctorId);
+                return new List<AppointmentDto>();
+            }
+        }
+
     }
 }

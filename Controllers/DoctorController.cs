@@ -58,7 +58,7 @@ namespace PAmazeCare.Controllers
                 if (newDoctorId <= 0)
                     return StatusCode(500, "A problem happened while handling your request.");
 
-                return CreatedAtAction(nameof(GetDoctorById), new { id = newDoctorId }, dto);
+                return CreatedAtAction(nameof(GetDoctorById), new { id = newDoctorId }, new { id = newDoctorId });
             }
             catch (Exception ex)
             {

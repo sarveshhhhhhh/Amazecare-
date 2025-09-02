@@ -30,12 +30,12 @@ namespace PAmazeCare.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
-            var token = await _authService.LoginAsync(dto);
+            var result = await _authService.LoginAsync(dto);
 
-            if (string.IsNullOrEmpty(token))
+            if (result == null)
                 return Unauthorized("Invalid credentials.");
 
-            return Ok(new { Token = token });
+            return Ok(result);
         }
 
     }

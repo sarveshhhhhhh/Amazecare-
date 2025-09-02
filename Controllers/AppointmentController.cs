@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PAmazeCare.DTOs;
 using PAmazeCare.Services.Interfaces;
+using System;
 using System.Threading.Tasks;
 
 namespace PAmazeCare.Controllers
@@ -10,10 +12,12 @@ namespace PAmazeCare.Controllers
     public class AppointmentController : ControllerBase
     {
         private readonly IAppointmentService _appointmentService;
+        private readonly ILogger<AppointmentController> _logger;
 
-        public AppointmentController(IAppointmentService appointmentService)
+        public AppointmentController(IAppointmentService appointmentService, ILogger<AppointmentController> logger)
         {
             _appointmentService = appointmentService;
+            _logger = logger;
         }
 
         [HttpGet("paged")]
@@ -67,8 +71,10 @@ namespace PAmazeCare.Controllers
         public async Task<IActionResult> DeleteAppointment(int id)
         {
             var deleted = await _appointmentService.DeleteAppointmentAsync(id);
-            if (!deleted) return NotFound($"Appointment with ID {id} not found");
-            return NoContent();
+            if (!deleted)
+                return NotFound();
+
+            return Ok(new { message = "Appointment deleted successfully" });
         }
 
         [HttpPatch("{id}/cancel")]
@@ -88,5 +94,21 @@ namespace PAmazeCare.Controllers
             var pagedResult = await _appointmentService.GetAppointmentsByPatientIdAsync(patientId, paginationParams);
             return Ok(pagedResult);
         }
+
+        [HttpGet("doctor/{doctorId}")]
+        public async Task<IActionResult> GetAppointmentsByDoctorId(int doctorId)
+        {
+            try
+            {
+                var appointments = await _appointmentService.GetAppointmentsByDoctorIdAsync(doctorId);
+                return Ok(appointments);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error retrieving appointments for doctor {doctorId}");
+                return StatusCode(500, "Error retrieving appointments");
+            }
+        }
+
     }
 }

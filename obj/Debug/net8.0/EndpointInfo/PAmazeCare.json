@@ -437,6 +437,29 @@
         }
       }
     },
+    "/api/Appointment/doctor/{doctorId}": {
+      "get": {
+        "tags": [
+          "Appointment"
+        ],
+        "parameters": [
+          {
+            "name": "doctorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Auth/register": {
       "post": {
         "tags": [
@@ -2265,8 +2288,7 @@
         "required": [
           "dateOfBirth",
           "email",
-          "fullName",
-          "password"
+          "fullName"
         ],
         "type": "object",
         "properties": {
@@ -2287,13 +2309,29 @@
             "type": "string",
             "nullable": true
           },
-          "password": {
-            "minLength": 1,
-            "type": "string"
+          "address": {
+            "type": "string",
+            "nullable": true
           },
           "dateOfBirth": {
             "type": "string",
             "format": "date-time"
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "bloodGroup": {
+            "type": "string",
+            "nullable": true
+          },
+          "emergencyContact": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
           },
           "userId": {
             "type": "integer",
