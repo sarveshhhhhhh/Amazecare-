@@ -341,7 +341,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
@@ -355,6 +355,19 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-04T03:45:23.673Z",
               "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MedicalReordDto.cs",
+              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\MedicalReordDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\MedicalReordDto.cs",
+              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\MedicalReordDto.cs",
+              "RelativeToolTip": "DTOs\\MedicalReordDto.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAA9wA0AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-01T19:38:15.015Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
@@ -408,19 +421,6 @@
               "ViewState": "AgIAACUAAAAAAAAAAAA5wFMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-01T19:37:38.361Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MedicalReordDto.cs",
-              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\MedicalReordDto.cs",
-              "RelativeDocumentMoniker": "DTOs\\MedicalReordDto.cs",
-              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\MedicalReordDto.cs",
-              "RelativeToolTip": "DTOs\\MedicalReordDto.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAowBkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-01T19:38:15.015Z",
               "EditorCaption": ""
             },
             {

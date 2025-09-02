@@ -65,10 +65,15 @@ class PAmazeCareApp {
             
             if (response && response.token) {
                 localStorage.setItem('authToken', response.token);
+                
+                // Check for admin credentials
+                const isAdmin = loginDto.email === 'hexa@gmail.com' && loginDto.password === 'Hexa@10';
+                
                 const user = {
                     email: loginDto.email,
-                    userType: response.userType || 'Patient',
-                    token: response.token
+                    userType: isAdmin ? 'Admin' : (response.userType || 'Patient'),
+                    token: response.token,
+                    isAdmin: isAdmin
                 };
                 
                 localStorage.setItem('currentUser', JSON.stringify(user));
@@ -133,9 +138,17 @@ class PAmazeCareApp {
 
     showDashboard() {
         this.hideAllPages();
-        document.getElementById('dashboardPage').classList.add('active');
-        this.showView('dashboard');
-        this.loadDashboardData();
+        
+        // Check if user is admin and show appropriate dashboard
+        if (this.currentUser && this.currentUser.isAdmin) {
+            document.getElementById('adminDashboard').classList.add('active');
+            this.showView('dashboard');
+            this.loadDashboardData();
+        } else {
+            document.getElementById('dashboardPage').classList.add('active');
+            this.showView('dashboard');
+            this.loadDashboardData();
+        }
     }
 
     hideAllPages() {

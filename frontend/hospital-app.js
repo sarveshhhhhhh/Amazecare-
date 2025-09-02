@@ -125,9 +125,28 @@ class PAmazeCareApp {
             
             if (response && (response.Token || response.token)) {
                 const token = response.Token || response.token;
+                
+                // Check for admin credentials
+                const isAdmin = credentials.email === 'hexa@gmail.com' && credentials.password === 'Hexa@10';
+                
+                // Get userType from backend response or stored registration data
+                let userType = response.UserType || response.userType;
+                
+                // If no userType from backend, check localStorage for registration data
+                if (!userType) {
+                    const storedEmail = localStorage.getItem('registeredEmail');
+                    if (storedEmail === credentials.email) {
+                        const storedUserType = localStorage.getItem('registeredUserType');
+                        userType = storedUserType || 'Patient';
+                    } else {
+                        userType = 'Patient'; // Default fallback
+                    }
+                }
+                
                 this.currentUser = {
                     email: credentials.email,
-                    userType: response.UserType || response.userType || 'Patient'
+                    userType: userType,
+                    isAdmin: isAdmin
                 };
                 
                 this.showNotification('Login successful!', 'success');
@@ -168,6 +187,11 @@ class PAmazeCareApp {
             };
 
             await apiService.register(userData);
+            
+            // Store userType for later use during login
+            localStorage.setItem('registeredUserType', userData.userType);
+            localStorage.setItem('registeredEmail', userData.email);
+            
             this.showNotification('Registration successful! Please login.', 'success');
             this.showLogin();
         } catch (error) {
@@ -195,13 +219,14 @@ class PAmazeCareApp {
                 userMenu.classList.remove('show');
             }
             
-            // Clear all stored authentication data
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
+            // Clear all localStorage data to prevent session conflicts
             localStorage.removeItem('authToken');
             localStorage.removeItem('currentUser');
+            localStorage.removeItem('registeredUserType');
+            localStorage.removeItem('registeredEmail');
+            localStorage.removeItem('token');
             
-            // Reset application state
+            // Reset current user
             this.currentUser = null;
             this.currentView = null;
             
@@ -262,14 +287,19 @@ class PAmazeCareApp {
     showDashboard() {
         this.hideAllPages();
         
-        // Route to appropriate dashboard based on user type
+        // Check if user is admin (only hexa@gmail.com with correct password)
+        const isAdmin = this.currentUser?.isAdmin === true && 
+                       this.currentUser?.email === 'hexa@gmail.com';
+        
+        // Check user type for non-admin users
         const userType = this.currentUser?.userType?.toLowerCase();
         
-        if (userType === 'admin') {
+        if (isAdmin) {
+            // Show admin dashboard only for verified admin
             document.getElementById('dashboardPage').classList.add('active');
             this.showView('dashboard');
             
-            // Force show Patient and Doctor Management for admin users
+            // Show admin navigation elements
             setTimeout(() => {
                 const patientsNav = document.getElementById('patientsNav');
                 const doctorsNav = document.getElementById('doctorsNav');
@@ -292,15 +322,35 @@ class PAmazeCareApp {
             this.loadDashboardData();
             this.loadRecentActivities();
         } else if (userType === 'patient') {
+            // Show patient dashboard for patient users
             document.getElementById('patientDashboardPage').classList.add('active');
             this.showPatientView('patientDashboard');
             this.loadPatientDashboardData();
         } else {
-            // Default to admin dashboard for other user types
+            // Show regular dashboard for doctors and other non-admin users
             document.getElementById('dashboardPage').classList.add('active');
             this.showView('dashboard');
+            
+            // Hide admin navigation elements for non-admin users
+            setTimeout(() => {
+                const patientsNav = document.getElementById('patientsNav');
+                const doctorsNav = document.getElementById('doctorsNav');
+                const appointmentsNav = document.getElementById('appointmentsNav');
+                
+                if (patientsNav) {
+                    patientsNav.style.display = 'none';
+                    patientsNav.style.visibility = 'hidden';
+                }
+                if (doctorsNav) {
+                    doctorsNav.style.display = 'none';
+                    doctorsNav.style.visibility = 'hidden';
+                }
+                if (appointmentsNav) {
+                    appointmentsNav.style.display = 'none';
+                    appointmentsNav.style.visibility = 'hidden';
+                }
+            }, 100);
             this.loadDashboardData();
-            this.loadRecentActivities();
         }
     }
 
@@ -3067,6 +3117,129 @@ function toggleRegisterPassword() {
         } else {
             passwordInput.type = 'password';
             icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    }
+}
+
+// Add Patient Form Modal
+function showAddPatientForm() {
+    const modalHtml = `
+        <div class="modal-header">
+            <h2><i class="fas fa-user-plus"></i> Add New Patient</h2>
+            <button class="modal-close" onclick="app.closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="addPatientForm" class="form-grid">
+                <div class="form-group">
+                    <label for="patientFullName">Full Name *</label>
+                    <input type="text" id="patientFullName" name="fullName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientEmail">Email Address *</label>
+                    <input type="email" id="patientEmail" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientPassword">Password *</label>
+                    <input type="password" id="patientPassword" name="password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientContactNumber">Contact Number *</label>
+                    <input type="tel" id="patientContactNumber" name="contactNumber" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientDateOfBirth">Date of Birth *</label>
+                    <input type="date" id="patientDateOfBirth" name="dateOfBirth" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientGender">Gender</label>
+                    <select id="patientGender" name="gender">
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="patientAddress">Address</label>
+                    <textarea id="patientAddress" name="address" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientEmergencyContact">Emergency Contact</label>
+                    <input type="tel" id="patientEmergencyContact" name="emergencyContact">
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientBloodGroup">Blood Group</label>
+                    <select id="patientBloodGroup" name="bloodGroup">
+                        <option value="">Select Blood Group</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="app.closeModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveNewPatient()">Add Patient</button>
+        </div>
+    `;
+    
+    if (window.app) {
+        app.showModal(modalHtml);
+    }
+}
+
+// Save New Patient Function
+async function saveNewPatient() {
+    try {
+        const form = document.getElementById('addPatientForm');
+        const formData = new FormData(form);
+        
+        const patientDto = {
+            fullName: formData.get('fullName'),
+            email: formData.get('email'),
+            password: formData.get('password'),
+            contactNumber: formData.get('contactNumber'),
+            dateOfBirth: formData.get('dateOfBirth'),
+            gender: formData.get('gender') || null,
+            address: formData.get('address') || null,
+            emergencyContact: formData.get('emergencyContact') || null,
+            bloodGroup: formData.get('bloodGroup') || null
+        };
+        
+        console.log('Adding patient with data:', patientDto);
+        
+        const response = await apiService.createPatient(patientDto);
+        
+        if (window.app) {
+            app.showNotification('Patient added successfully!', 'success');
+            app.closeModal();
+            
+            // Refresh patient list if we're on patients view
+            if (window.app.currentView === 'patients') {
+                app.loadPatients();
+            }
+        }
+        
+        console.log('Patient added successfully:', response);
+        
+    } catch (error) {
+        console.error('Error adding patient:', error);
+        if (window.app) {
+            app.showNotification('Failed to add patient. Please try again.', 'error');
         }
     }
 }

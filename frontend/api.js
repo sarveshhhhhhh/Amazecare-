@@ -79,8 +79,8 @@ class ApiService {
     async login(credentials) {
         try {
             const loginDto = {
-                Email: credentials.email,
-                Password: credentials.password
+                email: credentials.email,
+                password: credentials.password
             };
             
             console.log('Sending login request to:', API_ENDPOINTS.AUTH.LOGIN);
@@ -92,15 +92,13 @@ class ApiService {
             });
             
             console.log('Raw API response:', response);
-            console.log('Response type:', typeof response);
             
-            if (response && (response.Token || response.token)) {
-                const token = response.Token || response.token;
-                localStorage.setItem('authToken', token);
-                // Extract user info from token or set basic info
+            if (response && response.token) {
+                localStorage.setItem('authToken', response.token);
                 const userInfo = {
                     email: credentials.email,
-                    userType: response.UserType || response.userType || 'Patient'
+                    userType: response.userType || 'Patient',
+                    token: response.token
                 };
                 localStorage.setItem('currentUser', JSON.stringify(userInfo));
             }
@@ -114,15 +112,21 @@ class ApiService {
     async register(userData) {
         try {
             const registerDto = {
-                FullName: userData.fullName,
-                Email: userData.email,
-                Password: userData.password,
-                UserType: userData.userType || 'Patient'
+                fullName: userData.fullName,
+                email: userData.email,
+                password: userData.password,
+                userType: userData.userType || 'string'
             };
+            
+            console.log('Sending register request to:', API_ENDPOINTS.AUTH.REGISTER);
+            console.log('Register payload:', registerDto);
+            
             const response = await this.makeRequest(API_ENDPOINTS.AUTH.REGISTER, {
                 method: 'POST',
                 body: JSON.stringify(registerDto)
             });
+            
+            console.log('Register API response:', response);
             return response;
         } catch (error) {
             console.error('Registration error:', error);
@@ -187,7 +191,11 @@ class ApiService {
             Email: patientData.email,
             Password: patientData.password,
             ContactNumber: patientData.contactNumber,
-            DateOfBirth: patientData.dateOfBirth
+            DateOfBirth: patientData.dateOfBirth,
+            Gender: patientData.gender,
+            Address: patientData.address,
+            EmergencyContact: patientData.emergencyContact,
+            BloodGroup: patientData.bloodGroup
         };
         return await this.makeRequest(API_ENDPOINTS.PATIENT.CREATE, {
             method: 'POST',
