@@ -457,8 +457,6 @@ class PAmazeCareApp {
     updatePatientDashboardStats(stats) {
         const elements = {
             patientTotalAppointments: document.getElementById('patientTotalAppointments'),
-            patientTotalRecords: document.getElementById('patientTotalRecords'),
-            patientTotalPrescriptions: document.getElementById('patientTotalPrescriptions')
         };
 
         Object.keys(elements).forEach(key => {
@@ -494,42 +492,18 @@ class PAmazeCareApp {
         `).join('');
     }
 
-    renderRecentMedicalRecords(records) {
-        const container = document.getElementById('recentMedicalRecords');
-        if (!container) return;
-
-        if (!records || records.length === 0) {
-            container.innerHTML = '<p class="no-data">No medical records found</p>';
-            return;
-        }
-
-        container.innerHTML = records.map(record => `
-            <div class="record-item">
-                <div class="record-icon">
-                    <i class="fas fa-file-medical"></i>
-                </div>
-                <div class="record-details">
-                    <h4>${record.diagnosis || 'General Checkup'}</h4>
-                    <p>Dr. ${record.doctorName || 'Unknown'}</p>
-                    <span class="record-date">${new Date(record.createdAt || record.date).toLocaleDateString()}</span>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // Patient-specific navigation functions
     async showMyAppointments() {
         this.showPatientView('patientAppointments');
         await this.loadPatientAppointments();
     }
 
-    async showMyMedicalRecords() {
-        this.showPatientView('patientMedicalRecords');
-        await this.loadPatientMedicalRecords();
-    }
-
     async showBookAppointment() {
         await this.showAddAppointment();
+    }
+
+    async showViewDoctors() {
+        this.showPatientView('patientViewDoctors');
+        await this.loadAllDoctors();
     }
 
     showPatientProfile() {
@@ -609,67 +583,65 @@ class PAmazeCareApp {
         `).join('');
     }
 
-    async loadPatientMedicalRecords() {
+    async loadAllDoctors() {
         try {
             this.showLoading(true);
-            
-            // Get patient ID from multiple sources
-            let patientId = this.currentUser?.id || 
-                           this.currentUser?.patientId || 
-                           localStorage.getItem('patientId');
-            
-            if (!patientId) {
-                // Try to fetch patient ID if not available
-                await this.fetchAndStorePatientId(this.currentUser?.email);
-                patientId = localStorage.getItem('patientId');
-            }
-            
-            if (!patientId) {
-                this.showNotification('Patient ID not found. Please contact support.', 'error');
-                return;
-            }
-
-            const records = await this.api.getPatientMedicalRecords(patientId);
-            this.renderPatientMedicalRecordsTable(records);
+            const doctors = await this.api.getAllDoctors();
+            this.renderDoctorsTable(doctors);
         } catch (error) {
-            console.error('Error loading patient medical records:', error);
-            this.showNotification('Error loading medical records', 'error');
+            console.error('Error loading doctors:', error);
+            this.showNotification('Error loading doctors', 'error');
         } finally {
             this.showLoading(false);
         }
     }
 
-    renderPatientMedicalRecordsTable(records) {
-        const tbody = document.getElementById('patientMedicalRecordsTableBody');
+    renderDoctorsTable(doctors) {
+        const tbody = document.getElementById('patientViewDoctorsTableBody');
         if (!tbody) return;
 
-        if (!records || records.length === 0) {
+        if (!doctors || doctors.length === 0) {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="5" style="text-align: center; padding: 2rem; color: var(--gray-500);">
-                        <i class="fas fa-file-medical" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                        No medical records found
+                        <i class="fas fa-user-md" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                        No doctors found
                     </td>
                 </tr>
             `;
             return;
         }
 
-        tbody.innerHTML = records.map(record => `
+        tbody.innerHTML = doctors.map(doctor => `
             <tr>
-                <td>${record.id}</td>
-                <td>Dr. ${record.doctorName || 'Unknown'}</td>
-                <td>${record.diagnosis || 'N/A'}</td>
-                <td>${new Date(record.createdAt || record.date).toLocaleDateString()}</td>
-                <td>
-                    <div class="action-buttons">
-                        <button class="btn btn-sm btn-primary" onclick="app.viewMedicalRecord(${record.id})" title="View Details">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                </td>
+                <td>${doctor.id}</td>
+                <td>${doctor.fullName || doctor.name || 'Unknown'}</td>
+                <td>${doctor.email || 'N/A'}</td>
+                <td>${doctor.contactNumber || doctor.contact || 'N/A'}</td>
+                <td>${doctor.specialty || 'General'}</td>
             </tr>
         `).join('');
+    }
+
+    async cancelPatientAppointment(appointmentId) {
+        if (!confirm('Are you sure you want to cancel this appointment?')) {
+            return;
+        }
+
+        try {
+            this.showLoading(true);
+            await this.api.cancelAppointment(appointmentId);
+            this.showNotification('Appointment cancelled successfully', 'success');
+            
+            // Reload appointments to reflect changes
+            await this.loadPatientAppointments();
+            await this.loadPatientDashboardData();
+        } catch (error) {
+            console.error('Error cancelling appointment:', error);
+            this.showNotification('Error cancelling appointment', 'error');
+        } finally {
+            this.showLoading(false);
+        }
     }
 
     async loadPatientProfile() {
@@ -731,10 +703,6 @@ class PAmazeCareApp {
         }
     }
 
-    // Patient-specific placeholder methods
-    async showMyPrescriptions() {
-        this.showNotification('Prescriptions feature coming soon', 'info');
-    }
 
     // Patient profile editing
     async editPatientProfile() {
@@ -3307,10 +3275,9 @@ function showAddAdmin() { if (window.app) app.showAddAdmin(); }
 // Patient Dashboard Global Functions
 function showPatientDashboard() { if (window.app) app.showPatientDashboard(); }
 function showMyAppointments() { if (window.app) app.showMyAppointments(); }
-function showMyMedicalRecords() { if (window.app) app.showMyMedicalRecords(); }
 function showBookAppointment() { if (window.app) app.showBookAppointment(); }
+function showViewDoctors() { if (window.app) app.showViewDoctors(); }
 function showPatientProfile() { if (window.app) app.showPatientProfile(); }
-function showMyPrescriptions() { if (window.app) app.showMyPrescriptions(); }
 function editPatientProfile() { if (window.app) app.editPatientProfile(); }
 
 // Initialize app when DOM is loaded

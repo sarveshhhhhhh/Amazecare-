@@ -232,7 +232,7 @@ class ApiService {
 
     // ==================== DOCTOR METHODS ====================
     async getAllDoctors() {
-        return await this.makeRequest(API_ENDPOINTS.DOCTOR.GET_ALL);
+        return await this.makeRequest('http://localhost:5120/api/Doctor/all');
     }
 
     async getAllDoctorsPaged(pageNumber = 1, pageSize = 10) {
@@ -324,7 +324,7 @@ class ApiService {
     }
 
     async cancelAppointment(id) {
-        return await this.makeRequest(API_ENDPOINTS.APPOINTMENT.CANCEL(id), {
+        return await this.makeRequest(`http://localhost:5120/api/Appointment/${id}/cancel`, {
             method: 'PATCH'
         });
     }
