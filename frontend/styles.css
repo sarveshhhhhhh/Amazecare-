@@ -633,10 +633,23 @@ img {
 .page {
     display: none;
     min-height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    overflow-y: auto;
 }
 
 .page.active {
     display: block;
+}
+
+/* Ensure only one page is visible at a time */
+.page:not(.active) {
+    display: none !important;
+    visibility: hidden !important;
 }
 
 /* ==================== LOGIN & REGISTRATION STYLES ==================== */
@@ -925,8 +938,11 @@ img {
     border-right: 3px solid #3498db;
     padding: 2rem 0;
     overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    height: calc(100vh - 70px);
+    max-height: calc(100vh - 70px);
 }
 
 .sidebar::before {
@@ -1048,20 +1064,10 @@ font-size: 12px;
     grid-area: main;
     padding: 2rem;
     overflow-y: auto;
-    background: transparent;
+    background: #f8fafc;
     position: relative;
-}
-
-.main-content::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="medical-cross" patternUnits="userSpaceOnUse" width="50" height="50"><rect width="50" height="50" fill="%23ffffff" opacity="0.02"/><path d="M20 15h10v20h-10z M15 20h20v10h-20z" fill="%232563eb" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23medical-cross)"/></svg>') repeat;
-    pointer-events: none;
-    z-index: -1;
+    height: calc(100vh - 70px);
+    max-height: calc(100vh - 70px);
 }
 
 .content-view {
@@ -1457,12 +1463,12 @@ font-size: 12px;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     z-index: 9999;
     opacity: 0;
     visibility: hidden;
-    transition: var(--transition);
+    transition: all 0.3s ease;
 }
 
 .loading-overlay.show {
@@ -1471,17 +1477,64 @@ font-size: 12px;
 }
 
 .loading-spinner {
-    background: var(--white);
-    padding: 2rem;
-    border-radius: var(--radius-lg);
-    text-align: center;
-    box-shadow: var(--shadow-xl);
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
-.loading-spinner i {
-    font-size: 2rem;
-    color: var(--primary-color);
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.member-prompt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    margin-bottom: 2rem;
+}
+
+.prompt-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+}
+
+.prompt-card h3 {
     margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.prompt-card p {
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.prompt-card .btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.prompt-card .btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
 }
 
 .notification {

@@ -285,5 +285,51 @@ namespace PAmazeCare.Services.Implementations
                 return false;
             }
         }
+
+        public async Task<PagedResult<AppointmentDto>> GetAppointmentsByPatientIdAsync(int patientId, PaginationParams paginationParams)
+        {
+            try
+            {
+                var query = _context.Appointments
+                    .Include(a => a.Patient)
+                    .Include(a => a.Doctor)
+                    .Where(a => !a.IsDeleted && a.PatientId == patientId)
+                    .AsQueryable();
+
+                var totalCount = await query.CountAsync();
+
+                var items = await query
+                    .OrderBy(a => a.AppointmentDate)
+                    .ThenBy(a => a.AppointmentTime)
+                    .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                    .Take(paginationParams.PageSize)
+                    .Select(a => new AppointmentDto
+                    {
+                        Id = a.Id,
+                        PatientId = a.PatientId,
+                        PatientName = a.Patient.FullName ?? string.Empty,
+                        DoctorId = a.DoctorId,
+                        DoctorName = a.Doctor.FullName ?? string.Empty,
+                        AppointmentDate = a.AppointmentDate,
+                        AppointmentTime = a.AppointmentTime,
+                        Symptoms = a.Symptoms ?? string.Empty,
+                        Status = a.Status ?? string.Empty
+                    })
+                    .ToListAsync();
+
+                return new PagedResult<AppointmentDto>
+                {
+                    Items = items,
+                    TotalCount = totalCount,
+                    PageNumber = paginationParams.PageNumber,
+                    PageSize = paginationParams.PageSize
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving appointments for patient {PatientId}", patientId);
+                return new PagedResult<AppointmentDto>();
+            }
+        }
     }
 }

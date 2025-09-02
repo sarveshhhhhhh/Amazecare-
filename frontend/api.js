@@ -51,13 +51,21 @@ class ApiService {
     
     // Get appointments for a specific patient
     async getPatientAppointments(patientId) {
-        const url = `${config.API_BASE_URL}/api/Appointment/patient/${patientId}`;
-        return await this.makeRequest(url);
+        const url = API_ENDPOINTS.APPOINTMENT.GET_BY_PATIENT(patientId);
+        console.log('Making request to URL:', url);
+        const response = await this.makeRequest(url);
+        console.log('Raw backend response for patient appointment<', response);
+        console.log('Response type:', typeof response);
+        console.log('Is array?', Array.isArray(response));
+        if (response && typeof response === 'object') {
+            console.log('Response keys:', Object.keys(response));
+        }
+        return response;
     }
 
     // Get medical records for a specific patient
     async getPatientMedicalRecords(patientId) {
-        const url = `${config.API_BASE_URL}/api/MedicalRecord/patient/${patientId}`;
+        const url = `${API_BASE_URL}/MedicalRecord/patient/${patientId}`;
         return await this.makeRequest(url);
     }
 

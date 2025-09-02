@@ -117,28 +117,32 @@ namespace PAmazeCare.Services.Implementations
         {
             try
             {
-                // ✅ Check if a user already exists with this email
+                // Check if a user already exists with this email
                 var existingUser = await _context.Users
                     .FirstOrDefaultAsync(u => u.Email == dto.Email);
 
+                User user;
                 if (existingUser != null)
                 {
-                    // Stop here instead of letting SQL throw an exception
-                    throw new InvalidOperationException($"A user with email '{dto.Email}' already exists.");
+                    // Use existing user
+                    user = existingUser;
                 }
-
-                var user = new User
+                else
                 {
-                    Email = dto.Email,
-                    FullName = dto.FullName,
-                    PasswordHash = HashPassword(dto.Password),
-                    Role = 2,
-                    UserType = UserTypeEnum.Patient.ToString(),
-                    CreatedAt = DateTime.Now
-                };
+                    // Create new user if not found
+                    user = new User
+                    {
+                        Email = dto.Email,
+                        FullName = dto.FullName,
+                        PasswordHash = HashPassword(dto.Password),
+                        Role = 2,
+                        UserType = UserTypeEnum.Patient.ToString(),
+                        CreatedAt = DateTime.Now
+                    };
 
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
+                }
 
                 var patient = new Patient
                 {

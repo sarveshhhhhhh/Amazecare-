@@ -120,11 +120,10 @@ class PAmazeCareApp {
             const response = await apiService.login(credentials);
             
             console.log('Login API Response:', response);
-            console.log('Response type:', typeof response);
-            console.log('Response keys:', response ? Object.keys(response) : 'No response');
             
             if (response && (response.Token || response.token)) {
                 const token = response.Token || response.token;
+                localStorage.setItem('authToken', token);
                 
                 // Check for admin credentials
                 const isAdmin = credentials.email === 'hexa@gmail.com' && credentials.password === 'Hexa@10';
@@ -132,14 +131,13 @@ class PAmazeCareApp {
                 // Get userType from backend response or stored registration data
                 let userType = response.UserType || response.userType;
                 
-                // If no userType from backend, check localStorage for registration data
                 if (!userType) {
                     const storedEmail = localStorage.getItem('registeredEmail');
                     if (storedEmail === credentials.email) {
                         const storedUserType = localStorage.getItem('registeredUserType');
                         userType = storedUserType || 'Patient';
                     } else {
-                        userType = 'Patient'; // Default fallback
+                        userType = 'Patient';
                     }
                 }
                 
@@ -148,6 +146,13 @@ class PAmazeCareApp {
                     userType: userType,
                     isAdmin: isAdmin
                 };
+                
+                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                
+                // If user is a patient, fetch and store patient ID
+                if (userType.toLowerCase() === 'patient' && !isAdmin) {
+                    await this.fetchAndStorePatientId(credentials.email);
+                }
                 
                 this.showNotification('Login successful!', 'success');
                 this.showDashboard();
@@ -225,6 +230,7 @@ class PAmazeCareApp {
             localStorage.removeItem('registeredUserType');
             localStorage.removeItem('registeredEmail');
             localStorage.removeItem('token');
+            localStorage.removeItem('patientId');
             
             // Reset current user
             this.currentUser = null;
@@ -265,12 +271,9 @@ class PAmazeCareApp {
     }
 
     hideAllPages() {
-        const pages = ['loginPage', 'registerPage', 'dashboardPage', 'patientDashboardPage'];
-        pages.forEach(pageId => {
-            const page = document.getElementById(pageId);
-            if (page) {
-                page.classList.remove('active');
-            }
+        // Hide all pages to ensure only one is visible
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
         });
     }
 
@@ -294,62 +297,39 @@ class PAmazeCareApp {
         // Check user type for non-admin users
         const userType = this.currentUser?.userType?.toLowerCase();
         
+        console.log('Showing dashboard for user:', this.currentUser);
+        console.log('Is Admin:', isAdmin, 'User Type:', userType);
+        
         if (isAdmin) {
             // Show admin dashboard only for verified admin
-            document.getElementById('dashboardPage').classList.add('active');
+            const adminDashboard = document.getElementById('dashboardPage');
+            const patientDashboard = document.getElementById('patientDashboardPage');
+            
+            if (adminDashboard) adminDashboard.classList.add('active');
+            if (patientDashboard) patientDashboard.classList.remove('active');
+            
             this.showView('dashboard');
-            
-            // Show admin navigation elements
-            setTimeout(() => {
-                const patientsNav = document.getElementById('patientsNav');
-                const doctorsNav = document.getElementById('doctorsNav');
-                const appointmentsNav = document.getElementById('appointmentsNav');
-                
-                if (patientsNav) {
-                    patientsNav.style.display = 'block';
-                    patientsNav.style.visibility = 'visible';
-                }
-                if (doctorsNav) {
-                    doctorsNav.style.display = 'block';
-                    doctorsNav.style.visibility = 'visible';
-                }
-                if (appointmentsNav) {
-                    appointmentsNav.style.display = 'block';
-                    appointmentsNav.style.visibility = 'visible';
-                }
-            }, 100);
-            
             this.loadDashboardData();
             this.loadRecentActivities();
         } else if (userType === 'patient') {
             // Show patient dashboard for patient users
-            document.getElementById('patientDashboardPage').classList.add('active');
+            const adminDashboard = document.getElementById('dashboardPage');
+            const patientDashboard = document.getElementById('patientDashboardPage');
+            
+            if (adminDashboard) adminDashboard.classList.remove('active');
+            if (patientDashboard) patientDashboard.classList.add('active');
+            
             this.showPatientView('patientDashboard');
             this.loadPatientDashboardData();
         } else {
             // Show regular dashboard for doctors and other non-admin users
-            document.getElementById('dashboardPage').classList.add('active');
-            this.showView('dashboard');
+            const adminDashboard = document.getElementById('dashboardPage');
+            const patientDashboard = document.getElementById('patientDashboardPage');
             
-            // Hide admin navigation elements for non-admin users
-            setTimeout(() => {
-                const patientsNav = document.getElementById('patientsNav');
-                const doctorsNav = document.getElementById('doctorsNav');
-                const appointmentsNav = document.getElementById('appointmentsNav');
-                
-                if (patientsNav) {
-                    patientsNav.style.display = 'none';
-                    patientsNav.style.visibility = 'hidden';
-                }
-                if (doctorsNav) {
-                    doctorsNav.style.display = 'none';
-                    doctorsNav.style.visibility = 'hidden';
-                }
-                if (appointmentsNav) {
-                    appointmentsNav.style.display = 'none';
-                    appointmentsNav.style.visibility = 'hidden';
-                }
-            }, 100);
+            if (adminDashboard) adminDashboard.classList.add('active');
+            if (patientDashboard) patientDashboard.classList.remove('active');
+            
+            this.showView('dashboard');
             this.loadDashboardData();
         }
     }
@@ -437,8 +417,16 @@ class PAmazeCareApp {
         try {
             this.showLoading(true);
             
-            // Load patient-specific data
-            const patientId = this.currentUser?.id || this.currentUser?.userId;
+            // Get patient ID from multiple sources
+            let patientId = this.currentUser?.id || 
+                           this.currentUser?.patientId || 
+                           localStorage.getItem('patientId');
+            
+            if (!patientId) {
+                // Try to fetch patient ID if not available
+                await this.fetchAndStorePatientId(this.currentUser?.email);
+                patientId = localStorage.getItem('patientId');
+            }
             
             if (patientId) {
                 const [appointments, medicalRecords] = await Promise.all([
@@ -454,6 +442,9 @@ class PAmazeCareApp {
 
                 this.renderUpcomingAppointments(appointments.slice(0, 5));
                 this.renderRecentMedicalRecords(medicalRecords.slice(0, 5));
+            } else {
+                console.warn('Patient ID not found for dashboard data loading');
+                this.showNotification('Unable to load patient data. Please try logging in again.', 'warning');
             }
         } catch (error) {
             console.error('Error loading patient dashboard data:', error);
@@ -480,6 +471,7 @@ class PAmazeCareApp {
     }
 
     renderUpcomingAppointments(appointments) {
+        console.log('Rendering upcoming appointments <><><><><><><><><><><><><><>:', appointments);
         const container = document.getElementById('upcomingAppointments');
         if (!container) return;
 
@@ -548,10 +540,20 @@ class PAmazeCareApp {
     async loadPatientAppointments() {
         try {
             this.showLoading(true);
-            const patientId = this.currentUser?.id || this.currentUser?.userId;
+            
+            // Get patient ID from multiple sources
+            let patientId = this.currentUser?.id || 
+                           this.currentUser?.patientId || 
+                           localStorage.getItem('patientId');
             
             if (!patientId) {
-                this.showNotification('Patient ID not found', 'error');
+                // Try to fetch patient ID if not available
+                await this.fetchAndStorePatientId(this.currentUser?.email);
+                patientId = localStorage.getItem('patientId');
+            }
+            
+            if (!patientId) {
+                this.showNotification('Patient ID not found. Please contact support.', 'error');
                 return;
             }
 
@@ -569,7 +571,10 @@ class PAmazeCareApp {
         const tbody = document.getElementById('patientAppointmentsTableBody');
         if (!tbody) return;
 
-        if (!appointments || appointments.length === 0) {
+        // Handle paginated response - extract items array
+        const appointmentsList = appointments?.items || appointments || [];
+
+        if (!appointmentsList || appointmentsList.length === 0) {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="6" style="text-align: center; padding: 2rem; color: var(--gray-500);">
@@ -581,7 +586,7 @@ class PAmazeCareApp {
             return;
         }
 
-        tbody.innerHTML = appointments.map(appointment => `
+        tbody.innerHTML = appointmentsList.map(appointment => `
             <tr>
                 <td>${appointment.id}</td>
                 <td>Dr. ${appointment.doctorName || 'Unknown'}</td>
@@ -607,10 +612,20 @@ class PAmazeCareApp {
     async loadPatientMedicalRecords() {
         try {
             this.showLoading(true);
-            const patientId = this.currentUser?.id || this.currentUser?.userId;
+            
+            // Get patient ID from multiple sources
+            let patientId = this.currentUser?.id || 
+                           this.currentUser?.patientId || 
+                           localStorage.getItem('patientId');
             
             if (!patientId) {
-                this.showNotification('Patient ID not found', 'error');
+                // Try to fetch patient ID if not available
+                await this.fetchAndStorePatientId(this.currentUser?.email);
+                patientId = localStorage.getItem('patientId');
+            }
+            
+            if (!patientId) {
+                this.showNotification('Patient ID not found. Please contact support.', 'error');
                 return;
             }
 
@@ -659,10 +674,19 @@ class PAmazeCareApp {
 
     async loadPatientProfile() {
         try {
-            const patientId = this.currentUser?.id || this.currentUser?.userId;
+            // Get patient ID from multiple sources
+            let patientId = this.currentUser?.id || 
+                           this.currentUser?.patientId || 
+                           localStorage.getItem('patientId');
             
             if (!patientId) {
-                this.showNotification('Patient ID not found', 'error');
+                // Try to fetch patient ID if not available
+                await this.fetchAndStorePatientId(this.currentUser?.email);
+                patientId = localStorage.getItem('patientId');
+            }
+            
+            if (!patientId) {
+                this.showNotification('Patient ID not found. Please contact support.', 'error');
                 return;
             }
 
@@ -802,6 +826,30 @@ class PAmazeCareApp {
                 this.closeModal();
             }
         };
+    }
+
+    // Function to fetch and store patient ID
+    async fetchAndStorePatientId(email) {
+        try {
+            const patients = await apiService.getAllPatients();
+            const patient = patients.find(p => p.email === email || p.Email === email);
+            
+            if (patient) {
+                const patientId = patient.id || patient.Id;
+                localStorage.setItem('patientId', patientId.toString());
+                
+                // Update current user with patient ID
+                this.currentUser.id = patientId;
+                this.currentUser.patientId = patientId;
+                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                
+                console.log('Patient ID stored:', patientId);
+            } else {
+                console.warn('Patient not found for email:', email);
+            }
+        } catch (error) {
+            console.error('Error fetching patient ID:', error);
+        }
     }
 
     async handleProfileUpdate(event, patientId) {

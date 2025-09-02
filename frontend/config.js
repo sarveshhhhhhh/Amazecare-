@@ -3,6 +3,11 @@
 // Base API URL - Update this to match your backend server
 const API_BASE_URL = 'http://localhost:5120/api';
 
+// Config object for compatibility
+const config = {
+    API_BASE_URL: API_BASE_URL
+};
+
 // API Endpoints Configuration
 const API_ENDPOINTS = {
     // Authentication endpoints
@@ -49,7 +54,8 @@ const API_ENDPOINTS = {
         CREATE: `${API_BASE_URL}/Appointment`,
         UPDATE: (id) => `${API_BASE_URL}/Appointment/${id}`,
         DELETE: (id) => `${API_BASE_URL}/Appointment/${id}`,
-        CANCEL: (id) => `${API_BASE_URL}/Appointment/${id}/cancel`
+        CANCEL: (id) => `${API_BASE_URL}/Appointment/${id}/cancel`,
+        GET_BY_PATIENT: (patientId) => `${API_BASE_URL}/Appointment/patient/${patientId}`
     },
 
     // Medical Record endpoints

@@ -78,5 +78,15 @@ namespace PAmazeCare.Controllers
             if (!canceled) return NotFound($"Appointment with ID {id} not found");
             return NoContent();
         }
+
+        [HttpGet("patient/{patientId}")]
+        public async Task<IActionResult> GetAppointmentsByPatientId(int patientId, [FromQuery] PaginationParams paginationParams)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var pagedResult = await _appointmentService.GetAppointmentsByPatientIdAsync(patientId, paginationParams);
+            return Ok(pagedResult);
+        }
     }
 }

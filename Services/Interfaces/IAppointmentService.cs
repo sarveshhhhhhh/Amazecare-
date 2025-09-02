@@ -13,5 +13,6 @@ namespace PAmazeCare.Services.Interfaces
         Task<bool> UpdateAppointmentAsync(int id, UpdateAppointmentDto dto);
         Task<bool> CancelAppointmentAsync(int id);
         Task<bool> DeleteAppointmentAsync(int id);
+        Task<PagedResult<AppointmentDto>> GetAppointmentsByPatientIdAsync(int patientId, PaginationParams paginationParams);
     }
 }

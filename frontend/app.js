@@ -75,6 +75,11 @@ class PAmazeCareApp {
                     token: response.token,
                     isAdmin: isAdmin
                 };
+
+                // For patients, try to fetch and store patient ID
+                if (user.userType?.toLowerCase() === 'patient') {
+                    await this.fetchPatientId(user.email);
+                }
                 
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 this.currentUser = user;
@@ -141,7 +146,7 @@ class PAmazeCareApp {
         
         // Check if user is admin and show appropriate dashboard
         if (this.currentUser && this.currentUser.isAdmin) {
-            document.getElementById('adminDashboard').classList.add('active');
+            document.getElementById('dashboardPage').classList.add('active');
             this.showView('dashboard');
             this.loadDashboardData();
         } else {
@@ -211,6 +216,64 @@ class PAmazeCareApp {
                 item.style.display = 'none';
             }
         });
+
+        // For patients, check if they have created their patient profile
+        if (userType === 'patient') {
+            this.checkPatientProfile();
+        }
+    }
+
+    async checkPatientProfile() {
+        const patientId = localStorage.getItem('patientId');
+        if (!patientId) {
+            // Show add member prompt in dashboard
+            this.showAddMemberPrompt();
+        }
+    }
+
+    showAddMemberPrompt() {
+        const dashboardView = document.getElementById('dashboardView');
+        if (dashboardView) {
+            const promptHtml = `
+                <div class="member-prompt">
+                    <div class="prompt-card">
+                        <h3>Complete Your Profile</h3>
+                        <p>Please add your member details to access appointments and medical records.</p>
+                        <button class="btn btn-primary" onclick="app.showAddMemberForm()">
+                            <i class="fas fa-user-plus"></i> Add Member Details
+                        </button>
+                    </div>
+                </div>
+            `;
+            dashboardView.innerHTML = promptHtml + dashboardView.innerHTML;
+        }
+    }
+
+    async fetchPatientId(email) {
+        try {
+            console.log('Fetching patient ID for email:', email);
+            
+            // Get all patients and find the one with matching email
+            const patients = await apiService.getAllPatients();
+            console.log('All patients:', patients);
+            
+            const patient = patients.find(p => p.email?.toLowerCase() === email.toLowerCase());
+            console.log('Found patient:', patient);
+            
+            if (patient && patient.id) {
+                localStorage.setItem('patientId', patient.id.toString());
+                this.currentUser.patientId = patient.id;
+                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                console.log('Patient ID stored in localStorage:', patient.id);
+                return patient.id;
+            } else {
+                console.log('No patient record found for email:', email);
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching patient ID:', error);
+            return null;
+        }
     }
 
     // ==================== DATA LOADING ====================
@@ -266,6 +329,86 @@ class PAmazeCareApp {
                 }
             }
         });
+    }
+
+    // ==================== MEMBER MANAGEMENT FOR PATIENTS ====================
+    async showAddMemberForm() {
+        const modalHtml = `
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Add Member Details</h2>
+                    <button class="modal-close" onclick="app.closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMemberForm">
+                        <div class="form-group">
+                            <label for="memberFullName">Full Name</label>
+                            <input type="text" id="memberFullName" name="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="memberEmail">Email</label>
+                            <input type="email" id="memberEmail" name="email" value="${this.currentUser?.email || ''}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="memberContact">Contact Number</label>
+                            <input type="tel" id="memberContact" name="contactNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="memberDOB">Date of Birth</label>
+                            <input type="date" id="memberDOB" name="dateOfBirth" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="memberGender">Gender</label>
+                            <select id="memberGender" name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="app.closeModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="app.saveMemberDetails()">Save Member</button>
+                </div>
+            </div>
+        `;
+        this.showModal(modalHtml);
+    }
+
+    async saveMemberDetails() {
+        try {
+            const form = document.getElementById('addMemberForm');
+            const formData = new FormData(form);
+            
+            const patientDto = {
+                fullName: formData.get('fullName'),
+                email: formData.get('email'),
+                contactNumber: formData.get('contactNumber'),
+                dateOfBirth: formData.get('dateOfBirth'),
+                gender: formData.get('gender')
+            };
+
+            const response = await apiService.createPatient(patientDto);
+            
+            // Store patient ID in localStorage
+            if (response && response.id) {
+                localStorage.setItem('patientId', response.id.toString());
+                this.currentUser.patientId = response.id;
+                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+            }
+
+            this.showNotification('Member details saved successfully!', 'success');
+            this.closeModal();
+            
+            // Refresh dashboard to remove the prompt
+            this.showDashboard();
+            
+        } catch (error) {
+            console.error('Error saving member details:', error);
+            this.showNotification('Error saving member details', 'error');
+        }
     }
 
     // ==================== PATIENTS MANAGEMENT ====================
@@ -794,10 +937,70 @@ class PAmazeCareApp {
         try {
             this.showLoading(true);
             const paginationParams = { pageNumber: page, pageSize: this.pageSize };
-            const response = await apiService.getAllAppointmentsPaged(paginationParams);
             
-            this.renderAppointmentsTable(response.items || []);
-            this.renderPagination('appointments', response, page);
+            // For patients, use patient ID from localStorage to get only their appointments
+            if (this.currentUser?.userType?.toLowerCase() === 'patient') {
+                const patientId = localStorage.getItem('patientId');
+                if (patientId) {
+                    console.log('Loading appointments for patient ID:', patientId);
+                    const response = await apiService.getPatientAppointments(patientId, paginationParams);
+                    console.log('Raw backend response for patient appointments ><><>>>><>><><><><><><:', response);
+                    
+                    let appointments = [];
+                    let paginatedResponse = {
+                        items: [],
+                        totalCount: 0,
+                        pageNumber: 1,
+                        pageSize: this.pageSize
+                    };
+                    
+                    // Handle the response properly - backend returns {items: Array, totalCount, pageNumber, pageSize}
+                    if (response && typeof response === 'object') {
+                        if (response.items && Array.isArray(response.items)) {
+                            console.log('Using paginated response format with items array');
+                            appointments = response.items;
+                            paginatedResponse = {
+                                items: response.items,
+                                totalCount: response.totalCount || response.items.length,
+                                pageNumber: response.pageNumber || 1,
+                                pageSize: response.pageSize || this.pageSize
+                            };
+                        } else if (Array.isArray(response)) {
+                            console.log('Response is direct array');
+                            appointments = response;
+                            paginatedResponse.items = response;
+                            paginatedResponse.totalCount = response.length;
+                        } else {
+                            console.log('Response object has no items array, checking if response itself is the data');
+                            // Sometimes the response might be the appointments array directly
+                            appointments = [];
+                        }
+                    } else if (Array.isArray(response)) {
+                        console.log('Response is direct array');
+                        appointments = response;
+                        paginatedResponse.items = response;
+                        paginatedResponse.totalCount = response.length;
+                    } else {
+                        console.log('Unknown response format, defaulting to empty array');
+                        appointments = [];
+                    }
+                    
+                    console.log('Final appointments array:', appointments);
+                    console.log('Appointments length:', appointments?.length);
+                    console.log('Is appointments an array?', Array.isArray(appointments));
+                    
+                    this.renderAppointmentsTable(appointments);
+                    this.renderPagination('appointments', paginatedResponse, page);
+                } else {
+                    this.showNotification('Please complete your member profile first.', 'warning');
+                    this.renderAppointmentsTable([]);
+                }
+            } else {
+                // For admin/doctor, get all appointments
+                const response = await apiService.getAllAppointmentsPaged(paginationParams);
+                this.renderAppointmentsTable(response.items || []);
+                this.renderPagination('appointments', response, page);
+            }
         } catch (error) {
             console.error('Error loading appointments:', error);
             this.showNotification('Error loading appointments data', 'error');
@@ -807,10 +1010,35 @@ class PAmazeCareApp {
     }
 
     renderAppointmentsTable(appointments) {
+        console.log('=== RENDER APPOINTMENTS TABLE DEBUG ===');
+        console.log('Received appointments parameter:', appointments);
+        console.log('Type of appointments:', typeof appointments);
+        console.log('Is array?', Array.isArray(appointments));
+        
         const tbody = document.getElementById('appointmentsTableBody');
-        if (!tbody) return;
+        if (!tbody) {
+            console.log('ERROR: appointmentsTableBody element not found');
+            return;
+        }
 
-        tbody.innerHTML = appointments.map(appointment => `
+        if (!appointments || !Array.isArray(appointments)) {
+            console.log('No valid appointments array, showing empty message');
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 2rem; color: var(--gray-500);">
+                        <i class="fas fa-calendar" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                        No appointments found
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        console.log('Rendering', appointments.length, 'appointments');
+        console.log('First appointment:', appointments[0]);
+
+        try {
+            tbody.innerHTML = appointments.map(appointment => `
             <tr>
                 <td>${appointment.id}</td>
                 <td>${appointment.patientName || appointment.patientId || 'N/A'}</td>
@@ -828,15 +1056,54 @@ class PAmazeCareApp {
                 </td>
             </tr>
         `).join('');
+        } catch (error) {
+            console.error('Error rendering appointments table:', error);
+            console.error('Appointments data that caused error:', appointments);
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 2rem; color: var(--error-color);">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                        Error rendering appointments table
+                    </td>
+                </tr>
+            `;
+        }
     }
 
     async showAddAppointment() {
         try {
             this.showLoading(true);
-            const [patients, doctors] = await Promise.all([
-                apiService.getAllPatients().catch(() => []),
-                apiService.getAllDoctors().catch(() => [])
-            ]);
+            
+            // Check if patient has completed their profile
+            if (this.currentUser?.userType?.toLowerCase() === 'patient') {
+                const patientId = localStorage.getItem('patientId');
+                if (!patientId) {
+                    this.showNotification('Please complete your member profile first.', 'warning');
+                    this.showAddMemberForm();
+                    return;
+                }
+            }
+
+            const doctors = await apiService.getAllDoctors().catch(() => []);
+
+            let patientSection = '';
+            if (this.currentUser?.userType?.toLowerCase() === 'patient') {
+                // For patients, use their own patient ID
+                const patientId = localStorage.getItem('patientId');
+                patientSection = `<input type="hidden" name="patientId" value="${patientId}">`;
+            } else {
+                // For admin/doctor, show patient selection
+                const patients = await apiService.getAllPatients().catch(() => []);
+                patientSection = `
+                    <div class="form-group">
+                        <label for="appointmentPatient">Patient</label>
+                        <select id="appointmentPatient" name="patientId" required>
+                            <option value="">Select Patient</option>
+                            ${patients.map(p => `<option value="${p.id}">${p.fullName || p.email}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
+            }
 
             const modalHtml = `
                 <div class="modal">
@@ -846,13 +1113,7 @@ class PAmazeCareApp {
                     </div>
                     <div class="modal-body">
                         <form id="addAppointmentForm">
-                            <div class="form-group">
-                                <label for="appointmentPatient">Patient</label>
-                                <select id="appointmentPatient" name="patientId" required>
-                                    <option value="">Select Patient</option>
-                                    ${patients.map(p => `<option value="${p.id}">${p.fullName || p.email}</option>`).join('')}
-                                </select>
-                            </div>
+                            ${patientSection}
                             <div class="form-group">
                                 <label for="appointmentDoctor">Doctor</label>
                                 <select id="appointmentDoctor" name="doctorId" required>
@@ -869,8 +1130,8 @@ class PAmazeCareApp {
                                 <input type="time" id="appointmentTime" name="appointmentTime" required>
                             </div>
                             <div class="form-group">
-                                <label for="appointmentReason">Reason</label>
-                                <textarea id="appointmentReason" name="reason" rows="3" placeholder="Reason for appointment"></textarea>
+                                <label for="appointmentReason">Symptoms</label>
+                                <textarea id="appointmentReason" name="symptoms" rows="3" placeholder="Describe your symptoms"></textarea>
                             </div>
                         </form>
                     </div>
@@ -899,8 +1160,7 @@ class PAmazeCareApp {
                 doctorId: parseInt(formData.get('doctorId')),
                 appointmentDate: formData.get('appointmentDate'),
                 appointmentTime: formData.get('appointmentTime'),
-                reason: formData.get('reason') || 'General consultation',
-                status: 'Scheduled'
+                symptoms: formData.get('symptoms') || 'General consultation'
             };
 
             await apiService.createAppointment(appointmentDto);
@@ -1260,202 +1520,6 @@ function showAddPatient() { app.showAddPatient(); }
 function showAddDoctor() { app.showAddDoctor(); }
 function showAddAppointment() { app.showAddAppointment(); }
 function showAddPrescription() { app.showAddPrescription(); }
-function showAddMedicalRecord() { app.showAddMedicalRecord(); }
-function showAddTest() { app.showAddTest(); }
-function showAddDosage() { app.showAddDosage(); }
-function showAddAdmin() { app.showAddAdmin(); }
-
-// Initialize app when DOM is loaded
-let app;
-document.addEventListener('DOMContentLoaded', () => {
-    app = new PAmazeCareApp();
-    function logout() { app.logout(); }
-});
-
-            // Load patients and doctors for dropdowns
-            const [patients, doctors] = await Promise.all([
-                apiService.getAllPatients(),
-                apiService.getAllDoctors()
-            ]);
-
-            const modalHtml = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <h2>Book New Appointment</h2>
-                        <button class="modal-close" onclick="app.closeModal()">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="addAppointmentForm">
-                            <div class="form-group">
-                                <label for="appointmentPatient">Patient</label>
-                                <select id="appointmentPatient" name="patientId" required>
-                                    <option value="">Select Patient</option>
-                                    ${patients.map(patient => `<option value="${patient.id}">${patient.fullName || patient.email}</option>`).join('')}
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="appointmentDoctor">Doctor</label>
-                                <select id="appointmentDoctor" name="doctorId" required>
-                                    <option value="">Select Doctor</option>
-                                    ${doctors.map(doctor => `<option value="${doctor.id}">${doctor.fullName || doctor.email} - ${doctor.specialty || 'General'}</option>`).join('')}
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="appointmentDate">Date</label>
-                                <input type="date" id="appointmentDate" name="appointmentDate" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="appointmentTime">Time</label>
-                                <input type="time" id="appointmentTime" name="appointmentTime" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="appointmentReason">Reason</label>
-                                <textarea id="appointmentReason" name="reason" rows="3" placeholder="Reason for appointment"></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="app.closeModal()">Cancel</button>
-                        <button class="btn btn-primary" onclick="app.saveAppointment()">Book Appointment</button>
-                    </div>
-                </div>
-            `;
-            this.showModal(modalHtml);
-        } catch (error) {
-            console.error('Error loading appointment form data:', error);
-            this.showNotification('Error loading form data', 'error');
-        }
-    }
-
-    async saveAppointment() {
-        try {
-            const form = document.getElementById('addAppointmentForm');
-            const formData = new FormData(form);
-            
-            const appointmentDto = {
-                patientId: parseInt(formData.get('patientId')),
-                doctorId: parseInt(formData.get('doctorId')),
-                appointmentDate: formData.get('appointmentDate'),
-                appointmentTime: formData.get('appointmentTime'),
-                reason: formData.get('reason'),
-                status: 'Scheduled'
-            };
-
-            await apiService.createAppointment(appointmentDto);
-            this.showNotification('Appointment booked successfully!', 'success');
-            this.closeModal();
-            await this.loadAppointmentsData();
-        } catch (error) {
-            console.error('Error saving appointment:', error);
-            this.showNotification('Error booking appointment', 'error');
-        }
-    }
-
-    async viewAppointment(id) {
-        try {
-            const appointment = await apiService.getAppointmentById(id);
-            const modalHtml = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <h2>Appointment Details</h2>
-                        <button class="modal-close" onclick="app.closeModal()">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="appointment-details">
-                            <p><strong>ID:</strong> ${appointment.id}</p>
-                            <p><strong>Patient:</strong> ${appointment.patientName || appointment.patientId || 'N/A'}</p>
-                            <p><strong>Doctor:</strong> ${appointment.doctorName || appointment.doctorId || 'N/A'}</p>
-                            <p><strong>Date:</strong> ${appointment.appointmentDate ? new Date(appointment.appointmentDate).toLocaleDateString() : 'N/A'}</p>
-                            <p><strong>Time:</strong> ${appointment.appointmentTime || 'N/A'}</p>
-                            <p><strong>Status:</strong> ${appointment.status || 'Pending'}</p>
-                            <p><strong>Reason:</strong> ${appointment.reason || 'N/A'}</p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="app.closeModal()">Close</button>
-                        <button class="btn btn-warning" onclick="app.cancelAppointment(${appointment.id})">Cancel Appointment</button>
-                    </div>
-                </div>
-            `;
-            this.showModal(modalHtml);
-        } catch (error) {
-            console.error('Error viewing appointment:', error);
-            this.showNotification('Error loading appointment details', 'error');
-        }
-    }
-
-    async cancelAppointment(id) {
-        if (!confirm('Are you sure you want to cancel this appointment?')) return;
-
-        try {
-            await apiService.cancelAppointment(id);
-            this.showNotification('Appointment cancelled successfully!', 'success');
-            await this.loadAppointmentsData();
-        } catch (error) {
-            console.error('Error cancelling appointment:', error);
-            this.showNotification('Error cancelling appointment', 'error');
-        }
-    }
-
-    // ==================== OTHER MODULES ====================
-    async showMedicalRecords() {
-        this.showView('medicalRecords');
-        this.showNotification('Medical Records module loaded', 'info');
-    }
-
-    async showPrescriptions() {
-        this.showView('prescriptions');
-        this.showNotification('Prescriptions module loaded', 'info');
-    }
-
-    async showTests() {
-        this.showView('tests');
-        this.showNotification('Tests module loaded', 'info');
-    }
-
-    async showDosage() {
-        this.showView('dosage');
-        this.showNotification('Dosage Master module loaded', 'info');
-    }
-
-    async showAdmins() {
-        this.showView('admins');
-        this.showNotification('Administrators module loaded', 'info');
-    }
-
-    showProfile() {
-        this.showNotification('Profile management - Coming soon!', 'info');
-    }
-
-    showSettings() {
-        this.showNotification('Settings - Coming soon!', 'info');
-    }
-
-    // ==================== EVENT LISTENERS ====================
-    setupEventListeners() {
-        const loginForm = document.getElementById('loginForm');
-        if (loginForm) {
-            loginForm.addEventListener('submit', (e) => this.handleLogin(e));
-        }
-
-        const registerForm = document.getElementById('registerForm');
-        if (registerForm) {
-            registerForm.addEventListener('submit', (e) => this.handleRegister(e));
-        }
-
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-container')) {
-                this.closeModal();
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closeModal();
-            }
-        });
-    }
-}
 
 // ==================== GLOBAL FUNCTIONS ====================
 function togglePassword() {
@@ -1465,10 +1529,12 @@ function togglePassword() {
     
     if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
     } else {
         passwordInput.type = 'password';
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
     }
 }
 
@@ -1479,32 +1545,34 @@ function toggleRegisterPassword() {
     
     if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
     } else {
         passwordInput.type = 'password';
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
     }
 }
 
 function toggleUserMenu() {
     const menu = document.getElementById('userMenu');
-    menu.classList.toggle('show');
+    if (menu) menu.classList.toggle('show');
 }
 
-function showLogin() { app.showLogin(); }
-function showRegister() { app.showRegister(); }
-function showDashboard() { app.showDashboard(); }
-function showPatients() { app.showPatients(); }
-function showDoctors() { app.showDoctors(); }
-function showAppointments() { app.showAppointments(); }
-function showMedicalRecords() { app.showMedicalRecords(); }
-function showPrescriptions() { app.showPrescriptions(); }
-function showTests() { app.showTests(); }
-function showDosage() { app.showDosage(); }
-function showAdmins() { app.showAdmins(); }
-function showProfile() { app.showProfile(); }
-function showSettings() { app.showSettings(); }
-function logout() { app.logout(); }
+function showLogin() { if(app) app.showLogin(); }
+function showRegister() { if(app) app.showRegister(); }
+function showDashboard() { if(app) app.showDashboard(); }
+function showPatients() { if(app) app.showPatients(); }
+function showDoctors() { if(app) app.showDoctors(); }
+function showAppointments() { if(app) app.showAppointments(); }
+function showMedicalRecords() { if(app) app.showMedicalRecords(); }
+function showPrescriptions() { if(app) app.showPrescriptions(); }
+function showTests() { if(app) app.showTests(); }
+function showDosage() { if(app) app.showDosage(); }
+function showAdmins() { if(app) app.showAdmins(); }
+function showProfile() { if(app) app.showProfile(); }
+function showSettings() { if(app) app.showSettings(); }
+function logout() { if(app) app.logout(); }
 
 // Initialize the application
 let app;

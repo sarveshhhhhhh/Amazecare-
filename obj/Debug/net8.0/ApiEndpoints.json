@@ -246,6 +246,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "PAmazeCare.Controllers.AppointmentController",
+    "Method": "GetAppointmentsByPatientId",
+    "RelativePath": "api/Appointment/patient/{patientId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "patientId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "PAmazeCare.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
