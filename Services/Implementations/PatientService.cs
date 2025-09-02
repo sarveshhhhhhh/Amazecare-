@@ -133,7 +133,8 @@ namespace PAmazeCare.Services.Implementations
                     FullName = dto.FullName,
                     PasswordHash = HashPassword(dto.Password),
                     Role = 2,
-                    UserType = UserTypeEnum.Patient.ToString()
+                    UserType = UserTypeEnum.Patient.ToString(),
+                    CreatedAt = DateTime.Now
                 };
 
                 _context.Users.Add(user);
@@ -145,7 +146,8 @@ namespace PAmazeCare.Services.Implementations
                     FullName = dto.FullName,
                     Email = dto.Email,
                     ContactNumber = dto.ContactNumber,
-                    DateOfBirth = dto.DateOfBirth.Value
+                    DateOfBirth = dto.DateOfBirth.Value,
+                    PasswordHash = HashPassword(dto.Password)
                 };
 
                 _context.Patients.Add(patient);

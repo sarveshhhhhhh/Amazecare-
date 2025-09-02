@@ -12,8 +12,8 @@ using PAmazeCare.Data;
 namespace PAmazeCare.Migrations
 {
     [DbContext(typeof(PAmazeCareContext))]
-    [Migration("20250901213328_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250902065050_CurrentState")]
+    partial class CurrentState
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -1,4 +1,4 @@
-﻿namespace PAmazeCare.Models
+namespace PAmazeCare.Models
 {
     public class MedicalRecord
     {
@@ -8,5 +8,9 @@
         public DateTime Date { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsDeleted { get; set; } = false;
+        public int? AppointmentId { get; set; }
+        
+        // Navigation property
+        public Appointment? Appointment { get; set; }
     }
 }

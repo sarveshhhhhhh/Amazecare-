@@ -3,6 +3,30 @@
   "WorkspaceRootPath": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\dtos\\medicalreorddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:dtos\\medicalreorddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\controllers\\medicalrecordcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:controllers\\medicalrecordcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\dtos\\createdoctordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:dtos\\createdoctordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\controllers\\prescriptioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:controllers\\prescriptioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\dtos\\prescriptiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:dtos\\prescriptiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -19,16 +43,8 @@
       "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:models\\prescription.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\controllers\\prescriptioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:controllers\\prescriptioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\models\\usertypeenum.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -75,10 +91,6 @@
       "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:data\\pamazecarecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
@@ -91,20 +103,12 @@
       "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:services\\implementations\\patientservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\controllers\\medicalrecordcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:controllers\\medicalrecordcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\services\\implementations\\medicalrecordservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:services\\implementations\\medicalrecordservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\services\\interfaces\\imedicalrecordservie.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:services\\interfaces\\imedicalrecordservie.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\dtos\\medicalreorddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|solutionrelative:dtos\\medicalreorddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FA81ED83-EC70-46D7-B8FE-16DDD18EAED9}|PAmazeCare.csproj|c:\\users\\sarve\\source\\repos\\pamazecare\\services\\interfaces\\irecommendedtestservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -337,11 +341,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 73,
+              "DocumentIndex": 74,
               "Title": "DoctorServiceTests.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare.Tests\\Services\\DoctorServiceTests.cs",
               "RelativeDocumentMoniker": "..\\PAmazeCare.Tests\\Services\\DoctorServiceTests.cs",
@@ -353,73 +357,37 @@
               "IsPinned": true
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "PrescriptionController.cs",
-              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\PrescriptionController.cs",
-              "RelativeDocumentMoniker": "Controllers\\PrescriptionController.cs",
-              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\PrescriptionController.cs",
-              "RelativeToolTip": "Controllers\\PrescriptionController.cs",
-              "ViewState": "AgIAADAAAAAAAAAAAAAAAFgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-08T11:57:07.804Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "PrescriptionDto.cs",
-              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\PrescriptionDto.cs",
-              "RelativeDocumentMoniker": "DTOs\\PrescriptionDto.cs",
-              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\PrescriptionDto.cs*",
-              "RelativeToolTip": "DTOs\\PrescriptionDto.cs*",
-              "ViewState": "AgIAACAAAAAAAAAAAAA+wCcAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "CreateDoctorDto.cs",
+              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\CreateDoctorDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\CreateDoctorDto.cs",
+              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\CreateDoctorDto.cs",
+              "RelativeToolTip": "DTOs\\CreateDoctorDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-08T11:44:52.914Z",
+              "WhenOpened": "2025-09-02T07:39:59.286Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "Controllers\\AuthController.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAQwCoAAAAAAAAAAAAAAA==",
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAAAHgAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-02T19:09:13.655Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-02T18:44:07.642Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Prescription.cs",
-              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\Prescription.cs",
-              "RelativeDocumentMoniker": "Models\\Prescription.cs",
-              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\Prescription.cs",
-              "RelativeToolTip": "Models\\Prescription.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-02T18:38:49.829Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "PrescriptionService.cs",
-              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Implementations\\PrescriptionService.cs",
-              "RelativeDocumentMoniker": "Services\\Implementations\\PrescriptionService.cs",
-              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Implementations\\PrescriptionService.cs",
-              "RelativeToolTip": "Services\\Implementations\\PrescriptionService.cs",
-              "ViewState": "AgIAAK0AAAAAAAAAAAAAwNYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-08T11:50:06.141Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 7,
               "Title": "IPrescriptionService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Interfaces\\IPrescriptionService.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\IPrescriptionService.cs",
@@ -427,12 +395,49 @@
               "RelativeToolTip": "Services\\Interfaces\\IPrescriptionService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-08T11:49:56.316Z",
+              "WhenOpened": "2025-08-08T11:49:56.316Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MedicalRecordController.cs",
+              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\MedicalRecordController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MedicalRecordController.cs",
+              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\MedicalRecordController.cs",
+              "RelativeToolTip": "Controllers\\MedicalRecordController.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAA5wFMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-01T19:37:38.361Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 0,
+              "Title": "MedicalReordDto.cs",
+              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\MedicalReordDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\MedicalReordDto.cs",
+              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\MedicalReordDto.cs",
+              "RelativeToolTip": "DTOs\\MedicalReordDto.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAowBkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-01T19:38:15.015Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-08-02T18:43:44.127Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
               "Title": "Patient.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\Patient.cs",
               "RelativeDocumentMoniker": "Models\\Patient.cs",
@@ -440,25 +445,72 @@
               "RelativeToolTip": "Models\\Patient.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-02T18:37:16.364Z",
+              "WhenOpened": "2025-08-02T18:37:16.364Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PrescriptionController.cs",
+              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\PrescriptionController.cs",
+              "RelativeDocumentMoniker": "Controllers\\PrescriptionController.cs",
+              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\PrescriptionController.cs",
+              "RelativeToolTip": "Controllers\\PrescriptionController.cs",
+              "ViewState": "AgIAADwAAAAAAAAAAAAAAEcAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-08T11:57:07.804Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\AuthController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwCoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-02T19:09:13.655Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Prescription.cs",
+              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\Prescription.cs",
+              "RelativeDocumentMoniker": "Models\\Prescription.cs",
+              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\Prescription.cs",
+              "RelativeToolTip": "Models\\Prescription.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-02T18:38:49.829Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PrescriptionService.cs",
+              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Implementations\\PrescriptionService.cs",
+              "RelativeDocumentMoniker": "Services\\Implementations\\PrescriptionService.cs",
+              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Implementations\\PrescriptionService.cs",
+              "RelativeToolTip": "Services\\Implementations\\PrescriptionService.cs",
+              "ViewState": "AgIAAK0AAAAAAAAAAAAAwNYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-08T11:50:06.141Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-08-02T18:43:44.127Z",
-              "EditorCaption": ""
+              "Title": "PrescriptionDto.cs",
+              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\PrescriptionDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\PrescriptionDto.cs",
+              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\PrescriptionDto.cs",
+              "RelativeToolTip": "DTOs\\PrescriptionDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-08T11:44:52.914Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 11,
               "Title": "UserTypeEnum.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\UserTypeEnum.cs",
               "RelativeDocumentMoniker": "Models\\UserTypeEnum.cs",
@@ -466,12 +518,11 @@
               "RelativeToolTip": "Models\\UserTypeEnum.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-13T08:08:49.444Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-13T08:08:49.444Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 12,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\User.cs",
               "RelativeDocumentMoniker": "Models\\User.cs",
@@ -479,16 +530,11 @@
               "RelativeToolTip": "Models\\User.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-30T06:43:28.118Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+              "WhenOpened": "2025-08-30T06:43:28.118Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 13,
               "Title": "TestMaster.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\TestMaster.cs",
               "RelativeDocumentMoniker": "Models\\TestMaster.cs",
@@ -496,12 +542,11 @@
               "RelativeToolTip": "Models\\TestMaster.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-02T18:38:08.077Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-02T18:38:08.077Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "RecommendedTest.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\RecommendedTest.cs",
               "RelativeDocumentMoniker": "Models\\RecommendedTest.cs",
@@ -509,12 +554,11 @@
               "RelativeToolTip": "Models\\RecommendedTest.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-02T18:39:03.962Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-02T18:39:03.962Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 16,
               "Title": "MedicalRecord.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\MedicalRecord.cs",
               "RelativeDocumentMoniker": "Models\\MedicalRecord.cs",
@@ -522,12 +566,11 @@
               "RelativeToolTip": "Models\\MedicalRecord.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-01T19:32:42.984Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-01T19:32:42.984Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 17,
               "Title": "DosageMaster.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\DosageMaster.cs",
               "RelativeDocumentMoniker": "Models\\DosageMaster.cs",
@@ -535,12 +578,11 @@
               "RelativeToolTip": "Models\\DosageMaster.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-02T18:37:46.884Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-02T18:37:46.884Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 18,
               "Title": "Doctor.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\Doctor.cs",
               "RelativeDocumentMoniker": "Models\\Doctor.cs",
@@ -548,12 +590,11 @@
               "RelativeToolTip": "Models\\Doctor.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-13T04:33:37.422Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-13T04:33:37.422Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 19,
               "Title": "Appointment.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\Appointment.cs",
               "RelativeDocumentMoniker": "Models\\Appointment.cs",
@@ -561,12 +602,11 @@
               "RelativeToolTip": "Models\\Appointment.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-02T18:38:22.475Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-02T18:38:22.475Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 20,
               "Title": "Admin.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\Admin.cs",
               "RelativeDocumentMoniker": "Models\\Admin.cs",
@@ -574,12 +614,11 @@
               "RelativeToolTip": "Models\\Admin.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-02T18:37:32.281Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-02T18:37:32.281Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 21,
               "Title": "PAmazeCareContext.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Data\\PAmazeCareContext.cs",
               "RelativeDocumentMoniker": "Data\\PAmazeCareContext.cs",
@@ -587,25 +626,11 @@
               "RelativeToolTip": "Data\\PAmazeCareContext.cs",
               "ViewState": "AgIAACoAAAAAAAAAAAAlwBgAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-30T06:40:35.715Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-30T06:40:35.715Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAuwHwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-02T18:44:07.642Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 22,
               "Title": ".gitignore",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\.gitignore",
               "RelativeDocumentMoniker": ".gitignore",
@@ -613,12 +638,11 @@
               "RelativeToolTip": ".gitignore",
               "ViewState": "AgIAAKwBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-09-01T20:12:27.856Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-01T20:12:27.856Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 23,
               "Title": "PatientDto.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\PatientDto.cs",
               "RelativeDocumentMoniker": "DTOs\\PatientDto.cs",
@@ -626,12 +650,11 @@
               "RelativeToolTip": "DTOs\\PatientDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-30T06:38:45.142Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-30T06:38:45.142Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 24,
               "Title": "PatientService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Implementations\\PatientService.cs",
               "RelativeDocumentMoniker": "Services\\Implementations\\PatientService.cs",
@@ -639,25 +662,11 @@
               "RelativeToolTip": "Services\\Implementations\\PatientService.cs",
               "ViewState": "AgIAAHIAAAAAAAAAAAAhwIcAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-26T04:58:46.727Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-26T04:58:46.727Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "MedicalRecordController.cs",
-              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\MedicalRecordController.cs",
-              "RelativeDocumentMoniker": "Controllers\\MedicalRecordController.cs",
-              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\MedicalRecordController.cs",
-              "RelativeToolTip": "Controllers\\MedicalRecordController.cs",
-              "ViewState": "AgIAAFIAAAAAAAAAAAAwwFMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-01T19:37:38.361Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 25,
               "Title": "MedicalRecordService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Implementations\\MedicalRecordService.cs",
               "RelativeDocumentMoniker": "Services\\Implementations\\MedicalRecordService.cs",
@@ -665,12 +674,11 @@
               "RelativeToolTip": "Services\\Implementations\\MedicalRecordService.cs",
               "ViewState": "AgIAAIoAAAAAAAAAAAAQwLQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-01T19:36:04.888Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-01T19:36:04.888Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 26,
               "Title": "IMedicalRecordServie.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Interfaces\\IMedicalRecordServie.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\IMedicalRecordServie.cs",
@@ -678,25 +686,11 @@
               "RelativeToolTip": "Services\\Interfaces\\IMedicalRecordServie.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-01T19:36:29.716Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-01T19:36:29.716Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
-              "Title": "MedicalReordDto.cs",
-              "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\MedicalReordDto.cs",
-              "RelativeDocumentMoniker": "DTOs\\MedicalReordDto.cs",
-              "ToolTip": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\MedicalReordDto.cs",
-              "RelativeToolTip": "DTOs\\MedicalReordDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-01T19:38:15.015Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 27,
               "Title": "IRecommendedTestService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Interfaces\\IRecommendedTestService.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\IRecommendedTestService.cs",
@@ -704,12 +698,11 @@
               "RelativeToolTip": "Services\\Interfaces\\IRecommendedTestService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-08T12:22:09.756Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-08T12:22:09.756Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 28,
               "Title": "RecommendedTestService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Implementations\\RecommendedTestService.cs",
               "RelativeDocumentMoniker": "Services\\Implementations\\RecommendedTestService.cs",
@@ -717,12 +710,11 @@
               "RelativeToolTip": "Services\\Implementations\\RecommendedTestService.cs",
               "ViewState": "AgIAAI8AAAAAAAAAAADwv7cAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-08T12:22:18.844Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-08T12:22:18.844Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 29,
               "Title": "RecommendedTestDto.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\RecommendedTestDto.cs",
               "RelativeDocumentMoniker": "DTOs\\RecommendedTestDto.cs",
@@ -730,12 +722,11 @@
               "RelativeToolTip": "DTOs\\RecommendedTestDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-08T12:21:35.489Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-08T12:21:35.489Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 30,
               "Title": "RecommendedTestController.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\RecommendedTestController.cs",
               "RelativeDocumentMoniker": "Controllers\\RecommendedTestController.cs",
@@ -743,12 +734,11 @@
               "RelativeToolTip": "Controllers\\RecommendedTestController.cs",
               "ViewState": "AgIAACsAAAAAAAAAAAAuwFMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-08T12:25:25.106Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-08T12:25:25.106Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 31,
               "Title": "AuthService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Implementations\\AuthService.cs",
               "RelativeDocumentMoniker": "Services\\Implementations\\AuthService.cs",
@@ -756,12 +746,11 @@
               "RelativeToolTip": "Services\\Implementations\\AuthService.cs",
               "ViewState": "AgIAABgAAAAAAAAAAAAlwC4AAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-26T08:03:39.954Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-26T08:03:39.954Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 33,
               "Title": "AppointmentService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Implementations\\AppointmentService.cs",
               "RelativeDocumentMoniker": "Services\\Implementations\\AppointmentService.cs",
@@ -769,12 +758,11 @@
               "RelativeToolTip": "Services\\Implementations\\AppointmentService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-01T19:30:42.521Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-01T19:30:42.521Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 34,
               "Title": "PAmazeCare.AssemblyInfo.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\obj\\Debug\\net8.0\\PAmazeCare.AssemblyInfo.cs",
               "RelativeDocumentMoniker": "obj\\Debug\\net8.0\\PAmazeCare.AssemblyInfo.cs",
@@ -782,12 +770,11 @@
               "RelativeToolTip": "obj\\Debug\\net8.0\\PAmazeCare.AssemblyInfo.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-31T20:08:22.918Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-31T20:08:22.918Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 35,
               "Title": "DoctorService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Implementations\\DoctorService.cs",
               "RelativeDocumentMoniker": "Services\\Implementations\\DoctorService.cs",
@@ -799,7 +786,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 32,
               "Title": "AppointmentController.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\AppointmentController.cs",
               "RelativeDocumentMoniker": "Controllers\\AppointmentController.cs",
@@ -807,12 +794,11 @@
               "RelativeToolTip": "Controllers\\AppointmentController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAFEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-13T08:28:33.413Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-13T08:28:33.413Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 36,
               "Title": "IDoctorService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Interfaces\\IDoctorService.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\IDoctorService.cs",
@@ -824,7 +810,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 45,
               "Title": "TokenService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\TokenService.cs",
               "RelativeDocumentMoniker": "Services\\TokenService.cs",
@@ -836,7 +822,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 37,
               "Title": "README.md",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\frontend\\README.md",
               "RelativeDocumentMoniker": "frontend\\README.md",
@@ -848,7 +834,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 40,
               "Title": "IAuthService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Interfaces\\IAuthService.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\IAuthService.cs",
@@ -860,7 +846,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 39,
               "Title": "AuthResponse.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\AuthResponse.cs",
               "RelativeDocumentMoniker": "DTOs\\AuthResponse.cs",
@@ -872,7 +858,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 38,
               "Title": "AuthRequest.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\AuthRequest.cs",
               "RelativeDocumentMoniker": "DTOs\\AuthRequest.cs",
@@ -884,7 +870,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 42,
               "Title": "LoginDto.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\Auth\\LoginDto.cs",
               "RelativeDocumentMoniker": "Models\\Auth\\LoginDto.cs",
@@ -896,7 +882,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 41,
               "Title": "RegisterDto.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Models\\Auth\\RegisterDto.cs",
               "RelativeDocumentMoniker": "Models\\Auth\\RegisterDto.cs",
@@ -908,7 +894,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 43,
               "Title": "ITestMasterService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Interfaces\\ITestMasterService.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\ITestMasterService.cs",
@@ -920,7 +906,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 44,
               "Title": "Microsoft.Common.CurrentVersion.targets",
               "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
@@ -932,7 +918,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 46,
               "Title": "ITokenService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\ITokenService.cs",
               "RelativeDocumentMoniker": "Services\\ITokenService.cs",
@@ -944,7 +930,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 74,
+              "DocumentIndex": 75,
               "Title": "AdminServiceTests.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare.Tests\\Services\\AdminServiceTests.cs",
               "RelativeDocumentMoniker": "..\\PAmazeCare.Tests\\Services\\AdminServiceTests.cs",
@@ -956,7 +942,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 47,
               "Title": "IPatientService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Interfaces\\IPatientService.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\IPatientService.cs",
@@ -968,7 +954,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 48,
               "Title": "IDosageMasterService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Interfaces\\IDosageMasterService.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\IDosageMasterService.cs",
@@ -980,7 +966,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 49,
               "Title": "IAppointmentService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Interfaces\\IAppointmentService.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\IAppointmentService.cs",
@@ -992,7 +978,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 50,
               "Title": "IAdminService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Interfaces\\IAdminService.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\IAdminService.cs",
@@ -1004,7 +990,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 50,
+              "DocumentIndex": 51,
               "Title": "TestMasterService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Implementations\\TestMasterService.cs",
               "RelativeDocumentMoniker": "Services\\Implementations\\TestMasterService.cs",
@@ -1016,7 +1002,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 51,
+              "DocumentIndex": 52,
               "Title": "DosageMasterService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Implementations\\DosageMasterService.cs",
               "RelativeDocumentMoniker": "Services\\Implementations\\DosageMasterService.cs",
@@ -1028,7 +1014,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 52,
+              "DocumentIndex": 53,
               "Title": "AdminService.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Services\\Implementations\\AdminService.cs",
               "RelativeDocumentMoniker": "Services\\Implementations\\AdminService.cs",
@@ -1040,7 +1026,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 53,
+              "DocumentIndex": 54,
               "Title": "GenericRepository.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Repositories\\Implementations\\GenericRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\Implementations\\GenericRepository.cs",
@@ -1052,7 +1038,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 56,
+              "DocumentIndex": 57,
               "Title": "PagedResult.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\PagedResult.cs",
               "RelativeDocumentMoniker": "DTOs\\PagedResult.cs",
@@ -1064,7 +1050,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 54,
+              "DocumentIndex": 55,
               "Title": "TestMasterDto.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\TestMasterDto.cs",
               "RelativeDocumentMoniker": "DTOs\\TestMasterDto.cs",
@@ -1076,7 +1062,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 57,
+              "DocumentIndex": 58,
               "Title": "DosageMasterDto.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\DosageMasterDto.cs",
               "RelativeDocumentMoniker": "DTOs\\DosageMasterDto.cs",
@@ -1088,7 +1074,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 58,
+              "DocumentIndex": 59,
               "Title": "DoctorDTO.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\DoctorDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\DoctorDTO.cs",
@@ -1100,7 +1086,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 59,
+              "DocumentIndex": 60,
               "Title": "CreatePatientDto.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\CreatePatientDto.cs",
               "RelativeDocumentMoniker": "DTOs\\CreatePatientDto.cs",
@@ -1112,7 +1098,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 55,
+              "DocumentIndex": 56,
               "Title": "PaginationParams.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\PaginationParams.cs",
               "RelativeDocumentMoniker": "DTOs\\PaginationParams.cs",
@@ -1124,7 +1110,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 60,
+              "DocumentIndex": 61,
               "Title": "AppointmentDto.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\AppointmentDto.cs",
               "RelativeDocumentMoniker": "DTOs\\AppointmentDto.cs",
@@ -1136,7 +1122,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 61,
+              "DocumentIndex": 62,
               "Title": "AdminDto.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\DTOs\\AdminDto.cs",
               "RelativeDocumentMoniker": "DTOs\\AdminDto.cs",
@@ -1148,7 +1134,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 62,
+              "DocumentIndex": 63,
               "Title": "TestMasterController.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\TestMasterController.cs",
               "RelativeDocumentMoniker": "Controllers\\TestMasterController.cs",
@@ -1160,7 +1146,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 63,
+              "DocumentIndex": 64,
               "Title": "PatientController.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\PatientController.cs",
               "RelativeDocumentMoniker": "Controllers\\PatientController.cs",
@@ -1172,7 +1158,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 64,
+              "DocumentIndex": 65,
               "Title": "DosageMasterController.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\DosageMasterController.cs",
               "RelativeDocumentMoniker": "Controllers\\DosageMasterController.cs",
@@ -1184,7 +1170,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 65,
+              "DocumentIndex": 66,
               "Title": "DoctorController.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\DoctorController.cs",
               "RelativeDocumentMoniker": "Controllers\\DoctorController.cs",
@@ -1196,7 +1182,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 66,
+              "DocumentIndex": 67,
               "Title": "AdminController.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
@@ -1208,7 +1194,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 75,
+              "DocumentIndex": 76,
               "Title": "DosageMasterServiceTests.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare.Tests\\Services\\DosageMasterServiceTests.cs",
               "RelativeDocumentMoniker": "..\\PAmazeCare.Tests\\Services\\DosageMasterServiceTests.cs",
@@ -1220,7 +1206,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 76,
+              "DocumentIndex": 77,
               "Title": "AuthServiceTests.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare.Tests\\Services\\AuthServiceTests.cs",
               "RelativeDocumentMoniker": "..\\PAmazeCare.Tests\\Services\\AuthServiceTests.cs",
@@ -1232,7 +1218,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 77,
+              "DocumentIndex": 78,
               "Title": "PatientServiceTests.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare.Tests\\Services\\PatientServiceTests.cs",
               "RelativeDocumentMoniker": "..\\PAmazeCare.Tests\\Services\\PatientServiceTests.cs",
@@ -1244,7 +1230,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 67,
+              "DocumentIndex": 68,
               "Title": "PAmazeCare.csproj",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\PAmazeCare.csproj",
               "RelativeDocumentMoniker": "PAmazeCare.csproj",
@@ -1256,7 +1242,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 78,
+              "DocumentIndex": 79,
               "Title": "AppointmentServiceTests.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare.Tests\\Services\\AppointmentServiceTests.cs",
               "RelativeDocumentMoniker": "..\\PAmazeCare.Tests\\Services\\AppointmentServiceTests.cs",
@@ -1268,7 +1254,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 79,
+              "DocumentIndex": 80,
               "Title": "PrescriptionServiceTests.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare.Tests\\Services\\PrescriptionServiceTests.cs",
               "RelativeDocumentMoniker": "..\\PAmazeCare.Tests\\Services\\PrescriptionServiceTests.cs",
@@ -1280,7 +1266,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 80,
+              "DocumentIndex": 81,
               "Title": "UnitTest1.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare.Tests\\UnitTest1.cs",
               "RelativeDocumentMoniker": "..\\PAmazeCare.Tests\\UnitTest1.cs",
@@ -1292,7 +1278,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 81,
+              "DocumentIndex": 82,
               "Title": "TestMasterServiceTests.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare.Tests\\Services\\TestMasterServiceTests.cs",
               "RelativeDocumentMoniker": "..\\PAmazeCare.Tests\\Services\\TestMasterServiceTests.cs",
@@ -1304,7 +1290,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 82,
+              "DocumentIndex": 83,
               "Title": "RecommendedTestServiceTests.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare.Tests\\Services\\RecommendedTestServiceTests.cs",
               "RelativeDocumentMoniker": "..\\PAmazeCare.Tests\\Services\\RecommendedTestServiceTests.cs",
@@ -1316,7 +1302,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 83,
+              "DocumentIndex": 84,
               "Title": "MedicalRecordServiceTests.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare.Tests\\Services\\MedicalRecordServiceTests.cs",
               "RelativeDocumentMoniker": "..\\PAmazeCare.Tests\\Services\\MedicalRecordServiceTests.cs",
@@ -1328,7 +1314,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 84,
+              "DocumentIndex": 85,
               "Title": "PAmazeCare.Tests.csproj",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare.Tests\\PAmazeCare.Tests.csproj",
               "RelativeDocumentMoniker": "..\\PAmazeCare.Tests\\PAmazeCare.Tests.csproj",
@@ -1340,7 +1326,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 68,
+              "DocumentIndex": 69,
               "Title": "WeatherForecast.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\WeatherForecast.cs",
               "RelativeDocumentMoniker": "WeatherForecast.cs",
@@ -1352,7 +1338,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 69,
+              "DocumentIndex": 70,
               "Title": "UserRepository.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Repositories\\Implementations\\UserRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\Implementations\\UserRepository.cs",
@@ -1364,7 +1350,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 71,
+              "DocumentIndex": 72,
               "Title": "IUserRepository.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Repositories\\Interfaces\\IUserRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\Interfaces\\IUserRepository.cs",
@@ -1376,7 +1362,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 72,
+              "DocumentIndex": 73,
               "Title": "IGenericRepository.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Repositories\\Interfaces\\IGenericRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\Interfaces\\IGenericRepository.cs",
@@ -1388,7 +1374,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 70,
+              "DocumentIndex": 71,
               "Title": "20250802184633_InitialCreate.cs",
               "DocumentMoniker": "C:\\Users\\sarve\\source\\repos\\PAmazeCare\\Migrations\\20250802184633_InitialCreate.cs",
               "RelativeDocumentMoniker": "Migrations\\20250802184633_InitialCreate.cs",

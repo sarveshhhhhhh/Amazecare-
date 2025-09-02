@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PAmazeCare.Data;
 using PAmazeCare.DTOs;
@@ -118,7 +118,8 @@ namespace PAmazeCare.Services.Implementations
                     Diagnosis = dto.Diagnosis,
                     Treatment = dto.Treatment,
                     Date = dto.Date,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    AppointmentId = dto.AppointmentId
                 };
 
                 _context.MedicalRecords.Add(record);
@@ -130,7 +131,8 @@ namespace PAmazeCare.Services.Implementations
                     Diagnosis = record.Diagnosis,
                     Treatment = record.Treatment,
                     Date = record.Date,
-                    CreatedAt = record.CreatedAt
+                    CreatedAt = record.CreatedAt,
+                    AppointmentId = record.AppointmentId
                 };
             }
             catch (Exception ex)

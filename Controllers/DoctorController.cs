@@ -46,7 +46,7 @@ namespace PAmazeCare.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddDoctor([FromBody] DoctorDto dto)
+        public async Task<IActionResult> AddDoctor([FromBody] CreateDoctorDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

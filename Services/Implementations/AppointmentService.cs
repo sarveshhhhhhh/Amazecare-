@@ -238,7 +238,6 @@ namespace PAmazeCare.Services.Implementations
                 appointment.AppointmentDate = dto.AppointmentDate;
                 appointment.AppointmentTime = dto.AppointmentTime;
                 appointment.Symptoms = dto.Symptoms ?? string.Empty;
-                appointment.Status = dto.Status ?? string.Empty;
 
                 return await _context.SaveChangesAsync() > 0;
             }

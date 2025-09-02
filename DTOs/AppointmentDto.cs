@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace PAmazeCare.DTOs
@@ -42,8 +42,5 @@ namespace PAmazeCare.DTOs
         public TimeSpan AppointmentTime { get; set; }
 
         public string Symptoms { get; set; }
-
-        [Required]
-        public string Status { get; set; }
     }
 }

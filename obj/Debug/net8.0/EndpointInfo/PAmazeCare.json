@@ -595,17 +595,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PAmazeCare.DTOs.DoctorDto"
+                "$ref": "#/components/schemas/PAmazeCare.DTOs.CreateDoctorDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/PAmazeCare.DTOs.DoctorDto"
+                "$ref": "#/components/schemas/PAmazeCare.DTOs.CreateDoctorDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/PAmazeCare.DTOs.DoctorDto"
+                "$ref": "#/components/schemas/PAmazeCare.DTOs.CreateDoctorDto"
               }
             }
           }
@@ -1996,6 +1996,38 @@
         },
         "additionalProperties": false
       },
+      "PAmazeCare.DTOs.CreateDoctorDto": {
+        "required": [
+          "contactNumber",
+          "email",
+          "fullName",
+          "specialty"
+        ],
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "contactNumber": {
+            "minLength": 1,
+            "type": "string",
+            "format": "tel"
+          },
+          "specialty": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "PAmazeCare.DTOs.CreateDosageMasterDto": {
         "type": "object",
         "properties": {
@@ -2024,6 +2056,11 @@
           "date": {
             "type": "string",
             "format": "date-time"
+          },
+          "appointmentId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2176,6 +2213,11 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "appointmentId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2291,8 +2333,7 @@
       "PAmazeCare.DTOs.UpdateAppointmentDto": {
         "required": [
           "appointmentDate",
-          "appointmentTime",
-          "status"
+          "appointmentTime"
         ],
         "type": "object",
         "properties": {
@@ -2307,10 +2348,6 @@
           "symptoms": {
             "type": "string",
             "nullable": true
-          },
-          "status": {
-            "minLength": 1,
-            "type": "string"
           }
         },
         "additionalProperties": false

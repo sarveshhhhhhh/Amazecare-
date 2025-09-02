@@ -112,7 +112,7 @@ namespace PAmazeCare.Services.Implementations
             }
         }
 
-        public async Task<int> AddDoctorAsync(DoctorDto dto)
+        public async Task<int> AddDoctorAsync(CreateDoctorDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Email))
                 throw new ArgumentException("Email is required.");
@@ -130,7 +130,9 @@ namespace PAmazeCare.Services.Implementations
                 FullName = dto.FullName ?? "Unknown",
                 Email = dto.Email,
                 PasswordHash = passwordHash,
-                Role = 2
+                Role = 2,
+                UserType = UserTypeEnum.Doctor.ToString(),
+                CreatedAt = DateTime.Now
             };
 
             _context.Users.Add(user);
